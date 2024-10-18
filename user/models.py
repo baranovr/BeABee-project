@@ -89,6 +89,7 @@ class User(AbstractUser):
         choices=ServiceStatusChoices.choices,
         default=ServiceStatusChoices.USER
     )
+    is_staff = models.BooleanField(_("staff status"), default=False)
     posts = models.ForeignKey(
         Post,
         blank=True,
