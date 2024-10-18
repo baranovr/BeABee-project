@@ -96,6 +96,8 @@ class User(AbstractUser):
         related_name="user_posts",
         on_delete=models.CASCADE
     )
+    password = models.CharField(_("password"), max_length=255)
+    date_joined = models.DateField(_("date joined"), auto_now_add=True)
     is_banned = models.BooleanField(default=False)
     ban_reason = models.CharField(max_length=255, null=True, blank=True, choices=BanReasonsChoices.choices)
     ban_until = models.DateTimeField(null=True, blank=True)

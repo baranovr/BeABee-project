@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from beabee.models import Post
@@ -9,7 +10,10 @@ class UserSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(required=True, allow_null=True)
 
     def create(self, validated_data):
-        user = User.objects.create(**validated_data)
+        password = validated_data.pop("password", None)
+        user = get_user_model().objects.create_user(
+            password=password, **validated_data
+        )
         return user
 
     def update(self, instance, validated_data):
@@ -42,10 +46,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'avatar', 'username', 'first_name', 'last_name', 'email',
             'sex', 'birth_date', 'language', 'phone_number', 'country',
-            'twitter', 'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service',
-            'is_banned', 'ban_reason', 'ban_until', 'full_name'
+            'twitter', 'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service', 'password',
+            'date_joined', 'is_banned', 'ban_reason', 'ban_until', 'full_name'
         ]
-        read_only_fields = ['is_banned', 'ban_reason', 'ban_until', 'full_name']
+        read_only_fields = ['is_banned', 'ban_reason', 'ban_until', 'full_name', 'date_joined']
         extra_kwargs = {
             "password": {
                 "write_only": True,
@@ -65,9 +69,9 @@ class MyProfileSerializer(UserSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'avatar', 'username', 'first_name', 'last_name', 'email',
+            'id', 'avatar', 'username', 'first_name', 'last_name', 'full_name', 'email',
             'sex', 'birth_date', 'language', 'phone_number', 'country',
             'twitter', 'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service',
-            'posts', 'is_banned', 'ban_reason', 'ban_until', 'full_name'
+            'date_joined', 'posts', 'is_banned', 'ban_reason', 'ban_until'
         ]
-        read_only_fields = ['is_banned', 'ban_reason', 'ban_until', 'full_name']
+        read_only_fields = ['is_banned', 'ban_reason', 'ban_until', 'full_name', 'date_joined']
