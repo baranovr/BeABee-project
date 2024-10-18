@@ -24,6 +24,7 @@ def photo_path(instance, filename):
 class Post(models.Model):
     photo = models.ImageField(upload_to=photo_path)
     title = models.CharField(max_length=50)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag)
@@ -85,6 +86,8 @@ class Homework(models.Model):
     file = models.FileField(upload_to=homework_file_path)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    deadline = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.title

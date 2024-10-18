@@ -4,24 +4,26 @@ from beabee.models import (
     Tag, Post, Comment, Subject, Teacher, Homework, Story, News
 )
 
-class TagSerializer(serializers.ModelSerializer):
+class BaseTagSubjectRelatedSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Tag
         fields = (
-            "id", "tag"
+            "id",
+            "name"
         )
 
-
-class TagListSerializer(TagSerializer):
-    class Meta:
+class TagSerializer(BaseTagSubjectRelatedSerializer):
+    class Meta(BaseTagSubjectRelatedSerializer.Meta):
         model = Tag
-        fields = TagSerializer.Meta.fields
 
 
-class TagDetailSerializer(TagSerializer):
-    class Meta:
+class TagListSerializer(BaseTagSubjectRelatedSerializer):
+    class Meta(BaseTagSubjectRelatedSerializer.Meta):
         model = Tag
-        fields = TagSerializer.Meta.fields
+
+
+class TagDetailSerializer(BaseTagSubjectRelatedSerializer):
+    class Meta(BaseTagSubjectRelatedSerializer.Meta):
+        model = Tag
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -31,6 +33,7 @@ class PostSerializer(serializers.ModelSerializer):
             "id",
             "photo",
             "title",
+            "user",
             "description",
             "created_at",
             "tags"
@@ -73,24 +76,19 @@ class CommentDetailSerializer(CommentSerializer):
         fields = CommentSerializer.Meta.fields
 
 
-class SubjectSerializer(serializers.ModelSerializer):
-    class Meta:
+class SubjectSerializer(BaseTagSubjectRelatedSerializer):
+    class Meta(BaseTagSubjectRelatedSerializer.Meta):
         model = Subject
-        fields = (
-            "id", "name"
-        )
 
 
-class SubjectListSerializer(SubjectSerializer):
-    class Meta:
+class SubjectListSerializer(BaseTagSubjectRelatedSerializer):
+    class Meta(BaseTagSubjectRelatedSerializer.Meta):
         model = Subject
-        fields = SubjectSerializer.Meta.fields
 
 
-class SubjectDetailSerializer(SubjectSerializer):
-    class Meta:
+class SubjectDetailSerializer(BaseTagSubjectRelatedSerializer):
+    class Meta(BaseTagSubjectRelatedSerializer.Meta):
         model = Subject
-        fields = SubjectSerializer.Meta.fields
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -117,7 +115,7 @@ class HomeworkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Homework
         fields = (
-            "id", "title", "description", "file", "subject", "teacher", "created_at"
+            "id", "title", "description", "file", "subject", "teacher", "created_at", "deadline"
         )
 
 
