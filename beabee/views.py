@@ -2,7 +2,8 @@ from datetime import datetime
 
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import viewsets
+
+from rest_framework import viewsets, permissions
 
 from beabee.models import Tag, Post, Comment, Subject, Teacher, Homework, Story, News, ImportantInfo
 from beabee.serializers import (
@@ -16,6 +17,12 @@ from beabee.serializers import (
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+    def get_permissions(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return [permissions.IsAuthenticated()]
+        else:
+            return [permissions.AllowAny()]
 
     def get_queryset(self):
         name = self.request.query_params.get("name", None)
@@ -60,6 +67,14 @@ class TagViewSet(viewsets.ModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def get_permissions(self):
+        if self.action == "list":
+            return [permissions.AllowAny()]
+        elif self.action == "retrieve":
+            return [permissions.IsAuthenticatedOrReadOnly()]
+        else:
+            return [permissions.IsAuthenticated()]
 
     @staticmethod
     def _params_to_ints(qs):
@@ -140,6 +155,12 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
+    def get_permissions(self):
+        if self.action == "list":
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
     def get_queryset(self):
         username = self.request.query_params.get("user__username", None)
         created_date = self.request.query_params.get("created_at", None)
@@ -200,6 +221,14 @@ class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = TagSerializer
 
+    def get_permissions(self):
+        if self.action == "list":
+            return [permissions.AllowAny()]
+        elif self.action == "retrieve":
+            return [permissions.IsAuthenticatedOrReadOnly()]
+        else:
+            return [permissions.IsAdminUser()]
+
     def get_queryset(self):
         name = self.request.query_params.get("name", None)
 
@@ -242,6 +271,14 @@ class SubjectViewSet(viewsets.ModelViewSet):
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
+
+    def get_permissions(self):
+        if self.action == "list":
+            return [permissions.AllowAny()]
+        elif self.action == "retrieve":
+            return [permissions.IsAuthenticatedOrReadOnly()]
+        else:
+            return [permissions.IsAdminUser()]
     
     def get_queryset(self):
         first_name = self.request.query_params.get("first_name", None)
@@ -323,6 +360,14 @@ class HomeworkViewSet(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     serializer_class = HomeworkSerializer
 
+    def get_permissions(self):
+        if self.action == "list":
+            return [permissions.AllowAny()]
+        elif self.action == "retrieve":
+            return [permissions.IsAuthenticatedOrReadOnly()]
+        else:
+            return [permissions.IsAdminUser()]
+
     def get_queryset(self):
         title = self.request.query_params.get("title", None)
         subject = self.request.query_params.get("subject__name", None)
@@ -399,6 +444,12 @@ class StoryViewSet(viewsets.ModelViewSet):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
 
+    def get_permissions(self):
+        if self.action == "list":
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
     def get_queryset(self):
         username = self.request.query_params.get("user__username", None)
         created_date = self.request.query_params.get("created_at", None)
@@ -466,6 +517,12 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
 
+    def get_permissions(self):
+        if self.action == "list":
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
     def get_queryset(self):
         queryset = super().get_queryset()
         return self.filter_by_title_and_date(queryset)
@@ -500,6 +557,12 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
 class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
     queryset = ImportantInfo.objects.all()
     serializer_class = ImportantInfoSerializer
+
+    def get_permissions(self):
+        if self.action == "list":
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
         queryset = super().get_queryset()
