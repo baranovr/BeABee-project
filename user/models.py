@@ -71,7 +71,7 @@ class User(AbstractUser):
     sex = models.CharField(
         _("sex"),
         max_length=10,
-        choices=SexTextChoices
+        choices=SexTextChoices.choices
     )
     birth_date = models.DateField(_("birth date"))
     language = models.CharField(_("language"), max_length=50)
@@ -137,6 +137,6 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
-    REQUIRED_FIELDS = ["avatar", "username", "status", "first_name", "last_name", "group", "email"]
+    REQUIRED_FIELDS = ["avatar", "username", "status", "first_name", "last_name", "group"]
 
     objects = UserManager()
