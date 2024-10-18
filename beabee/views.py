@@ -6,11 +6,7 @@ from rest_framework import viewsets
 
 from beabee.models import Tag, Post, Comment, Subject, Teacher, Homework, Story, News, ImportantInfo
 from beabee.serializers import (
-    TagSerializer,
-    TagListSerializer,
-    TagDetailSerializer,
-    PostSerializer,
-    PostListSerializer,
+    TagSerializer, TagListSerializer, TagDetailSerializer, PostSerializer, PostListSerializer,
     PostDetailSerializer, CommentListSerializer, CommentDetailSerializer, CommentSerializer, SubjectListSerializer,
     SubjectDetailSerializer, SubjectSerializer, TeacherSerializer, TeacherListSerializer, TeacherDetailSerializer,
     HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer, StorySerializer, StoryListSerializer,
@@ -146,7 +142,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         username = self.request.query_params.get("user__username", None)
-        created_date = self.request.query_params.get("created_date", None)
+        created_date = self.request.query_params.get("created_at", None)
 
         queryset = self.queryset
 

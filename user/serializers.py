@@ -32,7 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.instagram = validated_data.get('instagram', instance.instagram)
         instance.github = validated_data.get('github', instance.github)
         instance.group = validated_data.get('group', instance.group)
-        instance.status = validated_data.get('status', instance.status)
+        instance.status_in_service = validated_data.get('status_in_service', instance.status_in_service)
 
         instance.save()
         return instance
@@ -42,8 +42,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'avatar', 'username', 'first_name', 'last_name', 'email',
             'sex', 'birth_date', 'language', 'phone_number', 'country',
-            'twitter', 'linkedin', 'facebook', 'instagram', 'github', 'group', 'status',
-            'posts', 'is_banned', 'ban_reason', 'ban_until', 'full_name'
+            'twitter', 'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service',
+            'is_banned', 'ban_reason', 'ban_until', 'full_name'
         ]
         read_only_fields = ['is_banned', 'ban_reason', 'ban_until', 'full_name']
         extra_kwargs = {
@@ -61,3 +61,13 @@ class MyProfileSerializer(UserSerializer):
     def get_posts(self, obj):
         posts = Post.objects.filter(user=obj)
         return PostSerializer(posts, many=True).data
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'avatar', 'username', 'first_name', 'last_name', 'email',
+            'sex', 'birth_date', 'language', 'phone_number', 'country',
+            'twitter', 'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service',
+            'posts', 'is_banned', 'ban_reason', 'ban_until', 'full_name'
+        ]
+        read_only_fields = ['is_banned', 'ban_reason', 'ban_until', 'full_name']

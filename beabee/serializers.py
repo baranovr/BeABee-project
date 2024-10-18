@@ -27,6 +27,8 @@ class TagDetailSerializer(BaseTagSubjectRelatedSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    tags = TagListSerializer(many=True)
+
     class Meta:
         model = Post
         fields = (
@@ -92,6 +94,8 @@ class SubjectDetailSerializer(BaseTagSubjectRelatedSerializer):
 
 
 class TeacherSerializer(serializers.ModelSerializer):
+    subject = SubjectDetailSerializer()
+
     class Meta:
         model = Teacher
         fields = (
@@ -132,6 +136,7 @@ class HomeworkDetailSerializer(HomeworkSerializer):
 
 
 class StorySerializer(serializers.ModelSerializer):
+    expires_at = serializers.DateTimeField(read_only=True)
     class Meta:
         model = Story
         fields = (
@@ -139,9 +144,10 @@ class StorySerializer(serializers.ModelSerializer):
             "user",
             "video_or_photo",
             "created_at",
-            "expires_at"
+            "expires_at",
             "is_expired"
         )
+
 
 
 class StoryListSerializer(StorySerializer):

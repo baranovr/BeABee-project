@@ -40,10 +40,10 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name="comments"
     )
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["created_date"]
+        ordering = ["created_at"]
 
     def __str__(self):
         return self.text

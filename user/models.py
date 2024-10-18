@@ -51,7 +51,7 @@ class SexTextChoices(models.TextChoices):
     FEMALE = "Female",
 
 
-class StatusChoices(models.TextChoices):
+class ServiceStatusChoices(models.TextChoices):
     CREATOR = "Creator",
     ADMIN = "Admin",
     USER = "User",
@@ -65,8 +65,8 @@ class BanReasonsChoices(models.TextChoices):
 class User(AbstractUser):
     avatar = models.ImageField(_("avatar"), upload_to=avatar_path)
     username = models.CharField(_("username"), max_length=50, unique=True)
-    first_name = models.CharField(_("first name"), max_length=50)
-    last_name = models.CharField(_("last name"), max_length=50)
+    first_name = models.CharField(_("first name"), max_length=50, null=True, blank=True)
+    last_name = models.CharField(_("last name"), max_length=50, null=True, blank=True)
     email = models.EmailField(_("email address"), unique=True)
     sex = models.CharField(
         _("sex"),
@@ -74,17 +74,20 @@ class User(AbstractUser):
         choices=SexTextChoices.choices
     )
     birth_date = models.DateField(_("birth date"))
-    language = models.CharField(_("language"), max_length=50)
-    phone_number = models.CharField(_("phone number"), max_length=50, unique=True)
-    country = models.CharField(_("country"), max_length=50)
-    twitter = models.URLField(_("twitter url"), max_length=250, unique=True)
-    linkedin = models.URLField(_("linkedin url"), max_length=250, unique=True)
-    facebook = models.URLField(_("facebook url"), max_length=250, unique=True)
-    instagram = models.URLField(_("instagram url"), max_length=250, unique=True)
-    github = models.URLField(_("github url"), max_length=250, unique=True)
+    language = models.CharField(_("language"), max_length=50, null=True, blank=True)
+    phone_number = models.CharField(_("phone number"), max_length=50, unique=True, null=True, blank=True)
+    country = models.CharField(_("country"), max_length=50, null=True, blank=True)
+    twitter = models.URLField(_("twitter url"), max_length=250, unique=True, null=True, blank=True)
+    linkedin = models.URLField(_("linkedin url"), max_length=250, unique=True, null=True, blank=True)
+    facebook = models.URLField(_("facebook url"), max_length=250, unique=True, null=True, blank=True)
+    instagram = models.URLField(_("instagram url"), max_length=250, unique=True, null=True, blank=True)
+    github = models.URLField(_("github url"), max_length=250, unique=True, null=True, blank=True)
     group = models.CharField(_("group"), max_length=50, default="CS-32")
-    status = models.CharField(
-        _("status"), max_length=50, choices=StatusChoices.choices, default=StatusChoices.USER
+    status_in_service = models.CharField(
+        _("status_in_service"),
+        max_length=50,
+        choices=ServiceStatusChoices.choices,
+        default=ServiceStatusChoices.USER
     )
     posts = models.ForeignKey(
         Post,
@@ -137,6 +140,6 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
-    REQUIRED_FIELDS = ["avatar", "username", "status", "first_name", "last_name", "group"]
+    REQUIRED_FIELDS = ["avatar", "username", "status_in_service", "first_name", "last_name", "group"]
 
     objects = UserManager()
