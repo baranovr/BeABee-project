@@ -1,10 +1,14 @@
 import os
 import uuid
+from datetime import timedelta
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.utils.text import slugify
+from django.utils import timezone
+
+from beabee.models import Post
 
 
 class UserManager(BaseUserManager):
@@ -52,6 +56,11 @@ class StatusChoices(models.TextChoices):
     ADMIN = "Admin",
     USER = "User",
 
+class BanReasonsChoices(models.TextChoices):
+    INSULTING = "Insulting community members"
+    OBSCENE_CONTENT = "Publishing obscene content"
+    SPAM = "Spam"
+
 
 class User(AbstractUser):
     avatar = models.ImageField(_("avatar"), upload_to=avatar_path)
@@ -77,6 +86,47 @@ class User(AbstractUser):
     status = models.CharField(
         _("status"), max_length=50, choices=StatusChoices.choices, default=StatusChoices.USER
     )
+    posts = models.ForeignKey(
+        Post,
+        blank=True,
+        null=True,
+        related_name="user_posts",
+        on_delete=models.CASCADE
+    )
+    is_banned = models.BooleanField(default=False)
+    ban_reason = models.CharField(max_length=255, null=True, blank=True, choices=BanReasonsChoices.choices)
+    ban_until = models.DateTimeField(null=True, blank=True)
+
+    @property
+    def is_ban_active(self):
+        """
+        Checks if the user has an active ban.
+        If `ban_until` is present and the time is less than this value, True is returned.
+        """
+        if self.is_banned and (self.ban_until is None or self.ban_until > timezone.now()):
+            return True
+        return False
+
+    def ban(self, reason=None, duration=None):
+        """
+        Bans a user.
+        :param reason: reason for ban.
+        :param duration: duration of ban in hours (if temporary ban).
+        """
+        self.is_banned = True
+        self.ban_reason = reason
+        if duration:
+            self.ban_until = timezone.now() + timedelta(hours=duration)
+        else:
+            self.ban_until = None  # If the ban is permanent
+        self.save()
+
+    def unban(self):
+        """Removes the ban from the user."""
+        self.is_banned = False
+        self.ban_reason = None
+        self.ban_until = None
+        self.save()
 
     @property
     def full_name(self):
