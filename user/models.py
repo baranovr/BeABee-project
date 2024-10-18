@@ -85,4 +85,8 @@ class User(AbstractUser):
     def __str__(self):
         return self.full_name
 
-objects = UserManager()
+    USERNAME_FIELD = "email"
+    EMAIL_FIELD = "email"
+    REQUIRED_FIELDS = ["avatar", "username", "status", "first_name", "last_name", "group", "email"]
+
+    objects = UserManager()
