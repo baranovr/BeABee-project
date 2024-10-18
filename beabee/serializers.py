@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from beabee.models import (
-    Tag, Post, Comment, Subject, Teacher, Homework, Story, News
+    Tag, Post, Comment, Subject, Teacher, Homework, Story, News, ImportantInfo
 )
 
 class BaseTagSubjectRelatedSerializer(serializers.ModelSerializer):
@@ -27,8 +27,6 @@ class TagDetailSerializer(BaseTagSubjectRelatedSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    tags = TagListSerializer(many=True)
-
     class Meta:
         model = Post
         fields = (
@@ -43,12 +41,14 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class PostListSerializer(PostSerializer):
+    tags = TagSerializer(many=True)
+
     class Meta:
         model = Post
         fields = PostSerializer.Meta.fields
 
 
-class PostDetailSerializer(PostSerializer):
+class PostDetailSerializer(PostListSerializer):
     class Meta:
         model = Post
         fields = PostSerializer.Meta.fields
@@ -94,8 +94,6 @@ class SubjectDetailSerializer(BaseTagSubjectRelatedSerializer):
 
 
 class TeacherSerializer(serializers.ModelSerializer):
-    subject = SubjectDetailSerializer()
-
     class Meta:
         model = Teacher
         fields = (
@@ -104,12 +102,14 @@ class TeacherSerializer(serializers.ModelSerializer):
 
 
 class TeacherListSerializer(TeacherSerializer):
+    subject = SubjectSerializer(many=True)
+
     class Meta:
         model = Teacher
         fields = TeacherSerializer.Meta.fields
 
 
-class TeacherDetailSerializer(TeacherSerializer):
+class TeacherDetailSerializer(TeacherListSerializer):
     class Meta:
         model = Teacher
         fields = TeacherSerializer.Meta.fields
@@ -124,12 +124,17 @@ class HomeworkSerializer(serializers.ModelSerializer):
 
 
 class HomeworkListSerializer(HomeworkSerializer):
+    subject = SubjectSerializer()
+    teacher = TeacherDetailSerializer()
+
     class Meta:
         model = Homework
         fields = HomeworkSerializer.Meta.fields
 
 
-class HomeworkDetailSerializer(HomeworkSerializer):
+class HomeworkDetailSerializer(HomeworkListSerializer):
+    subject = SubjectSerializer()
+
     class Meta:
         model = Homework
         fields = HomeworkSerializer.Meta.fields
@@ -137,6 +142,7 @@ class HomeworkDetailSerializer(HomeworkSerializer):
 
 class StorySerializer(serializers.ModelSerializer):
     expires_at = serializers.DateTimeField(read_only=True)
+
     class Meta:
         model = Story
         fields = (
@@ -188,17 +194,23 @@ class NewsDetailSerializer(NewsSerializer):
 
 class ImportantInfoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = News
-        fields = NewsSerializer.Meta.fields
+        model = ImportantInfo
+        fields = (
+            "id",
+            "file",
+            "title",
+            "description",
+            "created_at",
+        )
 
 
 class ImportantInfoListSerializer(ImportantInfoSerializer):
     class Meta:
-        model = News
+        model = ImportantInfo
         fields = ImportantInfoSerializer.Meta.fields
 
 
 class ImportantInfoDetailDetailSerializer(ImportantInfoSerializer):
     class Meta:
-        model = News
+        model = ImportantInfo
         fields = ImportantInfoSerializer.Meta.fields
