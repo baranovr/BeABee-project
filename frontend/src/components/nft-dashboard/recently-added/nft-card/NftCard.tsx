@@ -1,6 +1,6 @@
 import React from 'react';
 import { useResponsive } from '@app/hooks/useResponsive';
-import { NftItem } from '@app/api/nftDashboard.api';
+import { NftItem } from '@app/api/mainpageDashboard.api';
 import { formatNumberWithCommas, getCurrencyPrice } from '@app/utils/utils';
 import { CurrencyTypeEnum } from '@app/interfaces/interfaces';
 import * as S from './NftCard.styles';

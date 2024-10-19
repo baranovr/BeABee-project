@@ -141,8 +141,8 @@
     "copied": "Copied to clipboard",
     "copy": "Copy",
     "country": "Country",
-    "nft-dashboard": "NFT Dashboard",
-    "medical-dashboard": "Medical Dashboard",
+    "nft-dashboard": "Main Page",
+    "medical-dashboard": "Teachers Page",
     "dataDisplay": "Data display",
     "dataTables": "Data Tables",
     "dateTime": "Date & Time",
@@ -173,7 +173,7 @@
     "lastName": "Last Name",
     "leafletMap": "Leaflet Maps",
     "loading": "Loading...",
-    "lock": "Lock",
+    "ban": "Ban",
     "login": "Log In",
     "maintenance": "Maintenance",
     "map": "Map",
@@ -258,9 +258,9 @@
     "fat": "Fat",
     "favoriteDoctors": {
       "lastVisit": "Last visit",
-      "title": "Favorite doctors"
+      "title": "All teachers"
     },
-    "health": {
+    "subjects": {
       "ecology": {
         "description": "The environment is a major determinant of health, estimated to account for almost 20% of all deaths in the WHO European Region.",
         "title": "Ecology"
@@ -277,7 +277,7 @@
         "description": "Relationship between health insurance (or lack of insurance), use of medical care and health outcomes for specific conditions and types of services, and with overall health status and mortality.",
         "title": "Medicine"
       },
-      "title": "Health"
+      "title": "Subjects"
     },
     "latestScreenings": {
       "friends": "Friends",
@@ -288,7 +288,7 @@
     "map": {
       "polyclinic": "Polyclinic"
     },
-    "news": "News",
+    "news": "Homeworks",
     "patientResults": {
       "patientAdmission": {
         "description": "Admission of a patient means allowing and facilitating a patient to stay in the hospital unit or ward for observation, investigation, and treatment of the disease he or she is suffering from.",
@@ -727,10 +727,6 @@
     "warning": "Warning result",
     "warningTitle": "There are some problems with your operation."
   },
-  "securityCodeForm": {
-    "noCode": "Didn't get a verification code?",
-    "title": "Check your mail"
-  },
   "selects": {
     "basic": "Basic select",
     "customTags": "Custom tags",
@@ -865,8 +861,8 @@
     "filter": "Filter",
     "show": "Show",
     "bid": "Bid",
-    "trendingCollections": "Trending Collections",
-    "recentlyAddedNFTs": "Recently Added NFTs",
-    "trendingCreators": "Trending Creators"
+    "trendingCollections": "What's important?",
+    "recentlyAddedNFTs": "Recently News",
+    "trendingCreators": "Stories"
   }
 }

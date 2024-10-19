@@ -1,12 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
-import { MapCard } from '@app/components/medical-dashboard/mapCard/MapCard';
 import { ScreeningsCard } from '@app/components/medical-dashboard/screeningsCard/ScreeningsCard/ScreeningsCard';
 import { ActivityCard } from '@app/components/medical-dashboard/activityCard/ActivityCard';
 import { TreatmentCard } from '@app/components/medical-dashboard/treatmentCard/TreatmentCard';
 import { CovidCard } from '@app/components/medical-dashboard/covidCard/CovidCard';
-import { HealthCard } from '@app/components/medical-dashboard/HealthCard/HealthCard';
+import { SubjectCard } from '@app/components/medical-dashboard/SubjectCard/SubjectCard';
 import { FavoritesDoctorsCard } from '@app/components/medical-dashboard/favoriteDoctors/FavoriteDoctorsCard/FavoritesDoctorsCard';
 import { PatientResultsCard } from '@app/components/medical-dashboard/PatientResultsCard/PatientResultsCard';
 import { StatisticsCards } from '@app/components/medical-dashboard/statisticsCards/StatisticsCards';
@@ -18,7 +17,7 @@ import * as S from './DashboardPage.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 
-const MedicalDashboardPage: React.FC = () => {
+const TeachersPage: React.FC = () => {
   const { isTablet, isDesktop } = useResponsive();
 
   const { t } = useTranslation();
@@ -31,10 +30,6 @@ const MedicalDashboardPage: React.FC = () => {
             <BaseRow gutter={[30, 30]}>
               <StatisticsCards />
             </BaseRow>
-          </BaseCol>
-
-          <BaseCol id="map" span={24}>
-            <MapCard />
           </BaseCol>
 
           <BaseCol id="latest-screenings" span={24}>
@@ -53,8 +48,8 @@ const MedicalDashboardPage: React.FC = () => {
             <ActivityCard />
           </BaseCol>
 
-          <BaseCol id="health" xl={24} xxl={12}>
-            <HealthCard />
+          <BaseCol id="subject" xl={24} xxl={12}>
+            <SubjectCard />
           </BaseCol>
 
           <BaseCol id="favorite-doctors" xl={24}>
@@ -84,12 +79,6 @@ const MedicalDashboardPage: React.FC = () => {
     <BaseRow gutter={[20, 20]}>
       <StatisticsCards />
 
-      {isTablet && (
-        <BaseCol id="map" md={24} order={4}>
-          <MapCard />
-        </BaseCol>
-      )}
-
       <BaseCol id="latest-screenings" xs={24} md={12} order={(isTablet && 5) || 0}>
         <ScreeningsCard />
       </BaseCol>
@@ -102,8 +91,8 @@ const MedicalDashboardPage: React.FC = () => {
         <TreatmentCard />
       </BaseCol>
 
-      <BaseCol id="health" xs={24} md={12} order={(isTablet && 9) || 0}>
-        <HealthCard />
+      <BaseCol id="subjects" xs={24} md={12} order={(isTablet && 9) || 0}>
+        <SubjectCard />
       </BaseCol>
 
       <BaseCol id="patient-timeline" xs={24} md={12} order={(isTablet && 11) || 0}>
@@ -136,4 +125,4 @@ const MedicalDashboardPage: React.FC = () => {
   );
 };
 
-export default MedicalDashboardPage;
+export default TeachersPage;

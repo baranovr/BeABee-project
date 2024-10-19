@@ -1,5 +1,6 @@
 import React from 'react';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
+import { MapCard } from '@app/components/medical-dashboard/mapCard/MapCard';
 import { References } from '@app/components/common/References/References';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { TrendingCreators } from '@app/components/nft-dashboard/trending-creators/TrendingCreators';
@@ -30,6 +31,10 @@ const MedicalDashboardPage: React.FC = () => {
 
           <BaseCol span={24}>
             <TrendingCollections />
+          </BaseCol>
+
+          <BaseCol id="map" span={24}>
+            <MapCard />
           </BaseCol>
 
           <BaseCol span={24}>
@@ -69,6 +74,10 @@ const MedicalDashboardPage: React.FC = () => {
         <TrendingCollections />
       </BaseCol>
 
+      <BaseCol id="map" md={24} order={4}>
+        <MapCard />
+      </BaseCol>
+
       <BaseCol span={24}>
         <RecentActivity />
       </BaseCol>
@@ -77,7 +86,7 @@ const MedicalDashboardPage: React.FC = () => {
 
   return (
     <>
-      <PageTitle>NFT Dashboard</PageTitle>
+      <PageTitle>Main Page</PageTitle>
       {isDesktop ? desktopLayout : mobileAndTabletLayout}
     </>
   );

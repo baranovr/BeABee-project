@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { BaseArticle } from '@app/components/common/BaseArticle/BaseArticle';
 import { BaseFeed } from '@app/components/common/BaseFeed/BaseFeed';
-import { NewsFilter } from '@app/components/apps/newsFeed/NewsFilter/NewsFilter';
-import { getNews, Post } from '@app/api/news.api';
+import { HomeworksFilter } from '@app/components/apps/newsFeed/HomeworksFilter/HomeworksFilter';
+import { getNews, Post } from '@app/api/homeworks.api';
 import { BaseEmpty } from '@app/components/common/BaseEmpty/BaseEmpty';
 
-export const NewsFeed: React.FC = () => {
+export const HomeworksFeed: React.FC = () => {
   const [news, setNews] = useState<Post[]>([]);
   const [hasMore] = useState<boolean>(true);
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -21,7 +21,7 @@ export const NewsFeed: React.FC = () => {
   };
 
   return (
-    <NewsFilter news={news}>
+    <HomeworksFilter news={news}>
       {({ filteredNews }) =>
         filteredNews?.length || !loaded ? (
           <BaseFeed next={next} hasMore={hasMore}>
@@ -42,6 +42,6 @@ export const NewsFeed: React.FC = () => {
           <BaseEmpty />
         )
       }
-    </NewsFilter>
+    </HomeworksFilter>
   );
 };

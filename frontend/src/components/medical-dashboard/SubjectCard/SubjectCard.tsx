@@ -1,13 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PieChartCustomLegend } from '../../common/charts/PieChartCustomLegend';
-import { healthChartData } from 'constants/healthChartData';
+import { subjectsChartData } from 'constants/subjectsChartData';
 import { BaseCard } from '@app/components/common/BaseCard/BaseCard';
 
-export const HealthCard: React.FC = () => {
+export const SubjectCard: React.FC = () => {
   const { t } = useTranslation();
 
-  const chartData = healthChartData.map((item) => ({
+  const chartData = subjectsChartData.map((item) => ({
     ...item,
     name: t(item.name),
     description: t(item.description),
@@ -16,9 +16,9 @@ export const HealthCard: React.FC = () => {
   const legendData = chartData.map((item) => ({ ...item, value: `${item.value}%` }));
 
   return (
-    <BaseCard title={t('medical-dashboard.health.title')} padding={'0 1.25rem 1.875rem'}>
+    <BaseCard title={t('medical-dashboard.subjects.title')} padding={'0 1.25rem 1.875rem'}>
       <PieChartCustomLegend
-        name={t('medical-dashboard.health.title')}
+        name={t('medical-dashboard.subjects.title')}
         chartData={chartData}
         legendData={legendData}
         height="300px"

@@ -5,7 +5,7 @@ import { BaseCarousel } from '@app/components/common/BaseCarousel/Carousel';
 import { NFTCardHeader } from '@app/components/nft-dashboard/common/NFTCardHeader/NFTCardHeader';
 import { ViewAll } from '@app/components/nft-dashboard/common/ViewAll/ViewAll';
 import { NftCard } from '@app/components/nft-dashboard/recently-added/nft-card/NftCard';
-import { getRecentlyAddedNfts, NftItem } from '@app/api/nftDashboard.api';
+import { getRecentlyAddedNfts, NftItem } from '@app/api/mainpageDashboard.api';
 import { useResponsive } from '@app/hooks/useResponsive';
 import * as S from './RecentlyAddedNft.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';

@@ -9,10 +9,10 @@ import { useResponsive } from '@app/hooks/useResponsive';
 import { Dates } from '@app/constants/Dates';
 import { doLogin } from '@app/store/slices/authSlice';
 import * as Auth from '@app/components/layouts/AuthLayout/AuthLayout.styles';
-import * as S from './LockForm.styles';
+import * as S from './BanForm.styles';
 import { BaseAvatar } from '@app/components/common/BaseAvatar/BaseAvatar';
 
-interface LockFormData {
+interface BanFormData {
   password: string;
 }
 
@@ -20,7 +20,7 @@ const initValues = {
   password: loginInitVal.password,
 };
 
-export const LockForm: React.FC = () => {
+export const BanForm: React.FC = () => {
   const navigate = useNavigate();
   const { mobileOnly } = useResponsive();
   const { t } = useTranslation();
@@ -40,7 +40,7 @@ export const LockForm: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSubmit = ({ password }: LockFormData) => {
+  const handleSubmit = ({ password }: BanFormData) => {
     setLoading(true);
     dispatch(doLogin({ email: user?.email.name || '', password }))
       .unwrap()

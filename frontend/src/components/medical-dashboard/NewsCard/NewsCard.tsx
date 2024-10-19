@@ -1,5 +1,5 @@
 import React from 'react';
-import { dashboardNews } from '@app/constants/dashboardNews';
+import { dashboardHomeworks } from '@app/constants/dashboardHomeworks';
 import { DashboardCard } from '../DashboardCard/DashboardCard';
 import * as S from './NewsCard.styles';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ export const NewsCard: React.FC = () => {
   return (
     <DashboardCard title={t('medical-dashboard.news')}>
       <S.Wrapper>
-        {dashboardNews.map((advice, index) => (
+        {dashboardHomeworks.map((advice, index) => (
           <BaseArticle
             key={index}
             imgUrl={advice.img}

@@ -9,7 +9,7 @@ export interface BaseArticleProps {
   author?: React.ReactNode;
   imgUrl: string;
   title: string;
-  date: number;
+  date: string;
   description: string;
   avatar?: string;
   tags?: IHashTag[];

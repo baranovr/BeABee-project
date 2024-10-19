@@ -173,7 +173,7 @@
     "lastName": "Nachname",
     "leafletMap": "Leaflet Karten",
     "loading": "Wird geladen...",
-    "lock": "Sperren",
+    "ban": "Sperren",
     "login": "Einloggen",
     "maintenance": "Wartung",
     "map": "Karte",
@@ -260,7 +260,7 @@
       "lastVisit": "Letzter Besuch",
       "title": "Lieblingsärzte"
     },
-    "health": {
+    "subjects": {
       "ecology": {
         "description": "Die Umwelt ist ein wichtiger Gesundheitsfaktor, auf den schätzungsweise fast 20 % aller Todesfälle in der Europäischen Region der WHO zurückzuführen sind.",
         "title": "Ökologie"
@@ -727,10 +727,6 @@
     "successTitle": "Cloud Server ECS erfolgreich gekauft!",
     "warning": "Warnendes Ergebnis",
     "warningTitle": "Es gibt einige Probleme mit Ihrem Betrieb."
-  },
-  "securityCodeForm": {
-    "noCode": "Sie haben keinen Bestätigungscode erhalten?",
-    "title": "Prüfe deine Mails"
   },
   "selects": {
     "basic": "Grundauswahl",

@@ -6,8 +6,8 @@ import { AuthorValidator, TitleValidator, DatesValidator, TagsValidator } from '
 import { useResponsive } from '@app/hooks/useResponsive';
 import { newsTags as defaultTags } from '@app/constants/newsTags';
 import { AppDate, Dates } from '@app/constants/Dates';
-import { Post } from '@app/api/news.api';
-import * as S from './NewsFilter.styles';
+import { Post } from '@app/api/homeworks.api';
+import * as S from './HomeworksFilter.styles';
 import { BaseDropdown } from '@app/components/common/BaseDropdown/Dropdown';
 
 interface NewsFilterProps {
@@ -132,7 +132,7 @@ const Filter: React.FC<Filter> = ({
   );
 };
 
-export const NewsFilter: React.FC<NewsFilterProps> = ({ news, newsTags, children }) => {
+export const HomeworksFilter: React.FC<NewsFilterProps> = ({ news, newsTags, children }) => {
   const [filterFields, setFilterFields] = useState<{
     author: string;
     title: string;
@@ -196,7 +196,7 @@ export const NewsFilter: React.FC<NewsFilterProps> = ({ news, newsTags, children
       }
       setFilteredNews(
         updatedNews.sort((a, b) => {
-          return b.date - a.date;
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
         }),
       );
     },

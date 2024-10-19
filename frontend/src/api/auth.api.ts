@@ -14,18 +14,6 @@ export interface SignUpRequest {
   password: string;
 }
 
-export interface ResetPasswordRequest {
-  email: string;
-}
-
-export interface SecurityCodePayload {
-  code: string;
-}
-
-export interface NewPasswordData {
-  newPassword: string;
-}
-
 export interface LoginRequest {
   email: string;
   password: string;
@@ -41,12 +29,3 @@ export const login = (loginPayload: LoginRequest): Promise<LoginResponse> =>
 
 export const signUp = (signUpData: SignUpRequest): Promise<undefined> =>
   httpApi.post<undefined>('signUp', { ...signUpData }).then(({ data }) => data);
-
-export const resetPassword = (resetPasswordPayload: ResetPasswordRequest): Promise<undefined> =>
-  httpApi.post<undefined>('forgotPassword', { ...resetPasswordPayload }).then(({ data }) => data);
-
-export const verifySecurityCode = (securityCodePayload: SecurityCodePayload): Promise<undefined> =>
-  httpApi.post<undefined>('verifySecurityCode', { ...securityCodePayload }).then(({ data }) => data);
-
-export const setNewPassword = (newPasswordData: NewPasswordData): Promise<undefined> =>
-  httpApi.post<undefined>('setNewPassword', { ...newPasswordData }).then(({ data }) => data);
