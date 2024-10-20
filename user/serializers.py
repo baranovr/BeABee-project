@@ -48,9 +48,9 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'avatar', 'username', 'first_name', 'last_name', 'email',
             'sex', 'birth_date', 'language', 'phone_number', 'country',
             'twitter', 'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service', 'is_staff',
-            'password', 'date_joined', 'is_banned', 'ban_reason', 'ban_until', 'full_name'
+            'password', 'date_joined', 'is_banned', 'ban_reason', 'full_name'
         ]
-        read_only_fields = ['is_banned', 'ban_reason', 'ban_until', 'full_name', 'date_joined']
+        read_only_fields = ['is_banned', 'ban_reason', 'full_name', 'date_joined']
         extra_kwargs = {
             "password": {
                 "write_only": True,
@@ -73,6 +73,6 @@ class MyProfileSerializer(UserSerializer):
             'id', 'avatar', 'username', 'first_name', 'last_name', 'full_name', 'email',
             'sex', 'birth_date', 'language', 'phone_number', 'country',
             'twitter', 'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service', 'is_staff',
-            'date_joined', 'posts', 'is_banned', 'ban_reason', 'ban_until'
+            'date_joined', 'posts', 'is_banned', 'ban_reason'
         ]
-        read_only_fields = ['is_banned', 'ban_reason', 'ban_until', 'full_name', 'date_joined']
+        read_only_fields = ['is_banned', 'ban_reason', 'full_name', 'date_joined']

@@ -1,28 +1,25 @@
 from datetime import datetime
 
+from django.db import transaction
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 
-from beabee.models import Tag, Post, Comment, Subject, Teacher, Homework, Story, News, ImportantInfo
+from beabee.models import Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban
 from beabee.serializers import (
     TagSerializer, TagListSerializer, TagDetailSerializer, PostSerializer, PostListSerializer,
     PostDetailSerializer, CommentListSerializer, CommentDetailSerializer, CommentSerializer, SubjectListSerializer,
     SubjectDetailSerializer, SubjectSerializer, TeacherSerializer, TeacherListSerializer, TeacherDetailSerializer,
-    HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer, StorySerializer, StoryListSerializer,
-    StoryDetailSerializer, NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer
+    HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer,
+    NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer
 )
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-
-    def get_permissions(self):
-        if self.action == 'list' or self.action == 'retrieve':
-            return [permissions.IsAuthenticated()]
-        else:
-            return [permissions.AllowAny()]
 
     def get_queryset(self):
         name = self.request.query_params.get("name", None)
@@ -68,14 +65,6 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-    def get_permissions(self):
-        if self.action == "list":
-            return [permissions.AllowAny()]
-        elif self.action == "retrieve":
-            return [permissions.IsAuthenticatedOrReadOnly()]
-        else:
-            return [permissions.IsAuthenticated()]
-
     @staticmethod
     def _params_to_ints(qs):
         """Converts a list of string IDs to a list of integers"""
@@ -112,6 +101,39 @@ class PostViewSet(viewsets.ModelViewSet):
             return PostDetailSerializer
         
         return PostSerializer
+
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(user=request.user)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            )
+
+    def update(self, request, *args, **kwargs):
+        with transaction.atomic():
+            post = get_object_or_404(
+                Post, pk=kwargs["pk"], user=request.user
+            )
+            serializer = self.get_serializer(
+                post, data=request.data, partial=True
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, pk=kwargs["pk"])
+        author = post.user
+
+        if author != request.user:
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(
         parameters=[
@@ -155,12 +177,6 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
-    def get_permissions(self):
-        if self.action == "list":
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
-
     def get_queryset(self):
         username = self.request.query_params.get("user__username", None)
         created_date = self.request.query_params.get("created_at", None)
@@ -187,6 +203,40 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         return CommentSerializer
 
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(user=request.user)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            )
+
+    def update(self, request, *args, **kwargs):
+        comment = get_object_or_404(
+            Comment, pk=kwargs["pk"], user=request.user
+        )
+        serializer = self.get_serializer(comment, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        commentator = comment.user
+
+        if request.user != commentator.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        serializer.save()
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        comment = get_object_or_404(Comment, pk=kwargs["pk"])
+        post = comment.post
+        author = post.user
+        commentator = comment.user
+
+        if author != request.user and commentator != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(
         parameters=[
@@ -221,14 +271,6 @@ class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = TagSerializer
 
-    def get_permissions(self):
-        if self.action == "list":
-            return [permissions.AllowAny()]
-        elif self.action == "retrieve":
-            return [permissions.IsAuthenticatedOrReadOnly()]
-        else:
-            return [permissions.IsAdminUser()]
-
     def get_queryset(self):
         name = self.request.query_params.get("name", None)
 
@@ -247,6 +289,15 @@ class SubjectViewSet(viewsets.ModelViewSet):
             return SubjectDetailSerializer
 
         return SubjectSerializer
+
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            )
 
     @extend_schema(
         parameters=[
@@ -271,14 +322,6 @@ class SubjectViewSet(viewsets.ModelViewSet):
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
-
-    def get_permissions(self):
-        if self.action == "list":
-            return [permissions.AllowAny()]
-        elif self.action == "retrieve":
-            return [permissions.IsAuthenticatedOrReadOnly()]
-        else:
-            return [permissions.IsAdminUser()]
     
     def get_queryset(self):
         first_name = self.request.query_params.get("first_name", None)
@@ -315,6 +358,16 @@ class TeacherViewSet(viewsets.ModelViewSet):
             return TeacherDetailSerializer
 
         return TeacherSerializer
+
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            )
 
     @extend_schema(
         parameters=[
@@ -360,14 +413,6 @@ class HomeworkViewSet(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     serializer_class = HomeworkSerializer
 
-    def get_permissions(self):
-        if self.action == "list":
-            return [permissions.AllowAny()]
-        elif self.action == "retrieve":
-            return [permissions.IsAuthenticatedOrReadOnly()]
-        else:
-            return [permissions.IsAdminUser()]
-
     def get_queryset(self):
         title = self.request.query_params.get("title", None)
         subject = self.request.query_params.get("subject__name", None)
@@ -405,6 +450,40 @@ class HomeworkViewSet(viewsets.ModelViewSet):
 
         return HomeworkSerializer
 
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(added_by=request.user)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            )
+
+    def update(self, request, *args, **kwargs):
+        with transaction.atomic():
+            homework = get_object_or_404(
+                Homework, pk=kwargs["pk"], added_by=request.user
+            )
+            serializer = self.get_serializer(homework, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            author = homework.added_by
+
+            if author == request.user or request.user.status_in_service == "Creator":
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        news = get_object_or_404(News, pk=kwargs["pk"])
+        author = news.posted_by
+
+        if author == request.user or request.user.status_in_service == "Creator":
+            return super().destroy(request, *args, **kwargs)
+
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -440,60 +519,6 @@ class HomeworkViewSet(viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
 
 
-class StoryViewSet(viewsets.ModelViewSet):
-    queryset = Story.objects.all()
-    serializer_class = StorySerializer
-
-    def get_permissions(self):
-        if self.action == "list":
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
-
-    def get_queryset(self):
-        username = self.request.query_params.get("user__username", None)
-        created_date = self.request.query_params.get("created_at", None)
-
-        queryset = self.queryset
-
-        if username:
-            queryset = queryset.filter(username__icontains=username)
-
-        if created_date:
-            date_c = datetime.strptime(
-                created_date, "%Y-%m-%d"
-            ).date()
-            queryset = queryset.filter(created_date__date=date_c)
-
-        return queryset.distinct()
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return StoryListSerializer
-
-        if self.action == "retrieve":
-            return StoryDetailSerializer
-
-        return StorySerializer
-
-    @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                name="username",
-                type=OpenApiTypes.STR,
-                description="Filter story by username",
-            ),
-            OpenApiParameter(
-                name="created_date",
-                type=OpenApiTypes.DATE,
-                description="Filter story by created_date",
-            )
-        ]
-    )
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-
 class FilterByTitleAndDateMixin:
     def filter_by_title_and_date(self, queryset):
         title = self.request.query_params.get("title", None)
@@ -517,12 +542,6 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
 
-    def get_permissions(self):
-        if self.action == "list":
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
-
     def get_queryset(self):
         queryset = super().get_queryset()
         return self.filter_by_title_and_date(queryset)
@@ -535,6 +554,39 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
             return NewsDetailSerializer
 
         return NewsSerializer
+
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(posted_by=request.user)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        with transaction.atomic():
+            news = get_object_or_404(
+                News, pk=kwargs["pk"], posted_by=request.user
+            )
+            serializer = self.get_serializer(news, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            author = news.posted_by
+
+            if author == request.user or request.user.status_in_service == "Creator":
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        news = get_object_or_404(News, pk=kwargs["pk"])
+        author = news.posted_by
+
+        if author == request.user or request.user.status_in_service == "Creator":
+            return super().destroy(request, *args, **kwargs)
+
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
 
     @extend_schema(
         parameters=[
@@ -558,15 +610,45 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
     queryset = ImportantInfo.objects.all()
     serializer_class = ImportantInfoSerializer
 
-    def get_permissions(self):
-        if self.action == "list":
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
-
     def get_queryset(self):
         queryset = super().get_queryset()
         return self.filter_by_title_and_date(queryset)
+
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            if request.user.is_staff:
+                serializer.save(posted_by=request.user)
+                headers = self.get_success_headers(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def update(self, request, *args, **kwargs):
+        with transaction.atomic():
+            imp_info = get_object_or_404(
+                ImportantInfo, pk=kwargs["pk"], posted_by=request.user
+            )
+            serializer = self.get_serializer(imp_info, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            author = imp_info.posted_by
+
+            if author == request.user or request.user.status_in_service == "Creator":
+                serializer.save()
+                return Response(serializer.data)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        imp_info = get_object_or_404(ImportantInfo, pk=kwargs["pk"])
+        author = imp_info.posted_by
+
+        if author == request.user or request.user.status_in_service == "Creator":
+            return super().destroy(request, *args, **kwargs)
+
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     @extend_schema(
         parameters=[
@@ -584,3 +666,10 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class BanViewSet(viewsets.ModelViewSet):
+    queryset = Ban.objects.all()
+    serializer_class = BanSerializer
+    permission_classes = [permissions.IsAdminUser]
+

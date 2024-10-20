@@ -88,6 +88,7 @@ class Homework(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField(null=True, blank=True)
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -97,25 +98,6 @@ def story_media_path(instance, filename):
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.user.username)}-{uuid.uuid4()}{extension}"
     return os.path.join("uploads/stories_media/", filename)
-
-
-class Story(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='stories')
-    video_or_photo = models.FileField(upload_to=story_media_path)
-    created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()
-
-    def save(self, *args, **kwargs):
-        if not self.expires_at:
-            self.expires_at = timezone.now() + timedelta(hours=24)
-        super().save(*args, **kwargs)
-
-    @property
-    def is_expired(self):
-        return timezone.now() > self.expires_at
-
-    def __str__(self):
-        return f"Story by {self.user.username}"
 
 
 def news_media_path(instance, filename):
@@ -129,6 +111,7 @@ class News(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -144,6 +127,44 @@ class ImportantInfo(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
+
+
+class BanReasonsChoices(models.TextChoices):
+    INSULTING = "Insulting community members"
+    OBSCENE_CONTENT = "Publishing obscene content"
+    SPAM = "Spam"
+
+
+class Ban(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="ban"
+    )
+    reason = models.CharField(max_length=55, choices=BanReasonsChoices.choices)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        """
+        Ban the user when this object is created.
+        """
+        self.user.is_banned = True
+        self.user.ban_reason = self.reason
+        self.user.save()
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """
+        Unban the user when this object is deleted.
+        """
+        self.user.is_banned = False
+        self.user.ban_reason = None
+        self.user.save()
+        super().delete(*args, **kwargs)
+
+    def __str__(self):
+        return f"Ban for {self.user.email} - {self.reason}"

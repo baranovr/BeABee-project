@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from beabee.models import (
-    Tag, Post, Comment, Subject, Teacher, Homework, Story, News, ImportantInfo
+    Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban
 )
 
 class BaseTagSubjectRelatedSerializer(serializers.ModelSerializer):
@@ -27,6 +27,8 @@ class TagDetailSerializer(BaseTagSubjectRelatedSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.username', read_only=True)
+
     class Meta:
         model = Post
         fields = (
@@ -67,15 +69,17 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class CommentListSerializer(CommentSerializer):
+    user = serializers.CharField(source='user.username')
+
     class Meta:
         model = Comment
-        fields = CommentSerializer.Meta.fields
+        fields = CommentSerializer.Meta.fields + ("user",)
 
 
 class CommentDetailSerializer(CommentSerializer):
     class Meta:
         model = Comment
-        fields = CommentSerializer.Meta.fields
+        fields = CommentListSerializer.Meta.fields
 
 
 class SubjectSerializer(BaseTagSubjectRelatedSerializer):
@@ -116,10 +120,20 @@ class TeacherDetailSerializer(TeacherListSerializer):
 
 
 class HomeworkSerializer(serializers.ModelSerializer):
+    added_by = serializers.CharField(source='added_by.username', read_only=True)
+
     class Meta:
         model = Homework
         fields = (
-            "id", "title", "description", "file", "subject", "teacher", "created_at", "deadline"
+            "id",
+            "title",
+            "description",
+            "file",
+            "subject",
+            "teacher",
+            "created_at",
+            "deadline",
+            "added_by"
         )
 
 
@@ -140,35 +154,9 @@ class HomeworkDetailSerializer(HomeworkListSerializer):
         fields = HomeworkSerializer.Meta.fields
 
 
-class StorySerializer(serializers.ModelSerializer):
-    expires_at = serializers.DateTimeField(read_only=True)
-
-    class Meta:
-        model = Story
-        fields = (
-            "id",
-            "user",
-            "video_or_photo",
-            "created_at",
-            "expires_at",
-            "is_expired"
-        )
-
-
-
-class StoryListSerializer(StorySerializer):
-    class Meta:
-        model = Story
-        fields = StorySerializer.Meta.fields
-
-
-class StoryDetailSerializer(StorySerializer):
-    class Meta:
-        model = Story
-        fields = StorySerializer.Meta.fields
-
-
 class NewsSerializer(serializers.ModelSerializer):
+    posted_by = serializers.CharField(source='posted_by.username', read_only=True)
+
     class Meta:
         model = News
         fields = (
@@ -177,6 +165,7 @@ class NewsSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "created_at",
+            "posted_by"
         )
 
 
@@ -193,6 +182,8 @@ class NewsDetailSerializer(NewsSerializer):
 
 
 class ImportantInfoSerializer(serializers.ModelSerializer):
+    posted_by = serializers.CharField(source='posted_by.username', read_only=True)
+
     class Meta:
         model = ImportantInfo
         fields = (
@@ -201,6 +192,7 @@ class ImportantInfoSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "created_at",
+            "posted_by"
         )
 
 
@@ -214,3 +206,18 @@ class ImportantInfoDetailDetailSerializer(ImportantInfoSerializer):
     class Meta:
         model = ImportantInfo
         fields = ImportantInfoSerializer.Meta.fields
+
+
+class BanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ban
+        fields = ['user', 'reason', 'created_at']
+
+    def create(self, validated_data):
+        # При создании автоматически баним пользователя
+        return Ban.objects.create(**validated_data)
+
+    def delete(self):
+        # При удалении автоматически разбаниваем пользователя
+        self.instance.user.unban()
+        self.instance.delete()
