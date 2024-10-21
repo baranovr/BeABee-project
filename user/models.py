@@ -57,6 +57,17 @@ class ServiceStatusChoices(models.TextChoices):
     USER = "User",
 
 
+class GroupChoices(models.TextChoices):
+    CS_31 = "CS_31"
+    CS_32 = "CS-32",
+    CS_33 = "CS-33",
+    CS_34 = "CS-34",
+    CS_41 = "CS_41",
+    CS_42 = "CS-42",
+    CS_43 = "CS-43",
+    CS_44 = "CS-44",
+
+
 class User(AbstractUser):
     avatar = models.ImageField(_("avatar"), upload_to=avatar_path)
     username = models.CharField(_("username"), max_length=50, unique=True)
@@ -69,22 +80,24 @@ class User(AbstractUser):
         choices=SexTextChoices.choices
     )
     birth_date = models.DateField(_("birth date"))
-    language = models.CharField(_("language"), max_length=50, null=True, blank=True)
     phone_number = models.CharField(_("phone number"), max_length=50, unique=True, null=True, blank=True)
     country = models.CharField(_("country"), max_length=50, null=True, blank=True)
-    twitter = models.URLField(_("twitter url"), max_length=250, unique=True, null=True, blank=True)
     linkedin = models.URLField(_("linkedin url"), max_length=250, unique=True, null=True, blank=True)
     facebook = models.URLField(_("facebook url"), max_length=250, unique=True, null=True, blank=True)
     instagram = models.URLField(_("instagram url"), max_length=250, unique=True, null=True, blank=True)
     github = models.URLField(_("github url"), max_length=250, unique=True, null=True, blank=True)
-    group = models.CharField(_("group"), max_length=50, default="CS-32")
+    group = models.CharField(
+        _("group"),
+        max_length=50,
+        choices=GroupChoices.choices,
+        default=GroupChoices.CS_32
+    )
     status_in_service = models.CharField(
         _("status_in_service"),
         max_length=50,
         choices=ServiceStatusChoices.choices,
         default=ServiceStatusChoices.USER
     )
-    is_staff = models.BooleanField(_("staff status"), default=False)
     posts = models.ForeignKey(
         Post,
         blank=True,

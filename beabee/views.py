@@ -121,19 +121,23 @@ class PostViewSet(viewsets.ModelViewSet):
                 post, data=request.data, partial=True
             )
             serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            author = post.user
+
+            if author == request.user:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
     def destroy(self, request, *args, **kwargs):
         post = get_object_or_404(Post, pk=kwargs["pk"])
         author = post.user
 
-        if author != request.user:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-            )
+        if author == request.user or request.user.status_in_service == "Creator":
+            super().destroy(request, *args, **kwargs)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return super().destroy(request, *args, **kwargs)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     @extend_schema(
         parameters=[
@@ -214,29 +218,30 @@ class CommentViewSet(viewsets.ModelViewSet):
             )
 
     def update(self, request, *args, **kwargs):
-        comment = get_object_or_404(
-            Comment, pk=kwargs["pk"], user=request.user
-        )
-        serializer = self.get_serializer(comment, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        commentator = comment.user
+        with transaction.atomic():
+            comment = get_object_or_404(
+                Comment, pk=kwargs["pk"], user=request.user
+            )
+            serializer = self.get_serializer(comment, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            commentator = comment.user
 
-        if request.user != commentator.user:
+            if request.user == commentator.user:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
             return Response(status=status.HTTP_403_FORBIDDEN)
-
-        serializer.save()
-        return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         comment = get_object_or_404(Comment, pk=kwargs["pk"])
-        post = comment.post
-        author = post.user
+        author = comment.post.user
         commentator = comment.user
 
-        if author != request.user and commentator != request.user:
-            return Response(status=status.HTTP_403_FORBIDDEN)
+        if author == request.user or commentator == request.user:
+            super().destroy(request, *args, **kwargs)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return super().destroy(request, *args, **kwargs)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     @extend_schema(
         parameters=[
@@ -298,6 +303,25 @@ class SubjectViewSet(viewsets.ModelViewSet):
             return Response(
                 serializer.data, status=status.HTTP_201_CREATED, headers=headers
             )
+
+    def update(self, request, *args, **kwargs):
+        with transaction.atomic():
+            subject = get_object_or_404(Subject, pk=kwargs["pk"])
+            serializer = self.get_serializer(subject, data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+            super().destroy(request, *args, **kwargs)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
 
     @extend_schema(
         parameters=[
@@ -363,11 +387,35 @@ class TeacherViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
-            headers = self.get_success_headers(serializer.data)
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED, headers=headers
-            )
+
+            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+                serializer.save()
+                headers = self.get_success_headers(serializer.data)
+                return Response(
+                    serializer.data, status=status.HTTP_201_CREATED, headers=headers
+                )
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def update(self, request, *args, **kwargs):
+        with transaction.atomic():
+            teacher = get_object_or_404(Teacher, pk=kwargs["pk"])
+            serializer = self.get_serializer(teacher, data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+            super().destroy(request, *args, **kwargs)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
 
     @extend_schema(
         parameters=[
@@ -454,11 +502,15 @@ class HomeworkViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save(added_by=request.user)
-            headers = self.get_success_headers(serializer.data)
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED, headers=headers
-            )
+
+            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+                serializer.save(added_by=request.user)
+                headers = self.get_success_headers(serializer.data)
+                return Response(
+                    serializer.data, status=status.HTTP_201_CREATED, headers=headers
+                )
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
     def update(self, request, *args, **kwargs):
         with transaction.atomic():
@@ -469,7 +521,7 @@ class HomeworkViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             author = homework.added_by
 
-            if author == request.user or request.user.status_in_service == "Creator":
+            if author == request.user:
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -480,7 +532,8 @@ class HomeworkViewSet(viewsets.ModelViewSet):
         author = news.posted_by
 
         if author == request.user or request.user.status_in_service == "Creator":
-            return super().destroy(request, *args, **kwargs)
+            super().destroy(request, *args, **kwargs)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(status=status.HTTP_403_FORBIDDEN)
 
@@ -572,7 +625,7 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             author = news.posted_by
 
-            if author == request.user or request.user.status_in_service == "Creator":
+            if author == request.user:
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -583,7 +636,8 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
         author = news.posted_by
 
         if author == request.user or request.user.status_in_service == "Creator":
-            return super().destroy(request, *args, **kwargs)
+            super().destroy(request, *args, **kwargs)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(status=status.HTTP_403_FORBIDDEN)
 
@@ -619,7 +673,7 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            if request.user.is_staff:
+            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
                 serializer.save(posted_by=request.user)
                 headers = self.get_success_headers(serializer.data)
                 return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -635,7 +689,7 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             author = imp_info.posted_by
 
-            if author == request.user or request.user.status_in_service == "Creator":
+            if author == request.user:
                 serializer.save()
                 return Response(serializer.data)
 
@@ -645,8 +699,11 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
         imp_info = get_object_or_404(ImportantInfo, pk=kwargs["pk"])
         author = imp_info.posted_by
 
-        if author == request.user or request.user.status_in_service == "Creator":
-            return super().destroy(request, *args, **kwargs)
+        if (
+                author == request.user and author.status_in_service != request.user.status_in_service
+        ) or request.user.status_in_service == "Creator":
+            super().destroy(request, *args, **kwargs)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(status=status.HTTP_403_FORBIDDEN)
 
@@ -672,4 +729,3 @@ class BanViewSet(viewsets.ModelViewSet):
     queryset = Ban.objects.all()
     serializer_class = BanSerializer
     permission_classes = [permissions.IsAdminUser]
-

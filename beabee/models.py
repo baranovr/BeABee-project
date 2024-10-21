@@ -80,11 +80,18 @@ def homework_file_path(instance, filename):
     return os.path.join("uploads/homeworks_files/", filename)
 
 
+class HomeworkTypeChoice(models.TextChoices):
+    MATH_PHYSICS = "Math/Physics"
+    PROG_NETWORKS = "Prog/Networks"
+    LANG_CULTURE = "Lang/Culture"
+
+
 class Homework(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField()
-    file = models.FileField(upload_to=homework_file_path)
+    file = models.FileField(upload_to=homework_file_path, null=True, blank=True)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    type = models.CharField(max_length=50, choices=HomeworkTypeChoice.choices)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField(null=True, blank=True)

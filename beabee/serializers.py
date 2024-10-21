@@ -130,6 +130,7 @@ class HomeworkSerializer(serializers.ModelSerializer):
             "description",
             "file",
             "subject",
+            "type",
             "teacher",
             "created_at",
             "deadline",

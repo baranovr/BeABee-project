@@ -46,8 +46,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'avatar', 'username', 'first_name', 'last_name', 'email',
-            'sex', 'birth_date', 'language', 'phone_number', 'country',
-            'twitter', 'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service', 'is_staff',
+            'sex', 'birth_date', 'phone_number', 'country', 'linkedin',
+            'facebook', 'instagram', 'github', 'group', 'status_in_service',
             'password', 'date_joined', 'is_banned', 'ban_reason', 'full_name'
         ]
         read_only_fields = ['is_banned', 'ban_reason', 'full_name', 'date_joined']
@@ -63,7 +63,8 @@ class UserSerializer(serializers.ModelSerializer):
 class MyProfileSerializer(UserSerializer):
     posts = serializers.SerializerMethodField()
 
-    def get_posts(self, obj):
+    @staticmethod
+    def get_posts(obj):
         posts = Post.objects.filter(user=obj)
         return PostSerializer(posts, many=True).data
 
@@ -71,8 +72,8 @@ class MyProfileSerializer(UserSerializer):
         model = User
         fields = [
             'id', 'avatar', 'username', 'first_name', 'last_name', 'full_name', 'email',
-            'sex', 'birth_date', 'language', 'phone_number', 'country',
-            'twitter', 'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service', 'is_staff',
+            'sex', 'birth_date', 'phone_number', 'country',
+            'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service',
             'date_joined', 'posts', 'is_banned', 'ban_reason'
         ]
         read_only_fields = ['is_banned', 'ban_reason', 'full_name', 'date_joined']
