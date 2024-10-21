@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { DashboardCard } from '@app/components/medical-dashboard/DashboardCard/DashboardCard';
 import { BaseCarousel } from '@app/components/common/BaseCarousel/Carousel';
 import { TeacherCard } from '@app/components/medical-dashboard/favoriteDoctors/TeacherCard/TeacherCard';
@@ -22,7 +21,6 @@ const PrevArrow = (props: any) => {
 };
 
 export const FavoritesTeachersCard: React.FC = () => {
-  const { t } = useTranslation();
   const [doctors, setDoctors] = useState<Teacher[]>([]);
   const [calendar, setCalendar] = useState<CalendarEvent[]>([]);
 
