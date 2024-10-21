@@ -44,7 +44,7 @@ export const FavoritesTeachersCard: React.FC = () => {
   );
 
   return (
-    <DashboardCard title={t('medical-dashboard.favoriteDoctors.title')} padding="0 20px">
+    <DashboardCard title={'All teachers'} padding="0 20px">
       {doctors.length > 0 && calendar.length > 0 && (
         <S.CarouselWrapper>
           <BaseCarousel
