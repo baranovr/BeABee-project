@@ -150,7 +150,7 @@
     "day": "day",
     "deleteQuestion": "Are you sure you want to delete?",
     "dermatologist": "Dermatologist",
-    "doctor": "Doctor",
+    "teacher": "Teacher",
     "dropdown": "Dropdown",
     "edit": "Edit",
     "email": "Email",
@@ -222,11 +222,11 @@
     "switch": "Switch",
     "tabs": "Tabs",
     "tags": "Tags",
-    "tempDiagnosis": "Without new treatments, the W.H.O. says, the number of new cancer patients could reach twenty-seven million.",
+    "tempDiagnosis": "Without new exams, the W.H.O. says, the number of new cancer patients could reach twenty-seven million.",
     "therapist": "Therapist",
     "today": "Today",
     "twoFactorAuthPage": "Two-Factor auth page",
-    "ui": "UI Components",
+    "future": "In future",
     "upload": "Upload",
     "verifCodeSent": "We have sent a verification code to your email",
     "verifyEmailPage": "Verify email page",
@@ -249,14 +249,14 @@
       "title": "Blood screening",
       "units": "Units"
     },
-    "bones": "Bones",
+    "lang_culture": "Lang/Culture",
     "covid": {
       "casesPerDay": "cases/day",
       "deaths": "deaths",
       "title": "Real COVID-19 Statistics"
     },
-    "fat": "Fat",
-    "favoriteDoctors": {
+    "prog_networks": "Prog/Networks",
+    "favoriteTeachers": {
       "lastVisit": "Last visit",
       "title": "All teachers"
     },
@@ -279,11 +279,11 @@
       },
       "title": "Subjects"
     },
-    "latestScreenings": {
-      "friends": "Friends",
+    "homeworkTypesPopularity": {
+      "teachers": "Teachers",
       "month": "Month",
       "statistics": "Statistics",
-      "title": "Latest screenings"
+      "title": "Homework types popularity"
     },
     "map": {
       "polyclinic": "Polyclinic"
@@ -291,7 +291,7 @@
     "news": "Homeworks",
     "patientResults": {
       "patientAdmission": {
-        "description": "Admission of a patient means allowing and facilitating a patient to stay in the hospital unit or ward for observation, investigation, and treatment of the disease he or she is suffering from.",
+        "description": "Admission of a patient means allowing and facilitating a patient to stay in the hospital unit or ward for observation, investigation, and exam of the disease he or she is suffering from.",
         "title": "Patient admission"
       },
       "patientDischarge": {
@@ -299,17 +299,16 @@
         "title": "Patient's discharge"
       },
       "title": "Patient timeline",
-      "treatmentStarts": {
-        "description": "Part of the evaluation and treatment of any patient, regardless of condition or diagnosis, is an appropriate framework or pathway for diagnosis, treatment, and, if necessary, referral for specialty care.",
-        "title": "Treatment starts"
+      "examStarts": {
+        "description": "Part of the evaluation and exam of any patient, regardless of condition or diagnosis, is an appropriate framework or pathway for diagnosis, exam, and, if necessary, referral for specialty care.",
+        "title": "Exam starts"
       }
     },
-    "protein": "Protein",
-    "treatmentPlan": {
-      "noVisits": "No visits for that day",
-      "title": "Treatment plan"
-    },
-    "water": "Water"
+    "math_physics": "Math/Physics",
+    "examPlan": {
+      "noVisits": "No exams for that day",
+      "title": "Exam schedule"
+    }
   },
   "dataDisplay": {
     "avatars": {

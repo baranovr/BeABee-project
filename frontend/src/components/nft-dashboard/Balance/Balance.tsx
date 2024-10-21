@@ -55,10 +55,6 @@ export const Balance: React.FC = () => {
   return (
     <BaseRow>
       <BaseCol span={24}>
-        <S.TitleText level={2}>{t('nft.yourBalance')}</S.TitleText>
-      </BaseCol>
-
-      <BaseCol span={24}>
         <NFTCard isSider>
           <BaseRow gutter={[30, 30]}>
             <BaseCol span={24}>

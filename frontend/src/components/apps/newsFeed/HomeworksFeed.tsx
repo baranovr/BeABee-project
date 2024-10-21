@@ -34,7 +34,6 @@ export const HomeworksFeed: React.FC = () => {
                 imgUrl={post.img}
                 author={post.author}
                 avatar={post.avatarUrl}
-                tags={post.tags}
               />
             ))}
           </BaseFeed>

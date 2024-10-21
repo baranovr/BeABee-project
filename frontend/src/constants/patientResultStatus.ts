@@ -12,8 +12,8 @@ export const patientResultStatus: ResultStatus[] = [
   },
   {
     id: 2,
-    name: 'medical-dashboard.patientResults.treatmentStarts.title',
-    desc: 'medical-dashboard.patientResults.treatmentStarts.description',
+    name: 'medical-dashboard.patientResults.examStarts.title',
+    desc: 'medical-dashboard.patientResults.examStarts.description',
   },
   {
     id: 3,

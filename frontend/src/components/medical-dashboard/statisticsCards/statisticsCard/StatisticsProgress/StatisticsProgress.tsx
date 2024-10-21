@@ -4,7 +4,7 @@ import * as S from './StatisticsProgress.styles';
 
 interface StatisticsProgressProps {
   color: string;
-  unit: 'kg';
+  unit: '%';
   value: number;
 }
 

@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { DashboardCard } from '../DashboardCard/DashboardCard';
-import { DoctorsMap } from './DoctorsMap/DoctorsMap';
-import { Doctor, getDoctorsData } from 'api/doctors.api';
+import { TeachersMap } from '@app/components/medical-dashboard/mapCard/TeachersMap/TeachersMap';
+import { Teacher, getTeachersData } from '@app/api/doctors.api';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 
 export const MapCard: React.FC = () => {
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [teacher, setTeacher] = useState<Teacher[]>([]);
 
   useEffect(() => {
-    getDoctorsData().then((res) => setDoctors(res));
+    getTeachersData().then((res) => setTeacher(res));
   }, []);
 
   const theme = useAppSelector((state) => state.theme.theme);
@@ -18,7 +18,7 @@ export const MapCard: React.FC = () => {
 
   return (
     <DashboardCard padding={0}>
-      <DoctorsMap key={key} doctors={doctors} />
+      <TeachersMap key={key} teachers={teacher} />
     </DashboardCard>
   );
 };

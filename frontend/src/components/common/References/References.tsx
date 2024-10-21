@@ -19,12 +19,6 @@ export const References: React.FC = () => {
         <a href="https://github.com/baranovr" target="_blank" rel="noreferrer">
           <GithubOutlined />
         </a>
-        {/*<a href="https://twitter.com/altence_team" target="_blank" rel="noreferrer">*/}
-        {/*  <TwitterOutlined />*/}
-        {/*</a>*/}
-        {/*<a href="https://www.facebook.com/groups/altence" target="_blank" rel="noreferrer">*/}
-        {/*  <FacebookOutlined />*/}
-        {/*</a>*/}
         <a href="https://www.linkedin.com/in/ruslan-baranov-2b75902bb/" target="_blank" rel="noreferrer">
           <LinkedinOutlined />
         </a>

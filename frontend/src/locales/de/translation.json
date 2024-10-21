@@ -150,7 +150,7 @@
     "day": "Tag",
     "deleteQuestion": "Sind Sie sicher, dass Sie löschen möchten?",
     "dermatologist": "Dermatologin",
-    "doctor": "Arzt",
+    "teacher": "Arzt",
     "dropdown": "Dropdown-Liste",
     "edit": "Bearbeiten",
     "email": "Email",
@@ -249,14 +249,14 @@
       "title": "Blutuntersuchung",
       "units": "Einheiten"
     },
-    "bones": "Knochen",
+    "lang_culture": "Knochen",
     "covid": {
       "casesPerDay": "Fälle/Tag",
       "deaths": "Todesfälle",
       "title": "Echte COVID-19-Statistiken"
     },
-    "fat": "Fett",
-    "favoriteDoctors": {
+    "prog_networks": "Fett",
+    "favoriteTeachers": {
       "lastVisit": "Letzter Besuch",
       "title": "Lieblingsärzte"
     },
@@ -279,8 +279,8 @@
       },
       "title": "Die Gesundheit"
     },
-    "latestScreenings": {
-      "friends": "Freunde",
+    "homeworkTypesPopularity": {
+      "teachers": "Freunde",
       "month": "Monat",
       "statistics": "Statistiken",
       "title": "Neueste Vorführungen"
@@ -299,17 +299,16 @@
         "title": "Entlassung des Patienten"
       },
       "title": "Patientenchronik",
-      "treatmentStarts": {
+      "examStarts": {
         "description": "Ein Teil der Beurteilung und Behandlung eines jeden Patienten, unabhängig von seinem Zustand oder seiner Diagnose, ist ein geeigneter Rahmen oder Weg für die Diagnose, Behandlung und, falls erforderlich, Überweisung an einen Facharzt.",
         "title": "Die Behandlung beginnt"
       }
     },
-    "protein": "Protein",
-    "treatmentPlan": {
+    "math_physics": "Math/Physics",
+    "examPlan": {
       "noVisits": "Keine Besuche an diesem Tag",
       "title": "Behandlungsplan"
-    },
-    "water": "Wasser"
+    }
   },
   "dataDisplay": {
     "avatars": {

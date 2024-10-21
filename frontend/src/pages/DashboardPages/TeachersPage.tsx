@@ -2,15 +2,11 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { ScreeningsCard } from '@app/components/medical-dashboard/screeningsCard/ScreeningsCard/ScreeningsCard';
-import { ActivityCard } from '@app/components/medical-dashboard/activityCard/ActivityCard';
-import { TreatmentCard } from '@app/components/medical-dashboard/treatmentCard/TreatmentCard';
-import { CovidCard } from '@app/components/medical-dashboard/covidCard/CovidCard';
-import { SubjectCard } from '@app/components/medical-dashboard/SubjectCard/SubjectCard';
-import { FavoritesDoctorsCard } from '@app/components/medical-dashboard/favoriteDoctors/FavoriteDoctorsCard/FavoritesDoctorsCard';
+import { ExamCard } from '@app/components/medical-dashboard/treatmentCard/ExamCard';
+import { FavoritesTeachersCard } from '@app/components/medical-dashboard/favoriteDoctors/FavoriteTeachersCard/FavoritesTeachersCard';
 import { PatientResultsCard } from '@app/components/medical-dashboard/PatientResultsCard/PatientResultsCard';
 import { StatisticsCards } from '@app/components/medical-dashboard/statisticsCards/StatisticsCards';
-import { BloodScreeningCard } from '@app/components/medical-dashboard/bloodScreeningCard/BloodScreeningCard/BloodScreeningCard';
-import { NewsCard } from '@app/components/medical-dashboard/NewsCard/NewsCard';
+import { NewsCard } from '@app/components/medical-dashboard/TeacherCard/NewsCard';
 import { References } from '@app/components/common/References/References';
 import { useResponsive } from '@app/hooks/useResponsive';
 import * as S from './DashboardPage.styles';
@@ -32,28 +28,16 @@ const TeachersPage: React.FC = () => {
             </BaseRow>
           </BaseCol>
 
-          <BaseCol id="latest-screenings" span={24}>
+          <BaseCol id="homework-types-popularity" span={24}>
             <ScreeningsCard />
           </BaseCol>
 
-          <BaseCol id="treatment-plan" xl={24}>
-            <TreatmentCard />
+          <BaseCol id="exam-plan" xl={24}>
+            <ExamCard />
           </BaseCol>
 
-          <BaseCol id="covid" xl={24}>
-            <CovidCard />
-          </BaseCol>
-
-          <BaseCol id="activity" xl={24} xxl={12}>
-            <ActivityCard />
-          </BaseCol>
-
-          <BaseCol id="subject" xl={24} xxl={12}>
-            <SubjectCard />
-          </BaseCol>
-
-          <BaseCol id="favorite-doctors" xl={24}>
-            <FavoritesDoctorsCard />
+          <BaseCol id="favorite-Teachers" xl={24}>
+            <FavoritesTeachersCard />
           </BaseCol>
 
           <BaseCol id="news" span={24}>
@@ -64,9 +48,6 @@ const TeachersPage: React.FC = () => {
       </S.LeftSideCol>
 
       <S.RightSideCol xl={8} xxl={7}>
-        <div id="blood-screening">
-          <BloodScreeningCard />
-        </div>
         <S.Space />
         <S.ScrollWrapper id="patient-timeline">
           <PatientResultsCard />
@@ -79,36 +60,20 @@ const TeachersPage: React.FC = () => {
     <BaseRow gutter={[20, 20]}>
       <StatisticsCards />
 
-      <BaseCol id="latest-screenings" xs={24} md={12} order={(isTablet && 5) || 0}>
+      <BaseCol id="homework-types-popularity" xs={24} md={12} order={(isTablet && 5) || 0}>
         <ScreeningsCard />
       </BaseCol>
 
-      <BaseCol id="activity" xs={24} md={12} order={(isTablet && 8) || 0}>
-        <ActivityCard />
-      </BaseCol>
-
-      <BaseCol id="treatment-plan" xs={24} md={24} order={(isTablet && 10) || 0}>
-        <TreatmentCard />
-      </BaseCol>
-
-      <BaseCol id="subjects" xs={24} md={12} order={(isTablet && 9) || 0}>
-        <SubjectCard />
+      <BaseCol id="exam-plan" xs={24} md={24} order={(isTablet && 10) || 0}>
+        <ExamCard />
       </BaseCol>
 
       <BaseCol id="patient-timeline" xs={24} md={12} order={(isTablet && 11) || 0}>
         <PatientResultsCard />
       </BaseCol>
 
-      <BaseCol id="blood-screening" xs={24} md={12} order={(isTablet && 6) || 0}>
-        <BloodScreeningCard />
-      </BaseCol>
-
-      <BaseCol id="favorite-doctors" xs={24} md={24} order={(isTablet && 13) || 0}>
-        <FavoritesDoctorsCard />
-      </BaseCol>
-
-      <BaseCol id="covid" xs={24} md={12} order={(isTablet && 12) || 0}>
-        <CovidCard />
+      <BaseCol id="favorite-Teachers" xs={24} md={24} order={(isTablet && 13) || 0}>
+        <FavoritesTeachersCard />
       </BaseCol>
 
       <BaseCol id="news" xs={24} md={24} order={(isTablet && 14) || 0}>

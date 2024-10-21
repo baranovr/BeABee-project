@@ -2,13 +2,11 @@ import React, { ReactNode, useState, useEffect, useCallback, useMemo } from 'rea
 import { useTranslation } from 'react-i18next';
 import { RangeValue } from 'rc-picker/lib/interface.d';
 import { BaseHashTag, IHashTag } from '@app/components/common/BaseHashTag/BaseHashTag';
-import { AuthorValidator, TitleValidator, DatesValidator, TagsValidator } from '../Validator';
+import { AuthorValidator, TitleValidator, DatesValidator } from '../Validator';
 import { useResponsive } from '@app/hooks/useResponsive';
-import { newsTags as defaultTags } from '@app/constants/newsTags';
 import { AppDate, Dates } from '@app/constants/Dates';
 import { Post } from '@app/api/homeworks.api';
 import * as S from './HomeworksFilter.styles';
-import { BaseDropdown } from '@app/components/common/BaseDropdown/Dropdown';
 
 interface NewsFilterProps {
   news: Post[];
@@ -19,7 +17,6 @@ interface NewsFilterProps {
 interface Filter {
   author: string;
   title: string;
-  newsTagData: IHashTag[];
   onTagClick: (tag: IHashTag) => void;
   selectedTagsIds: Array<string>;
   selectedTags: IHashTag[];
@@ -32,9 +29,7 @@ interface Filter {
 const Filter: React.FC<Filter> = ({
   author,
   title,
-  newsTagData,
   onTagClick,
-  selectedTagsIds,
   selectedTags,
   dates,
   onApply,
@@ -51,26 +46,6 @@ const Filter: React.FC<Filter> = ({
   const resetFilter = () => {
     onReset();
   };
-
-  const items = useMemo(
-    () =>
-      newsTagData.map((tag, i) => ({
-        key: `${i + 1}`,
-        label: (
-          <S.TagPopoverLine
-            key={tag.id}
-            onClick={(e) => {
-              onTagClick(tag);
-              e.stopPropagation();
-            }}
-          >
-            <S.PopoverCheckbox checked={selectedTagsIds.includes(tag.id)} />
-            <BaseHashTag title={tag.title} bgColor={tag.bgColor} />
-          </S.TagPopoverLine>
-        ),
-      })),
-    [newsTagData, onTagClick, selectedTagsIds],
-  );
 
   return (
     <S.FilterWrapper>
@@ -93,13 +68,6 @@ const Filter: React.FC<Filter> = ({
           onChange={(event) => updateFilteredField('title', event.target.value)}
         />
       </S.InputWrapper>
-
-      <BaseDropdown placement="bottom" trigger={['click']} menu={{ items }}>
-        <S.AddTagWrapper>
-          <S.PlusIcon />
-          <S.AddTagText>{t('newsFeed.tag')}</S.AddTagText>
-        </S.AddTagWrapper>
-      </BaseDropdown>
 
       {!!selectedTags.length && (
         <S.TagsWrapper>
@@ -132,7 +100,7 @@ const Filter: React.FC<Filter> = ({
   );
 };
 
-export const HomeworksFilter: React.FC<NewsFilterProps> = ({ news, newsTags, children }) => {
+export const HomeworksFilter: React.FC<NewsFilterProps> = ({ news, children }) => {
   const [filterFields, setFilterFields] = useState<{
     author: string;
     title: string;
@@ -150,7 +118,6 @@ export const HomeworksFilter: React.FC<NewsFilterProps> = ({ news, newsTags, chi
   const { mobileOnly } = useResponsive();
   const { t } = useTranslation();
 
-  const newsTagData = Object.values(newsTags || defaultTags);
   const selectedTagsIds = useMemo(() => selectedTags.map((item) => item.id), [selectedTags]);
 
   const onTagClick = useCallback(
@@ -181,14 +148,12 @@ export const HomeworksFilter: React.FC<NewsFilterProps> = ({ news, newsTags, chi
           const enteredAuthor = author.toLowerCase();
           const postTitle = post.title.toLowerCase();
           const enteredTitle = title.toLowerCase();
-          const postTags = post.tags;
           const postDate = Dates.getDate(post.date);
 
           const fieldsValidators = [
             new AuthorValidator(postAuthor, enteredAuthor),
             new TitleValidator(postTitle, enteredTitle),
             new DatesValidator(postDate, dates),
-            new TagsValidator(postTags, selectedTags),
           ];
 
           return fieldsValidators.map((validator) => validator.validate()).every((i) => i);
@@ -243,7 +208,6 @@ export const HomeworksFilter: React.FC<NewsFilterProps> = ({ news, newsTags, chi
               <Filter
                 author={author}
                 title={title}
-                newsTagData={newsTagData}
                 onTagClick={onTagClick}
                 selectedTagsIds={selectedTagsIds}
                 selectedTags={selectedTags}
@@ -266,7 +230,6 @@ export const HomeworksFilter: React.FC<NewsFilterProps> = ({ news, newsTags, chi
           <Filter
             author={author}
             title={title}
-            newsTagData={newsTagData}
             onTagClick={onTagClick}
             selectedTagsIds={selectedTagsIds}
             selectedTags={selectedTags}

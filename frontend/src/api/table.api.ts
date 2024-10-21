@@ -56,7 +56,7 @@ export const getBasicTableData = (pagination: Pagination): Promise<BasicTableDat
             name: 'Jim Green',
             age: 42,
             address: 'London No. 1 Lake Park',
-            tags: [{ value: 'Doctor', priority: Priority.HIGH }],
+            tags: [{ value: 'Teacher', priority: Priority.HIGH }],
           },
           {
             key: 3,
@@ -146,7 +146,7 @@ export const getBasicTableData = (pagination: Pagination): Promise<BasicTableDat
             address: 'Brest',
             tags: [
               { value: 'Professor', priority: Priority.LOW },
-              { value: 'Doctor', priority: Priority.HIGH },
+              { value: 'Teacher', priority: Priority.HIGH },
             ],
           },
           {

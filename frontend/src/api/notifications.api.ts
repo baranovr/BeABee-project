@@ -31,7 +31,7 @@ export const notifications = [
     userName: 'Steve Manson',
     userIcon:
       'https://res.cloudinary.com/lapkinthegod/image/upload/v1629187274/young-male-doctor-white-uniform_x7dcrs.jpg',
-    place: 'medical-dashboard.latestScreenings.title',
-    href: `/#latest-screenings`,
+    place: 'medical-dashboard.homeworkTypesPopularity.title',
+    href: `/#homework-types-popularity`,
   },
 ];

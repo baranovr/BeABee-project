@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { RecentActivityHeader } from '@app/components/nft-dashboard/recentActivity/RecentActivityHeader/RecentActivityHeader';
 import { RecentActivityFeed } from '@app/components/nft-dashboard/recentActivity/recentActivityFeed/RecentActivityFeed';
-import { RecentActivityFilter } from '@app/components/nft-dashboard/recentActivity/recentActivityFilters/RecentActivityFilter';
-import { useResponsive } from '@app/hooks/useResponsive';
 import { Activity, getActivities } from '@app/api/activity.api';
-import * as S from './RecentActivity.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 
@@ -20,8 +17,6 @@ export const RecentActivity: React.FC = () => {
   const [filters, setFilters] = useState<RecentActivityFilterState>({
     status: [],
   });
-
-  const { isDesktop } = useResponsive();
 
   useEffect(() => {
     getActivities().then((res) => setActivity(res));
@@ -48,12 +43,6 @@ export const RecentActivity: React.FC = () => {
       <BaseCol xs={24} sm={24} md={24} xl={16}>
         <RecentActivityFeed activity={filteredActivity} hasMore={hasMore} next={next} />
       </BaseCol>
-
-      {isDesktop && (
-        <S.FilterCol span={8}>
-          <RecentActivityFilter filters={filters} setFilters={setFilters} withWrapper />
-        </S.FilterCol>
-      )}
     </BaseRow>
   );
 };

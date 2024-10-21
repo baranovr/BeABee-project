@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ScreeningsHeader } from '../ScreeningsHeader/ScreeningsHeader';
-import { ScreeningsFriends } from '../screeningsFriends/ScreeningsFriends/ScreeningsFriends';
+import { HomeworkTypesTeachers } from '@app/components/medical-dashboard/screeningsCard/screeningsFriends/HomeworkTypesTeachers/HomeworkTypesTeachers';
 import { ScreeningsChart } from '../ScreeningsChart/ScreeningsChart';
 import { getScreenings, Screening } from '@app/api/screenings.api';
 import { Dates } from '@app/constants/Dates';
 import { getStatistics, Statistic } from '@app/api/statistics.api';
 import { getSmoothRandom } from '@app/utils/utils';
-import { Doctor, getDoctorsData } from '@app/api/doctors.api';
+import { Teacher, getTeachersData } from '@app/api/doctors.api';
 import * as S from './ScreeningsCard.styles';
 
 export interface CurrentStatisticsState {
@@ -19,7 +19,7 @@ export interface CurrentStatisticsState {
 export type ScreeningWithDoctors = Screening & { name: string; imgUrl: string };
 
 export const ScreeningsCard: React.FC = () => {
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [doctors, setDoctors] = useState<Teacher[]>([]);
   const [statistics, setStatistics] = useState<Statistic[]>([]);
   const [screenings, setScreenings] = useState<Screening[]>([]);
   const [currentStatistics, setCurrentStatistics] = useState<CurrentStatisticsState>({
@@ -39,7 +39,7 @@ export const ScreeningsCard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    getDoctorsData().then((res) => setDoctors(res));
+    getTeachersData().then((res) => setDoctors(res));
   }, []);
 
   const months = useMemo(() => Array.from({ length: 12 }, (_, i) => i), []);
@@ -106,7 +106,7 @@ export const ScreeningsCard: React.FC = () => {
       title={<ScreeningsHeader currentStatistics={currentStatistics} setCurrentStatistics={setCurrentStatistics} />}
       padding={0}
     >
-      <ScreeningsFriends
+      <HomeworkTypesTeachers
         screenings={screeningsWithDoctors}
         currentStatistics={currentStatistics}
         setCurrentStatistics={setCurrentStatistics}

@@ -15,7 +15,7 @@ interface StatisticsCardProps {
   value: number;
   prevValue: number;
   color: StatisticColor;
-  unit: 'kg';
+  unit: '%';
   Icon: React.FC;
 }
 

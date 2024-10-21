@@ -17,13 +17,11 @@ export interface UserModel {
   lang: 'en' | 'de';
   country: string;
   city: string;
-  address1: string;
-  address2?: string;
-  zipcode: number;
-  website?: string;
+  group: string;
   socials?: {
-    twitter?: string;
+    instagram?: string;
     facebook?: string;
     linkedin?: string;
+    github?: string;
   };
 }

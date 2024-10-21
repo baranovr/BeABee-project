@@ -44,7 +44,7 @@ export const DesktopScreenings: React.FC<DesktopScreeningsProps> = ({ screenings
         <BaseRow justify={isMenuOpen ? 'space-between' : 'center'}>
           {isMenuOpen && (
             <BaseCol>
-              <S.Title>{t('medical-dashboard.latestScreenings.friends')}</S.Title>
+              <S.Title>{t('medical-dashboard.homeworkTypesPopularity.teachers')}</S.Title>
             </BaseCol>
           )}
 

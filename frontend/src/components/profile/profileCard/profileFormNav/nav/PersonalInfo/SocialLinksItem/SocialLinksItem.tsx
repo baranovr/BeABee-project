@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TwitterOutlined } from '@ant-design/icons';
+import { GithubOutlined, InstagramOutlined } from '@ant-design/icons';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 import { ClipboardInput } from 'components/common/inputs/ClipboardInput/ClipboardInput';
 import { OpenURLInput } from '@app/components/common/inputs/OpenURLInput/OpenURLInput';
@@ -19,12 +19,12 @@ export const SocialLinksItem: React.FC = () => {
         <BaseCol xs={24} md={12}>
           <BaseButtonsForm.Item shouldUpdate>
             {({ getFieldValue }) => {
-              const twitter = getFieldValue('twitter');
+              const instagram = getFieldValue('instagram');
 
               return (
                 <label>
-                  <BaseButtonsForm.Item name="twitter">
-                    <ClipboardInput valueToCopy={twitter} addonBefore={<TwitterOutlined />} />
+                  <BaseButtonsForm.Item name="instagram">
+                    <ClipboardInput valueToCopy={instagram} addonBefore={<InstagramOutlined />} />
                   </BaseButtonsForm.Item>
                 </label>
               );
@@ -72,6 +72,29 @@ export const SocialLinksItem: React.FC = () => {
                     ]}
                   >
                     <OpenURLInput href={facebook} target="_blank" addonBefore={<FacebookIcon />} />
+                  </BaseButtonsForm.Item>
+                </label>
+              );
+            }}
+          </BaseButtonsForm.Item>
+        </BaseCol>
+        <BaseCol xs={24} md={12}>
+          <BaseButtonsForm.Item shouldUpdate>
+            {({ getFieldValue }) => {
+              const linkedin = getFieldValue('github');
+
+              return (
+                <label>
+                  <BaseButtonsForm.Item
+                    name="github"
+                    rules={[
+                      {
+                        pattern: new RegExp(websitePattern),
+                        message: t('profile.nav.personalInfo.notValidWebsite'),
+                      },
+                    ]}
+                  >
+                    <OpenURLInput href={linkedin} target="_blank" addonBefore={<GithubOutlined />} />
                   </BaseButtonsForm.Item>
                 </label>
               );

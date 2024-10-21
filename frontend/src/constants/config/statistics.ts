@@ -1,8 +1,7 @@
 import { FC } from 'react';
-import { ReactComponent as BonesIcon } from '@app/assets/icons/bones.svg';
-import { ReactComponent as FatIcon } from '@app/assets/icons/fat.svg';
-import { ReactComponent as ProteinIcon } from '@app/assets/icons/protein.svg';
-import { ReactComponent as WaterBalanceIcon } from '@app/assets/icons/water.svg';
+import { ReactComponent as LangCultureIcon } from '@app/assets/icons/lang_culture.svg';
+import { ReactComponent as ProgNetworksIcon } from '@app/assets/icons/prog_networks.svg';
+import { ReactComponent as MathPhysicsIcon } from '@app/assets/icons/math_physics.svg';
 
 export type StatisticColor = 'primary' | 'error' | 'secondary' | 'success';
 
@@ -17,30 +16,23 @@ interface ConfigStatistic {
 export const statistics: ConfigStatistic[] = [
   {
     id: 1,
-    name: 'protein',
-    title: 'medical-dashboard.protein',
+    name: 'math_physics',
+    title: 'medical-dashboard.math_physics',
     color: 'success',
-    Icon: ProteinIcon,
+    Icon: MathPhysicsIcon,
   },
   {
     id: 2,
-    name: 'fat',
-    title: 'medical-dashboard.fat',
+    name: 'Prog/Networks',
+    title: 'medical-dashboard.prog_networks',
     color: 'error',
-    Icon: FatIcon,
+    Icon: ProgNetworksIcon,
   },
   {
     id: 3,
-    name: 'bones',
-    title: 'medical-dashboard.bones',
+    name: 'Lang/Culture',
+    title: 'medical-dashboard.lang_culture',
     color: 'primary',
-    Icon: BonesIcon,
-  },
-  {
-    id: 4,
-    name: 'water',
-    title: 'medical-dashboard.water',
-    color: 'secondary',
-    Icon: WaterBalanceIcon,
+    Icon: LangCultureIcon,
   },
 ];

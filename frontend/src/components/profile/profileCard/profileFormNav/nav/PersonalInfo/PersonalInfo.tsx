@@ -7,14 +7,11 @@ import { LastNameItem } from '@app/components/profile/profileCard/profileFormNav
 import { NicknameItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/NicknameItem/NicknameItem';
 import { SexItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/SexItem/SexItem';
 import { BirthdayItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/BirthdayItem/BirthdayItem';
-import { LanguageItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/LanguageItem/LanguageItem';
+import { GroupItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/GroupItem/GroupItem';
 import { PhoneItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/PhoneItem/PhoneItem';
 import { EmailItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/EmailItem/EmailItem';
 import { CountriesItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/CountriesItem/CountriesItem';
 import { CitiesItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/CitiesItem/CitiesItem';
-import { ZipcodeItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/ZipcodeItem/ZipcodeItem';
-import { AddressItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/AddressItem/AddressItem';
-import { WebsiteItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/WebsiteItem/WebsiteItem';
 import { SocialLinksItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/SocialLinksItem/SocialLinksItem';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { Dates } from '@app/constants/Dates';
@@ -27,20 +24,18 @@ interface PersonalInfoFormValues {
   birthday?: string;
   lastName: string;
   country?: string;
-  website: string;
   city?: string;
-  address2: string;
   nickName: string;
-  address1: string;
   sex?: string;
   facebook: string;
   language?: string;
   linkedin: string;
-  zipcode: string;
   firstName: string;
-  twitter: string;
+  instagram: string;
+  github: string;
   phone: string;
   email: string;
+  group: string;
 }
 
 const initialPersonalInfoValues: PersonalInfoFormValues = {
@@ -54,13 +49,11 @@ const initialPersonalInfoValues: PersonalInfoFormValues = {
   email: '',
   country: undefined,
   city: undefined,
-  address1: '',
-  address2: '',
-  zipcode: '',
-  website: '',
-  twitter: '',
+  instagram: '',
   linkedin: '',
   facebook: '',
+  github: '',
+  group: '',
 };
 
 export const PersonalInfo: React.FC = () => {
@@ -83,13 +76,11 @@ export const PersonalInfo: React.FC = () => {
             language: user.lang,
             country: user.country,
             city: user.city,
-            address1: user.address1,
-            address2: user?.address2,
-            zipcode: user.zipcode,
-            website: user?.website,
-            twitter: user?.socials?.twitter,
+            instagram: user?.socials?.instagram,
             linkedin: user?.socials?.linkedin,
             facebook: user?.socials?.facebook,
+            github: user?.socials?.github,
+            group: user?.group,
           }
         : initialPersonalInfoValues,
     [user],
@@ -153,7 +144,7 @@ export const PersonalInfo: React.FC = () => {
           </BaseCol>
 
           <BaseCol xs={24} md={12}>
-            <LanguageItem />
+            <GroupItem />
           </BaseCol>
 
           <BaseCol span={24}>
@@ -184,26 +175,10 @@ export const PersonalInfo: React.FC = () => {
             <CitiesItem />
           </BaseCol>
 
-          <BaseCol xs={24} md={12}>
-            <AddressItem number={1} />
-          </BaseCol>
-
-          <BaseCol xs={24} md={12}>
-            <AddressItem number={2} />
-          </BaseCol>
-
-          <BaseCol xs={24} md={12}>
-            <ZipcodeItem />
-          </BaseCol>
-
           <BaseCol span={24}>
             <BaseButtonsForm.Item>
               <BaseButtonsForm.Title>{t('profile.nav.personalInfo.otherInfo')}</BaseButtonsForm.Title>
             </BaseButtonsForm.Item>
-          </BaseCol>
-
-          <BaseCol xs={24} md={12}>
-            <WebsiteItem />
           </BaseCol>
 
           <BaseCol span={24}>
