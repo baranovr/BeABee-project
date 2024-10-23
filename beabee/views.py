@@ -17,10 +17,13 @@ from beabee.serializers import (
     NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer, ExamSerializer,
     ExamListSerializer, ExamDetailSerializer, BanListSerializer, BanDetailSerializer
 )
+from beabee.сustom_permissions.is_not_banned_permission import IsNotBanned
+
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    permission_classes = [IsNotBanned]
 
     def get_queryset(self):
         name = self.request.query_params.get("name", None)
@@ -65,6 +68,7 @@ class TagViewSet(viewsets.ModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [IsNotBanned]
 
     @staticmethod
     def _params_to_ints(qs):
@@ -181,6 +185,7 @@ class PostViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    permission_classes = [IsNotBanned]
 
     def get_queryset(self):
         username = self.request.query_params.get("user__username", None)
@@ -276,6 +281,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
+    permission_classes = [IsNotBanned]
 
     def get_queryset(self):
         name = self.request.query_params.get("name", None)
@@ -349,6 +355,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
+    permission_classes = [IsNotBanned]
     
     def get_queryset(self):
         first_name = self.request.query_params.get("first_name", None)
@@ -463,6 +470,7 @@ class TeacherViewSet(viewsets.ModelViewSet):
 class ExamViewSet(viewsets.ModelViewSet):
     queryset = Exam.objects.all()
     serializer_class = ExamSerializer
+    permission_classes = [IsNotBanned]
 
     def get_queryset(self):
         date_time = self.request.query_params.get("date_time", None)
@@ -530,6 +538,7 @@ class ExamViewSet(viewsets.ModelViewSet):
 class HomeworkViewSet(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     serializer_class = HomeworkSerializer
+    permission_classes = [IsNotBanned]
 
     def get_queryset(self):
         title = self.request.query_params.get("title", None)
@@ -664,6 +673,7 @@ class FilterByTitleAndDateMixin:
 class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
+    permission_classes = [IsNotBanned]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -733,6 +743,7 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
 class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
     queryset = ImportantInfo.objects.all()
     serializer_class = ImportantInfoSerializer
+    permission_classes = [IsNotBanned]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -798,6 +809,7 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
 class BanViewSet(viewsets.ModelViewSet):
     queryset = Ban.objects.all()
     serializer_class = BanSerializer
+    permission_classes = [IsNotBanned]
 
     def get_serializer_class(self):
         if self.action == "list":
