@@ -6,7 +6,7 @@ from rest_framework import permissions
 
 class CreateUserViewSet(generics.CreateAPIView):
     serializer_class = UserSerializer
-    permission_classes = permissions.AllowAny
+    permission_classes = (permissions.AllowAny,)
 
 
 class MyProfileView(generics.RetrieveUpdateAPIView):

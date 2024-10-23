@@ -1,12 +1,10 @@
 import os
 import uuid
-from datetime import timedelta
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.utils.text import slugify
-from django.utils import timezone
 
 from beabee.models import Post
 
@@ -80,12 +78,12 @@ class User(AbstractUser):
         choices=SexTextChoices.choices
     )
     birth_date = models.DateField(_("birth date"))
-    phone_number = models.CharField(_("phone number"), max_length=50, unique=True, null=True, blank=True)
+    phone_number = models.CharField(_("phone number"), max_length=50, null=True, blank=True)
     country = models.CharField(_("country"), max_length=50, null=True, blank=True)
-    linkedin = models.URLField(_("linkedin url"), max_length=250, unique=True, null=True, blank=True)
-    facebook = models.URLField(_("facebook url"), max_length=250, unique=True, null=True, blank=True)
-    instagram = models.URLField(_("instagram url"), max_length=250, unique=True, null=True, blank=True)
-    github = models.URLField(_("github url"), max_length=250, unique=True, null=True, blank=True)
+    linkedin = models.URLField(_("linkedin url"), max_length=250, null=True, blank=True)
+    facebook = models.URLField(_("facebook url"), max_length=250, null=True, blank=True)
+    instagram = models.URLField(_("instagram url"), max_length=250, null=True, blank=True)
+    github = models.URLField(_("github url"), max_length=250, null=True, blank=True)
     group = models.CharField(
         _("group"),
         max_length=50,

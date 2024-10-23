@@ -7,6 +7,7 @@ from beabee.views import (
     CommentViewSet,
     SubjectViewSet,
     TeacherViewSet,
+    ExamViewSet,
     HomeworkViewSet,
     NewsViewSet,
     ImportantInfoViewSet,
@@ -22,6 +23,7 @@ router.register(r'posts', PostViewSet, basename='posts')
 router.register(r'comments', CommentViewSet, basename='comments')
 router.register(r'subjects', SubjectViewSet, basename='subjects')
 router.register(r'teachers', TeacherViewSet, basename='teachers')
+router.register(r'exams', ExamViewSet, basename='exams')
 router.register(r'homeworks', HomeworkViewSet, basename='homeworks')
 router.register(r'news', NewsViewSet, basename='news')
 router.register(r'importantinfo', ImportantInfoViewSet, basename='importantinfo')

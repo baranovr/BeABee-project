@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from beabee.models import Post
-from beabee.serializers import PostSerializer
-from .models import User
+from beabee.serializers import PostListSerializer
+from user.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class MyProfileSerializer(UserSerializer):
     @staticmethod
     def get_posts(obj):
         posts = Post.objects.filter(user=obj)
-        return PostSerializer(posts, many=True).data
+        return PostListSerializer(posts, many=True).data
 
     class Meta:
         model = User

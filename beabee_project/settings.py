@@ -60,13 +60,13 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'beabee.сustom_middlewares.ban_middleware.BanMiddleware',
+    'backend.beabee.сustom_middlewares.ban_middleware.BanMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'beabee_project.urls'
+ROOT_URLCONF = 'backend.beabee_project.urls'
 
 TEMPLATES = [
     {
@@ -84,9 +84,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'beabee_project.wsgi.application'
+WSGI_APPLICATION = 'backend.beabee_project.wsgi.application'
 
-ASGI_APPLICATION = 'beabee_project.asgi.application'
+ASGI_APPLICATION = 'backend.beabee_project.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {

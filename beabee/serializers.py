@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from beabee.models import (
-    Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban
+    Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
 )
 
 class BaseTagSubjectRelatedSerializer(serializers.ModelSerializer):
@@ -27,7 +27,9 @@ class TagDetailSerializer(BaseTagSubjectRelatedSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField()
     user = serializers.CharField(source='user.username', read_only=True)
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
 
     class Meta:
         model = Post
@@ -57,13 +59,14 @@ class PostDetailSerializer(PostListSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
+
     class Meta:
         model = Comment
         fields = (
             "id",
             "post",
             "text",
-            "user",
             "created_at",
         )
 
@@ -101,7 +104,7 @@ class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = (
-            "id", "first_name", "last_name", "surname", "subject", "degree"
+            "id", "teacher_avatar", "first_name", "last_name", "surname", "subject", "degree"
         )
 
 
@@ -119,7 +122,50 @@ class TeacherDetailSerializer(TeacherListSerializer):
         fields = TeacherSerializer.Meta.fields
 
 
+class ExamSerializer(serializers.ModelSerializer):
+    date_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = Exam
+        fields = (
+            "id",
+            "teacher",
+            "subject",
+            "date_time",
+            "group",
+        )
+
+
+class ExamListSerializer(ExamSerializer):
+    teacher_avatar = serializers.ImageField(source='teacher.teacher_avatar', read_only=True)
+    teacher_surname = serializers.CharField(source='teacher.surname', read_only=True)
+    teacher_first_name = serializers.CharField(source='teacher.first_name', read_only=True)
+    teacher_last_name = serializers.CharField(source='teacher.last_name', read_only=True)
+    subject = serializers.CharField(source='subject.name')
+
+    class Meta:
+        model = Exam
+        fields = (
+            "id",
+            "teacher_avatar",
+            "teacher_surname",
+            "teacher_first_name",
+            "teacher_last_name",
+            "subject",
+            "date_time",
+            "group",
+        )
+
+
+class ExamDetailSerializer(ExamListSerializer):
+    class Meta:
+        model = Exam
+        fields = ExamListSerializer.Meta.fields
+
+
 class HomeworkSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
+    deadline = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     added_by = serializers.CharField(source='added_by.username', read_only=True)
 
     class Meta:
@@ -156,6 +202,7 @@ class HomeworkDetailSerializer(HomeworkListSerializer):
 
 
 class NewsSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     posted_by = serializers.CharField(source='posted_by.username', read_only=True)
 
     class Meta:
@@ -164,7 +211,6 @@ class NewsSerializer(serializers.ModelSerializer):
             "id",
             "file",
             "title",
-            "description",
             "created_at",
             "posted_by"
         )
@@ -184,16 +230,19 @@ class NewsDetailSerializer(NewsSerializer):
 
 class ImportantInfoSerializer(serializers.ModelSerializer):
     posted_by = serializers.CharField(source='posted_by.username', read_only=True)
+    avatar = serializers.CharField(source='user.avatar', read_only=True)
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
 
     class Meta:
         model = ImportantInfo
         fields = (
             "id",
-            "file",
             "title",
+            "posted_by",
+            "file",
             "description",
             "created_at",
-            "posted_by"
+            "avatar"
         )
 
 
@@ -210,9 +259,11 @@ class ImportantInfoDetailDetailSerializer(ImportantInfoSerializer):
 
 
 class BanSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
+
     class Meta:
         model = Ban
-        fields = ['user', 'reason', 'created_at']
+        fields = ['id', 'user', 'reason', 'created_at']
 
     def create(self, validated_data):
         # При создании автоматически баним пользователя
@@ -222,3 +273,15 @@ class BanSerializer(serializers.ModelSerializer):
         # При удалении автоматически разбаниваем пользователя
         self.instance.user.unban()
         self.instance.delete()
+
+
+class BanListSerializer(BanSerializer):
+    class Meta:
+        model = Ban
+        fields = BanSerializer.Meta.fields
+
+
+class BanDetailSerializer(BanSerializer):
+    class Meta:
+        model = Ban
+        fields = BanSerializer.Meta.fields

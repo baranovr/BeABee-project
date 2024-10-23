@@ -4,17 +4,18 @@ from django.db import transaction
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from beabee.models import Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban
+from beabee.models import Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
 from beabee.serializers import (
     TagSerializer, TagListSerializer, TagDetailSerializer, PostSerializer, PostListSerializer,
     PostDetailSerializer, CommentListSerializer, CommentDetailSerializer, CommentSerializer, SubjectListSerializer,
     SubjectDetailSerializer, SubjectSerializer, TeacherSerializer, TeacherListSerializer, TeacherDetailSerializer,
     HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer,
-    NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer
+    NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer, ExamSerializer,
+    ExamListSerializer, ExamDetailSerializer, BanListSerializer, BanDetailSerializer
 )
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -192,7 +193,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         if created_date:
             date_c = datetime.strptime(
-                created_date, "%Y-%m-%d"
+                created_date, "%Y-%m-%d-%H-%M"
             ).date()
             queryset = queryset.filter(created_date__date=date_c)
 
@@ -274,7 +275,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
-    serializer_class = TagSerializer
+    serializer_class = SubjectSerializer
 
     def get_queryset(self):
         name = self.request.query_params.get("name", None)
@@ -299,6 +300,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
+            serializer.save()
             headers = self.get_success_headers(serializer.data)
             return Response(
                 serializer.data, status=status.HTTP_201_CREATED, headers=headers
@@ -311,6 +313,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
 
             if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+                serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             return Response(status=status.HTTP_403_FORBIDDEN)
@@ -457,6 +460,73 @@ class TeacherViewSet(viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
 
 
+class ExamViewSet(viewsets.ModelViewSet):
+    queryset = Exam.objects.all()
+    serializer_class = ExamSerializer
+
+    def get_queryset(self):
+        date_time = self.request.query_params.get("date_time", None)
+
+        queryset = self.queryset
+
+        if date_time:
+            date_t = datetime.strptime(
+                date_time, "%Y-%m-%d-%H-%M"
+            ).date()
+            queryset = queryset.filter(date_time__datetime=date_t)
+
+        return queryset.distinct()
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ExamListSerializer
+
+        if self.action == "retrieve":
+            return ExamDetailSerializer
+
+        return ExamSerializer
+
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+                serializer.save()
+                headers = self.get_success_headers(serializer.data)
+                return Response(
+                    serializer.data, status=status.HTTP_201_CREATED, headers=headers
+                )
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+            super().destroy(request, *args, **kwargs)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="date_time",
+                type=OpenApiTypes.DATETIME,
+                description="Filter homework by date_time",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        """
+        List all exams, or create a new exam.
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return super().list(request, *args, **kwargs)
+
+
 class HomeworkViewSet(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     serializer_class = HomeworkSerializer
@@ -477,13 +547,13 @@ class HomeworkViewSet(viewsets.ModelViewSet):
 
         if created_date:
             date_c = datetime.strptime(
-                created_date, "%Y-%m-%d"
+                created_date, "%Y-%m-%d-%H-%M"
             ).date()
             queryset = queryset.filter(created_date__date=date_c)
 
         if deadline:
             dead_date = datetime.strptime(
-                deadline, "%Y-%m-%d"
+                deadline, "%Y-%m-%d-%H-%M"
             ).date()
             queryset = queryset.filter(deadline__date=dead_date)
 
@@ -584,7 +654,7 @@ class FilterByTitleAndDateMixin:
 
         if created_date:
             date_c = datetime.strptime(
-                created_date, "%Y-%m-%d"
+                created_date, "%Y-%m-%d-%H-%M"
             ).date()
             queryset = queryset.filter(created_date__date=date_c)
 
@@ -728,4 +798,44 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
 class BanViewSet(viewsets.ModelViewSet):
     queryset = Ban.objects.all()
     serializer_class = BanSerializer
-    permission_classes = [permissions.IsAdminUser]
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return BanListSerializer
+
+        if self.action == "retrieve":
+            return BanDetailSerializer
+
+        return BanSerializer
+
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            banned_user = serializer.validated_data["user"]
+
+            if (
+                    banned_user != request.user and
+                    request.user.status_in_service == "Admin" and
+                    banned_user.status_in_service != "Admin" and
+                    banned_user.status_in_service != "Creator"
+            ) or request.user.status_in_service == "Creator" and banned_user != request.user:
+                serializer.save(banned_by=request.user)
+                headers = self.get_success_headers(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        ban = get_object_or_404(Ban, pk=kwargs["pk"])
+        banned_user = ban.user
+
+        if (
+                ban.user != request.user or
+                banned_user.status_in_service != request.user.status_in_service or
+                request.user.status_in_service == "Creator"
+        ):
+            super().destroy(request, *args, **kwargs)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status=status.HTTP_403_FORBIDDEN)
