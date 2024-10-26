@@ -30,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.language = validated_data.get('language', instance.language)
         instance.phone_number = validated_data.get('phone_number', instance.phone_number)
         instance.country = validated_data.get('country', instance.country)
+        instance.city = validated_data.get('city', instance.city)
         instance.twitter = validated_data.get('twitter', instance.twitter)
         instance.linkedin = validated_data.get('linkedin', instance.linkedin)
         instance.facebook = validated_data.get('facebook', instance.facebook)
@@ -46,7 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'avatar', 'username', 'first_name', 'last_name', 'email',
-            'sex', 'birth_date', 'phone_number', 'country', 'linkedin',
+            'sex', 'birth_date', 'phone_number', 'country', 'city', 'linkedin',
             'facebook', 'instagram', 'github', 'group', 'status_in_service',
             'password', 'date_joined', 'is_banned', 'ban_reason', 'full_name'
         ]
@@ -72,7 +73,7 @@ class MyProfileSerializer(UserSerializer):
         model = User
         fields = [
             'id', 'avatar', 'username', 'first_name', 'last_name', 'full_name', 'email',
-            'sex', 'birth_date', 'phone_number', 'country',
+            'sex', 'birth_date', 'phone_number', 'country', 'city',
             'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service',
             'date_joined', 'posts', 'is_banned', 'ban_reason'
         ]
