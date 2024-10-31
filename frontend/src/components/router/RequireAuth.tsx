@@ -4,7 +4,8 @@ import { useAppSelector } from '@app/hooks/reduxHooks';
 import { WithChildrenProps } from '@app/types/generalTypes';
 
 const RequireAuth: React.FC<WithChildrenProps> = ({ children }) => {
-  const token = useAppSelector((state) => state.auth.token);
+  const auth = useAppSelector((state) => state.auth);
+  const token = auth?.accessToken;
 
   return token ? <>{children}</> : <Navigate to="/auth/login" replace />;
 };

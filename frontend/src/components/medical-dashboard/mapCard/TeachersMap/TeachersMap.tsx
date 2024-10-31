@@ -55,12 +55,7 @@ export const TeachersMap: React.FC<TeachersMapProps> = ({ teachers }) => {
           position={[marker.gps?.latitude || 0, marker.gps?.longitude || 0]}
         >
           <Popup>
-            <TeacherProfile
-              avatar={marker.imgUrl}
-              name={marker.name}
-              speciality={marker.specifity}
-              rating={marker.rating}
-            />
+            <TeacherProfile avatar={marker.imgUrl} name={marker.name} speciality={marker.specifity} />
           </Popup>
         </Marker>
       ))}

@@ -1,7 +1,7 @@
 interface Result {
   id: number;
   status: number;
-  date: number;
+  date: string | number;
   isActive: boolean;
 }
 
@@ -15,13 +15,13 @@ export const patientResultsData: Array<Result> = [
   {
     id: 2,
     status: 2,
-    date: Date.now(),
+    date: '02.15.2024',
     isActive: false,
   },
   {
     id: 3,
     status: 3,
-    date: Date.now() + 5 * 24 * 3600 * 1000,
+    date: '11.02.2023',
     isActive: false,
   },
 ];

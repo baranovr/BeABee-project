@@ -7,6 +7,7 @@ import loginBackground from '@app/assets/images/login-bg.webp';
 import { BORDER_RADIUS, FONT_SIZE, FONT_WEIGHT, media } from '@app/styles/themes/constants';
 import { BaseCheckbox } from '@app/components/common/BaseCheckbox/BaseCheckbox';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
+import { Select } from 'antd';
 
 export const Wrapper = styled.div`
   height: 100vh;
@@ -194,5 +195,22 @@ export const SocialIconWrapper = styled.div`
 
   @media only screen and ${media.md} {
     margin-right: 0.8125rem;
+  }
+`;
+
+export const FormSelect = styled(Select)`
+  color: var(--text-main-color);
+  background: transparent;
+
+  & .ant-select-selector {
+    border-radius: ${BORDER_RADIUS};
+    height: 3.125rem;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  & .ant-select-selection-item {
+    color: var(--text-main-color);
   }
 `;

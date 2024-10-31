@@ -1,36 +1,15 @@
 import { UserModel } from '@app/domain/UserModel';
-const avatarImg = process.env.REACT_APP_ASSETS_BUCKET + '/avatars/avatar5.webp';
 
-const testUser = {
-  id: 1,
-  firstName: 'Chris',
-  lastName: 'Johnson',
-  imgUrl: avatarImg,
-  userName: '@john1989',
-  email: 'chris.johnson@altence.com',
-  phone: '+18143519459',
-  sex: 'male',
-  birthday: '01/26/2022',
-  lang: 'en',
-  country: 'GB',
-  city: 'London',
-  address1: '14 London Road',
-  zipcode: 5211,
-  website: 'altence.com',
-  socials: {
-    instagram: '@altence_team',
-    facebook: 'https://facebook.com/groups/1076577369582221',
-    linkedin: 'https://linkedin.com/company/altence',
-    github: 'https://linkedin.com/company/altence/',
-  },
+export const persistToken = (token: string, type: 'access' | 'refresh'): void => {
+  localStorage.setItem(`${type}Token`, token);
 };
 
-export const persistToken = (token: string): void => {
-  localStorage.setItem('accessToken', token);
+export const readToken = (type: 'access' | 'refresh'): string | null => {
+  return localStorage.getItem(`${type}Token`);
 };
 
-export const readToken = (): string => {
-  return localStorage.getItem('accessToken') || 'bearerToken';
+export const deleteToken = (type: 'access' | 'refresh'): void => {
+  localStorage.removeItem(`${type}Token`);
 };
 
 export const persistUser = (user: UserModel): void => {
@@ -40,8 +19,10 @@ export const persistUser = (user: UserModel): void => {
 export const readUser = (): UserModel | null => {
   const userStr = localStorage.getItem('user');
 
-  return userStr ? JSON.parse(userStr) : testUser;
+  // Проверяем наличие значения в userStr
+  return userStr ? JSON.parse(userStr) : null;
 };
 
-export const deleteToken = (): void => localStorage.removeItem('accessToken');
-export const deleteUser = (): void => localStorage.removeItem('user');
+export const deleteUser = (): void => {
+  localStorage.removeItem('user');
+};

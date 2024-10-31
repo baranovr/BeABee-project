@@ -1,33 +1,33 @@
 import React from 'react';
 import { useResponsive } from '@app/hooks/useResponsive';
-import { NftItem } from '@app/api/mainpageDashboard.api';
+import { NewsItem } from '@app/api/mainpageDashboard.api';
 import { formatNumberWithCommas, getCurrencyPrice } from '@app/utils/utils';
 import { CurrencyTypeEnum } from '@app/interfaces/interfaces';
 import * as S from './NftCard.styles';
 
 interface NftCardProps {
-  nftItem: NftItem;
+  newsItem: NewsItem;
 }
 
-export const NftCard: React.FC<NftCardProps> = ({ nftItem }) => {
+export const NftCard: React.FC<NftCardProps> = ({ newsItem }) => {
   const { isTablet } = useResponsive();
 
   const tabletLayout = (
     <>
       <S.InfoHeader>
-        <S.InfoText>@{nftItem.author}</S.InfoText>
+        <S.InfoText>@{newsItem.author}</S.InfoText>
       </S.InfoHeader>
 
       <S.InfoFooter>
         <S.CurrentBidWrapper>
           <S.CurrentBid>Current Bid</S.CurrentBid>
           <S.BidCrypto>
-            {getCurrencyPrice(formatNumberWithCommas(nftItem.currentBidCrypto), CurrencyTypeEnum.ETH, false)}
+            {getCurrencyPrice(formatNumberWithCommas(newsItem.currentBidCrypto), CurrencyTypeEnum.ETH, false)}
           </S.BidCrypto>
         </S.CurrentBidWrapper>
 
         <S.CurrentBidWrapper>
-          <S.Bid>{getCurrencyPrice(formatNumberWithCommas(nftItem.currentBid), CurrencyTypeEnum.USD)}</S.Bid>
+          <S.Bid>{getCurrencyPrice(formatNumberWithCommas(newsItem.currentBid), CurrencyTypeEnum.USD)}</S.Bid>
         </S.CurrentBidWrapper>
       </S.InfoFooter>
     </>
@@ -36,25 +36,25 @@ export const NftCard: React.FC<NftCardProps> = ({ nftItem }) => {
   const mobileLayout = (
     <>
       <S.InfoRow>
-        <S.InfoText>@{nftItem.author}</S.InfoText>
+        <S.InfoText>@{newsItem.author}</S.InfoText>
         <S.BidCrypto>
-          {getCurrencyPrice(formatNumberWithCommas(nftItem.currentBidCrypto), CurrencyTypeEnum.ETH, false)}
+          {getCurrencyPrice(formatNumberWithCommas(newsItem.currentBidCrypto), CurrencyTypeEnum.ETH, false)}
         </S.BidCrypto>
       </S.InfoRow>
 
       <S.InfoRow>
         <S.CurrentBid>Current Bid</S.CurrentBid>
-        <S.Bid>{getCurrencyPrice(formatNumberWithCommas(nftItem.currentBid), CurrencyTypeEnum.USD)}</S.Bid>
+        <S.Bid>{getCurrencyPrice(formatNumberWithCommas(newsItem.currentBid), CurrencyTypeEnum.USD)}</S.Bid>
       </S.InfoRow>
     </>
   );
 
   return (
-    <S.Card padding={0} $img={nftItem.image}>
-      <S.NftImage src={nftItem.image} alt="nftImage" />
+    <S.Card padding={0} $img={newsItem.image}>
+      <S.NftImage src={newsItem.image} alt="nftImage" />
       <S.NftInfo>
         <S.InfoRow>
-          <S.Title>{nftItem.title}</S.Title>
+          <S.Title>{newsItem.title}</S.Title>
         </S.InfoRow>
         {isTablet ? tabletLayout : mobileLayout}
       </S.NftInfo>

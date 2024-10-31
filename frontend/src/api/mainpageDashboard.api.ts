@@ -1,4 +1,4 @@
-export interface NftItem {
+export interface NewsItem {
   image: string;
   title: string;
   author: string;
@@ -6,7 +6,7 @@ export interface NftItem {
   currentBidCrypto: number;
 }
 
-export const getRecentlyAddedNfts = (): Promise<NftItem[]> => {
+export const getRecentlyAddedNews = (): Promise<NewsItem[]> => {
   return new Promise((res) => {
     res([
       {

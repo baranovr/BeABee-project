@@ -3,7 +3,7 @@ import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { MapCard } from '@app/components/medical-dashboard/mapCard/MapCard';
 import { References } from '@app/components/common/References/References';
 import { useResponsive } from '@app/hooks/useResponsive';
-import { RecentlyAddedNft } from '@app/components/nft-dashboard/recently-added/RecentlyAddedNft';
+import { RecentlyAddedNews } from '@app/components/nft-dashboard/recently-added/RecentlyAddedNews';
 import { TrendingCollections } from '@app/components/nft-dashboard/trending-collections/TrendingCollections';
 import { ActivityStory } from '@app/components/nft-dashboard/activityStory/ActivityStory';
 import { RecentActivity } from '@app/components/nft-dashboard/recentActivity/RecentActivity';
@@ -19,7 +19,7 @@ const MedicalDashboardPage: React.FC = () => {
       <S.LeftSideCol xl={16} xxl={17} id="desktop-content">
         <BaseRow gutter={[60, 60]}>
           <BaseCol span={24}>
-            <RecentlyAddedNft />
+            <RecentlyAddedNews />
           </BaseCol>
 
           <BaseCol span={24}>
@@ -48,7 +48,7 @@ const MedicalDashboardPage: React.FC = () => {
   const mobileAndTabletLayout = (
     <BaseRow gutter={[20, 24]}>
       <BaseCol span={24}>
-        <RecentlyAddedNft />
+        <RecentlyAddedNews />
       </BaseCol>
 
       <BaseCol span={24}>

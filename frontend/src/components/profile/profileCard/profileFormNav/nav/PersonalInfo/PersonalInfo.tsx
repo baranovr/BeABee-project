@@ -68,12 +68,11 @@ export const PersonalInfo: React.FC = () => {
         ? {
             firstName: user.firstName,
             lastName: user.lastName,
-            email: user.email.name,
-            phone: user.phone.number,
+            email: user.email,
+            phone: user.phone,
             nickname: user.userName,
             sex: user.sex,
             birthday: Dates.getDate(user.birthday),
-            language: user.lang,
             country: user.country,
             city: user.city,
             instagram: user?.socials?.instagram,
@@ -154,11 +153,11 @@ export const PersonalInfo: React.FC = () => {
           </BaseCol>
 
           <BaseCol xs={24} md={12}>
-            <PhoneItem verified={user?.phone.verified} />
+            <EmailItem />
           </BaseCol>
 
           <BaseCol xs={24} md={12}>
-            <EmailItem verified={user?.email.verified} />
+            <PhoneItem />
           </BaseCol>
 
           <BaseCol span={24}>

@@ -15,7 +15,7 @@ interface TeacherCardProps {
   date: number;
 }
 
-export const TeacherCard: React.FC<TeacherCardProps> = ({ name, speciality, rating, imgUrl, date }) => {
+export const TeacherCard: React.FC<TeacherCardProps> = ({ name, speciality, imgUrl, date }) => {
   const { t } = useTranslation();
 
   const specifity = specifities.find((el) => el.id === speciality)?.name;
@@ -27,18 +27,6 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({ name, speciality, rati
           <S.ImgWrapper>
             <BaseImage src={imgUrl} alt={name} preview={false} />
           </S.ImgWrapper>
-        </BaseCol>
-
-        <BaseCol span={24}>
-          <BaseRow align="middle" gutter={[10, 10]}>
-            <BaseCol>
-              <S.Rating value={rating} disabled />
-            </BaseCol>
-
-            <BaseCol>
-              <S.Text>{rating}.0</S.Text>
-            </BaseCol>
-          </BaseRow>
         </BaseCol>
 
         <BaseCol span={24}>

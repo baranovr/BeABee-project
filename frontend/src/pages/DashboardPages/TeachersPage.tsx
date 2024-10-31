@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { ScreeningsCard } from '@app/components/medical-dashboard/screeningsCard/ScreeningsCard/ScreeningsCard';
 import { ExamCard } from '@app/components/medical-dashboard/treatmentCard/ExamCard';
-import { FavoritesTeachersCard } from '@app/components/medical-dashboard/favoriteDoctors/FavoriteTeachersCard/FavoritesTeachersCard';
+import { AllTeachersCard } from '@app/components/medical-dashboard/favoriteDoctors/AllTeachersCard/AllTeachersCard';
 import { PatientResultsCard } from '@app/components/medical-dashboard/PatientResultsCard/PatientResultsCard';
 import { StatisticsCards } from '@app/components/medical-dashboard/statisticsCards/StatisticsCards';
 import { NewsCard } from '@app/components/medical-dashboard/TeacherCard/NewsCard';
@@ -37,7 +37,7 @@ const TeachersPage: React.FC = () => {
           </BaseCol>
 
           <BaseCol id="favorite-Teachers" xl={24}>
-            <FavoritesTeachersCard />
+            <AllTeachersCard />
           </BaseCol>
 
           <BaseCol id="news" span={24}>
@@ -73,7 +73,7 @@ const TeachersPage: React.FC = () => {
       </BaseCol>
 
       <BaseCol id="favorite-Teachers" xs={24} md={24} order={(isTablet && 13) || 0}>
-        <FavoritesTeachersCard />
+        <AllTeachersCard />
       </BaseCol>
 
       <BaseCol id="news" xs={24} md={24} order={(isTablet && 14) || 0}>

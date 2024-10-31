@@ -2,7 +2,6 @@ export interface Teacher {
   id: number;
   name: string;
   specifity: number;
-  rating: number;
   gps?: {
     latitude: number;
     longitude: number;
@@ -20,7 +19,6 @@ export const getTeachersData = (): Promise<Teacher[]> => {
           id: 1,
           name: 'Cameron Bell',
           specifity: 1,
-          rating: 5,
           gps: {
             latitude: 51.505,
             longitude: -0.09,
@@ -33,7 +31,6 @@ export const getTeachersData = (): Promise<Teacher[]> => {
           id: 2,
           name: 'Kayden Hunter',
           specifity: 2,
-          rating: 5,
           gps: {
             latitude: 41.732438,
             longitude: 44.7688134,
@@ -46,7 +43,6 @@ export const getTeachersData = (): Promise<Teacher[]> => {
           id: 3,
           name: 'Annabella Morton',
           specifity: 3,
-          rating: 5,
           gps: {
             latitude: 40.73061,
             longitude: -73.935242,
@@ -59,7 +55,6 @@ export const getTeachersData = (): Promise<Teacher[]> => {
           id: 4,
           name: 'Steve Wolfe',
           specifity: 4,
-          rating: 5,
           imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/steve.webp',
           phone: '+X-XXX-XXX-XXXX',
           address: '9 Wagon Street Ravenna, OH 44266',
@@ -68,7 +63,6 @@ export const getTeachersData = (): Promise<Teacher[]> => {
           id: 5,
           name: 'James Moss',
           specifity: 5,
-          rating: 4,
           gps: {
             latitude: 59.334122,
             longitude: 18.071997,
@@ -81,7 +75,6 @@ export const getTeachersData = (): Promise<Teacher[]> => {
           id: 6,
           name: 'Sara Mills',
           specifity: 6,
-          rating: 5,
           gps: {
             latitude: -26.195246,
             longitude: 28.034088,
@@ -94,7 +87,6 @@ export const getTeachersData = (): Promise<Teacher[]> => {
           id: 7,
           name: 'Francisco Venancio',
           specifity: 7,
-          rating: 5,
           gps: {
             latitude: 55.17111,
             longitude: -118.796928,
@@ -107,7 +99,6 @@ export const getTeachersData = (): Promise<Teacher[]> => {
           id: 8,
           name: 'Jorden Cannon',
           specifity: 8,
-          rating: 4,
           gps: {
             latitude: -22.908333,
             longitude: -43.196388,

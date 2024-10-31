@@ -1,27 +1,21 @@
 export interface UserModel {
   id: number;
-  firstName: string;
-  lastName: string;
-  imgUrl: string;
-  userName: string;
-  email: {
-    name: string;
-    verified: boolean;
-  };
-  phone: {
-    number: string;
-    verified: boolean;
-  };
-  sex: 'male' | 'female';
-  birthday: string;
-  lang: 'en' | 'de';
-  country: string;
-  city: string;
-  group: string;
+  firstName: string; // first_name
+  lastName: string; // last_name
+  imgUrl: string; // avatar URL, это нужно будет обработать в API
+  userName: string; // username
+  email: string; // email
+  phone: string | null; // phone_number
+  sex: string; // sex
+  birthday: string; // birth_date
+  country: string | null; // country
+  city: string | null; // city
+  group: string; // group
   socials?: {
-    instagram?: string;
-    facebook?: string;
-    linkedin?: string;
-    github?: string;
+    // Ссылки на соцсети
+    instagram?: string | null; // instagram
+    facebook?: string | null; // facebook
+    linkedin?: string | null; // linkedin
+    github?: string | null; // github
   };
 }

@@ -6,7 +6,7 @@ import { Dates } from '@app/constants/Dates';
 import { CalendarEvent, getUserCalendar } from '@app/api/calendar.api';
 import { Teacher, getTeachersData } from '@app/api/doctors.api';
 import { useAppSelector } from '@app/hooks/reduxHooks';
-import * as S from './FavoritesTeachersCard.styles';
+import * as S from './AllTeachersCard.styles';
 import { BREAKPOINTS } from '@app/styles/themes/constants';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -20,7 +20,7 @@ const PrevArrow = (props: any) => {
   return <S.SliderArrow className={className} style={{ ...style, display: 'block' }} onClick={onClick} />;
 };
 
-export const FavoritesTeachersCard: React.FC = () => {
+export const AllTeachersCard: React.FC = () => {
   const [doctors, setDoctors] = useState<Teacher[]>([]);
   const [calendar, setCalendar] = useState<CalendarEvent[]>([]);
 
@@ -110,7 +110,6 @@ export const FavoritesTeachersCard: React.FC = () => {
                     imgUrl={currentDoctor?.imgUrl}
                     name={currentDoctor?.name}
                     speciality={currentDoctor?.specifity}
-                    rating={currentDoctor?.rating}
                     date={event.date}
                   />
                 </div>

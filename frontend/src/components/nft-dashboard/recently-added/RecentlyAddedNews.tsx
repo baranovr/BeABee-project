@@ -4,32 +4,32 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { BaseCarousel } from '@app/components/common/BaseCarousel/Carousel';
 import { NFTCardHeader } from '@app/components/nft-dashboard/common/NFTCardHeader/NFTCardHeader';
 import { ViewAll } from '@app/components/nft-dashboard/common/ViewAll/ViewAll';
-import { NftCard } from '@app/components/nft-dashboard/recently-added/nft-card/NftCard';
-import { getRecentlyAddedNfts, NftItem } from '@app/api/mainpageDashboard.api';
+import { NftCard } from '@app/components/nft-dashboard/recently-added/news-card/NftCard';
+import { getRecentlyAddedNews, NewsItem } from '@app/api/mainpageDashboard.api';
 import { useResponsive } from '@app/hooks/useResponsive';
-import * as S from './RecentlyAddedNft.styles';
+import * as S from './RecentlyAddedNews.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 
-export const RecentlyAddedNft: React.FC = () => {
-  const [nfts, setNfts] = useState<NftItem[]>([]);
+export const RecentlyAddedNews: React.FC = () => {
+  const [nfts, setNfts] = useState<NewsItem[]>([]);
 
   const { t } = useTranslation();
   const { mobileOnly, isTablet } = useResponsive();
 
   useEffect(() => {
-    getRecentlyAddedNfts().then((result) => {
+    getRecentlyAddedNews().then((result) => {
       setNfts(result);
     });
   }, []);
 
   const cards = useMemo(() => {
     return {
-      mobile: nfts.slice(0, 3).map((nft) => <NftCard key={nft.title} nftItem={nft} />),
+      mobile: nfts.slice(0, 3).map((nft) => <NftCard key={nft.title} newsItem={nft} />),
       tablet: nfts.map((nft) => (
         <div key={nft.title}>
           <S.CardWrapper>
-            <NftCard nftItem={nft} />
+            <NftCard newsItem={nft} />
           </S.CardWrapper>
         </div>
       )),
