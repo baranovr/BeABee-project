@@ -1,49 +1,31 @@
-export interface NewsItem {
-  image: string;
-  title: string;
-  author: string;
-  currentBid: number;
-  currentBidCrypto: number;
-}
+// mainpageDashboard.api.ts
 
-export const getRecentlyAddedNews = (): Promise<NewsItem[]> => {
-  return new Promise((res) => {
-    res([
-      {
-        image: process.env.REACT_APP_ASSETS_BUCKET + '/recently-added/ezgif.com-gif-maker_1_na4ogi.gif',
-        title: 'XCopy Humano',
-        author: 'neithanwolf',
-        currentBid: 3521,
-        currentBidCrypto: 1.63,
-      },
-      {
-        image: process.env.REACT_APP_ASSETS_BUCKET + '/recently-added/borth-of-universe.webp',
-        title: 'Borth of Universe',
-        author: 'jakeparker',
-        currentBid: 3150,
-        currentBidCrypto: 1.02,
-      },
-      {
-        image: process.env.REACT_APP_ASSETS_BUCKET + '/recently-added/star-away.webp',
-        title: 'Star Away',
-        author: 'nick_johnson',
-        currentBid: 7210,
-        currentBidCrypto: 2.08,
-      },
-      {
-        image: process.env.REACT_APP_ASSETS_BUCKET + '/recently-added/night-deprivation.webp',
-        title: 'Night Deprivation',
-        author: 'mikeAdamson',
-        currentBid: 740,
-        currentBidCrypto: 1.56,
-      },
-      {
-        image: process.env.REACT_APP_ASSETS_BUCKET + '/recently-added/ezgif.com-gif-maker_t2caul.gif',
-        title: 'Spiral Hole',
-        author: 'jo_wo_le',
-        currentBid: 311,
-        currentBidCrypto: 1.04,
-      },
-    ]);
-  });
+import { getNewsList } from '@app/api/recentlynews.api';
+
+export interface News {
+  file: string;
+  title: string;
+  description: string;
+  created_at: number;
+  posted_by: string;
+  avatar: string;
+}
+export const getRecentlyAddedNews = async (): Promise<News[]> => {
+  try {
+    const recentlyNews = await getNewsList();
+
+    return recentlyNews.map(
+      (news): News => ({
+        title: news.title,
+        posted_by: news.posted_by,
+        created_at: news.created_at,
+        description: news.description,
+        file: news.file,
+        avatar: news.avatar,
+      }),
+    );
+  } catch (error) {
+    console.error('Error fetching recently news:', error);
+    throw error;
+  }
 };

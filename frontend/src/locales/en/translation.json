@@ -841,11 +841,14 @@
     "activityStory": "All Users In Service",
     "by": "by",
     "recentActivity": "Recent Activity",
+    "recentlyAddedNews": "Recent News",
+    "read_news": "Read news",
     "viewAll": "View all",
     "filter": "Filter",
     "show": "Show",
     "bid": "View",
     "trendingCollections": "What's important?",
+    "close": "Close",
     "recentlyAddedNFTs": "Recently News",
     "trendingCreators": "Stories"
   }

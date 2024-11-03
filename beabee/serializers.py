@@ -3,6 +3,8 @@ from rest_framework import serializers
 from beabee.models import (
     Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
 )
+from beabee_project import settings
+
 
 class BaseTagSubjectRelatedSerializer(serializers.ModelSerializer):
     class Meta:
@@ -202,8 +204,8 @@ class HomeworkDetailSerializer(HomeworkListSerializer):
 
 
 class NewsSerializer(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     posted_by = serializers.CharField(source='posted_by.nickname', read_only=True)
+    avatar = serializers.ImageField(source='posted_by.avatar', read_only=True)
 
     class Meta:
         model = News
@@ -211,15 +213,18 @@ class NewsSerializer(serializers.ModelSerializer):
             "id",
             "file",
             "title",
-            "created_at",
-            "posted_by"
+            "description",
+            "posted_by",
+            "avatar"
         )
 
 
 class NewsListSerializer(NewsSerializer):
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
     class Meta:
         model = News
-        fields = NewsSerializer.Meta.fields
+        fields = NewsSerializer.Meta.fields + ("created_at", )
 
 
 class NewsDetailSerializer(NewsSerializer):
@@ -229,17 +234,23 @@ class NewsDetailSerializer(NewsSerializer):
 
 
 class ImportantInfoSerializer(serializers.ModelSerializer):
-    posted_by = serializers.CharField(source='posted_by.nickname', read_only=True)
-    avatar = serializers.CharField(source='user.avatar', read_only=True)
+    owner = serializers.CharField(source='posted_by.nickname', read_only=True)
+    avatar = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
+
+    def get_avatar(self, obj):
+        request = self.context.get('request')
+        if request is not None:
+            return request.build_absolute_uri(obj.posted_by.avatar.url)
+        return f"{settings.BASE_URL}{obj.posted_by.avatar.url}"
 
     class Meta:
         model = ImportantInfo
         fields = (
             "id",
             "title",
-            "posted_by",
-            "file",
+            "owner",
+            "image",
             "description",
             "created_at",
             "avatar"
@@ -255,7 +266,7 @@ class ImportantInfoListSerializer(ImportantInfoSerializer):
 class ImportantInfoDetailDetailSerializer(ImportantInfoSerializer):
     class Meta:
         model = ImportantInfo
-        fields = ImportantInfoSerializer.Meta.fields
+        fields = ("description",)
 
 
 class BanSerializer(serializers.ModelSerializer):

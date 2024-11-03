@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { NFTCard } from '@app/components/nft-dashboard/common/NFTCard/NFTCard';
+import { Button as AntButton } from 'antd';
 import { FONT_SIZE, FONT_WEIGHT, FONT_FAMILY, media, BREAKPOINTS, BORDER_RADIUS } from '@app/styles/themes/constants';
 import { BaseTypography } from '@app/components/common/BaseTypography/BaseTypography';
+import { Modal as AntdModal } from 'antd';
+import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 
 interface CardInternalProps {
   $img: string;
@@ -60,13 +63,6 @@ export const InfoFooter = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-
-export const CurrentBidWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-`;
-
 export const InfoText = styled.span`
   display: block;
   transition: all 0.5s ease;
@@ -100,8 +96,7 @@ export const BidCrypto = styled.span`
     font-size: ${FONT_SIZE.md};
   }
 `;
-
-export const Bid = styled(CurrentBid)`
+styled(CurrentBid)`
   font-size: ${FONT_SIZE.xs};
 
   color: var(--text-main-color);
@@ -112,6 +107,70 @@ export const Bid = styled(CurrentBid)`
 
   @media only screen and ${media.xl} {
     font-size: ${FONT_SIZE.md};
+  }
+`;
+export const ViewButton = styled(BaseButton)`
+  transition: all 0.5s ease;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 14px;
+  color: var(--text-secondary-color);
+  border-color: var(--text-secondary-color);
+  font-size: ${FONT_SIZE.md};
+  z-index: 1;
+`;
+
+export const Button = styled(AntButton)`
+  border-radius: ${BORDER_RADIUS};
+`;
+
+export const StyledModal = styled(AntdModal)`
+  .ant-modal-content {
+    border-radius: ${BORDER_RADIUS};
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary-color);
+  }
+
+  .ant-modal-header {
+    border-bottom: none;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-top-left-radius: ${BORDER_RADIUS};
+    border-top-right-radius: ${BORDER_RADIUS};
+    padding: 16px;
+  }
+
+  .ant-modal-title {
+    font-size: ${FONT_SIZE.lg};
+    font-weight: ${FONT_WEIGHT.bold};
+    color: var(--text-secondary-color);
+  }
+
+  .ant-modal-close {
+    color: var(--text-secondary-color);
+    font-size: ${FONT_SIZE.md};
+  }
+
+  .ant-modal-body {
+    padding: 24px;
+    font-size: ${FONT_SIZE.md};
+    line-height: 1.5;
+    color: var(--text-primary-color);
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .ant-modal-footer {
+    border-top: none;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: flex-end;
+    background-color: rgba(0, 0, 0, 0.2);
+
+    button {
+      border-radius: ${BORDER_RADIUS};
+      font-size: ${FONT_SIZE.md};
+      padding: 6px 12px;
+    }
   }
 `;
 
@@ -133,18 +192,14 @@ export const Card = styled(NFTCard)<CardInternalProps>`
     }
 
     ${Title} {
-      animation: titleIn 0.5s ease;
-      animation-fill-mode: forwards;
-
       color: var(--text-secondary-color);
     }
 
-    ${InfoText} {
-      color: var(--text-secondary-color);
-    }
-
-    ${BidCrypto} {
-      color: var(--text-secondary-color);
+    ${ViewButton} {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1.1);
+      position: absolute;
     }
   }
 
@@ -167,26 +222,79 @@ export const Card = styled(NFTCard)<CardInternalProps>`
       transform: scale(1);
     }
   }
+`;
 
-  @keyframes titleIn {
-    0% {
-      left: 0;
-    }
+export const Description = styled(BaseTypography.Text)`
+  font-size: ${FONT_SIZE.xs};
+  font-weight: ${FONT_WEIGHT.regular};
+  font-family: ${FONT_FAMILY.secondary};
+  color: var(--text-main-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
 
-    100% {
-      left: 50%;
-      transform: translate(-50%, -50%) scale(1.5);
-    }
+export const Date = styled(BaseTypography.Text)`
+  font-size: ${FONT_SIZE.xs};
+  font-weight: ${FONT_WEIGHT.regular};
+  font-family: ${FONT_FAMILY.secondary};
+  color: var(--text-light-color);
+`;
+
+export const AuthorAvatar = styled.img`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--background-color);
+`;
+styled(AntdModal)`
+  .ant-modal-content {
+    border-radius: ${BORDER_RADIUS};
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary-color);
   }
 
-  @keyframes titleOut {
-    0% {
-      left: 50%;
-      transform: translate(-50%, -50%) scale(1.5);
-    }
+  .ant-modal-header {
+    border-bottom: none;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-top-left-radius: ${BORDER_RADIUS};
+    border-top-right-radius: ${BORDER_RADIUS};
+    padding: 16px;
+  }
 
-    100% {
-      left: 0;
+  .ant-modal-title {
+    font-size: ${FONT_SIZE.lg};
+    font-weight: ${FONT_WEIGHT.bold};
+    color: var(--text-secondary-color);
+  }
+
+  .ant-modal-close {
+    color: var(--text-secondary-color);
+    font-size: ${FONT_SIZE.md};
+  }
+
+  .ant-modal-body {
+    padding: 24px;
+    font-size: ${FONT_SIZE.md};
+    line-height: 1.5;
+    color: var(--text-primary-color);
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .ant-modal-footer {
+    border-top: none;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: flex-end;
+    background-color: rgba(0, 0, 0, 0.2);
+
+    button {
+      border-radius: ${BORDER_RADIUS};
+      font-size: ${FONT_SIZE.md};
+      padding: 6px 12px;
     }
   }
 `;

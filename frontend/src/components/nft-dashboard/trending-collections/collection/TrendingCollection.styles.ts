@@ -1,11 +1,64 @@
+// TrendingCollection.styles.ts
+
 import styled from 'styled-components';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { NFTCard } from '@app/components/nft-dashboard/common/NFTCard/NFTCard';
 import { FONT_SIZE, FONT_WEIGHT, FONT_FAMILY, media, BORDER_RADIUS } from '@app/styles/themes/constants';
 import { BaseTypography } from '@app/components/common/BaseTypography/BaseTypography';
+import { Modal as AntdModal } from 'antd';
+
 interface CardInternalProps {
   $img: string;
 }
+
+export const StyledModal = styled(AntdModal)`
+  .ant-modal-content {
+    border-radius: ${BORDER_RADIUS};
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary-color);
+  }
+
+  .ant-modal-header {
+    border-bottom: none;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-top-left-radius: ${BORDER_RADIUS};
+    border-top-right-radius: ${BORDER_RADIUS};
+    padding: 16px;
+  }
+
+  .ant-modal-title {
+    font-size: ${FONT_SIZE.lg};
+    font-weight: ${FONT_WEIGHT.bold};
+    color: var(--text-secondary-color);
+  }
+
+  .ant-modal-close {
+    color: var(--text-secondary-color);
+    font-size: ${FONT_SIZE.md};
+  }
+
+  .ant-modal-body {
+    padding: 24px;
+    font-size: ${FONT_SIZE.md};
+    line-height: 1.5;
+    color: var(--text-primary-color);
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .ant-modal-footer {
+    border-top: none;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: flex-end;
+    background-color: rgba(0, 0, 0, 0.2);
+
+    button {
+      border-radius: ${BORDER_RADIUS};
+      font-size: ${FONT_SIZE.md};
+      padding: 6px 12px;
+    }
+  }
+`;
 
 export const CollectionImage = styled.img`
   animation: imgOut 0.5s;

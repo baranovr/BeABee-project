@@ -1,3 +1,5 @@
+// TrendingCollections.tsx
+
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Slider from 'react-slick';
@@ -7,13 +9,14 @@ import { ViewAll } from '@app/components/nft-dashboard/common/ViewAll/ViewAll';
 import { NFTCardHeader } from '@app/components/nft-dashboard/common/NFTCardHeader/NFTCardHeader';
 import { TrendingCollection } from '@app/components/nft-dashboard/trending-collections/collection/TrendingCollection';
 import { useResponsive } from '@app/hooks/useResponsive';
-import { getTrendingActivities, TrendingActivity } from '@app/api/activity.api';
+import { getTrendingActivities, ImportantInfo } from '@app/api/activity.api';
 import * as S from './TrendingCollections.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 
 export const TrendingCollections: React.FC = () => {
-  const [trending, setTrending] = useState<TrendingActivity[]>([]);
+  const [trending, setTrending] = useState<ImportantInfo[]>([]);
+  const [showAll, setShowAll] = useState(false);
 
   const { mobileOnly, isTablet: isTabletOrHigher } = useResponsive();
 
@@ -33,18 +36,33 @@ export const TrendingCollections: React.FC = () => {
           </S.CardWrapper>
         </div>
       )),
+      grid: trending.map((item, index) => (
+        <BaseCol key={index} xs={24} sm={12} md={8}>
+          <S.CardWrapper>
+            <TrendingCollection {...item} />
+          </S.CardWrapper>
+        </BaseCol>
+      )),
     };
   }, [trending]);
 
   const sliderRef = useRef<Slider>(null);
 
+  const handleViewAllClick = () => {
+    setShowAll(true);
+  };
+
+  const handleBackToSlider = () => {
+    setShowAll(false);
+  };
+
   return (
     <>
       <NFTCardHeader title={t('nft.trendingCollections')}>
-        {isTabletOrHigher && (
+        {isTabletOrHigher && !showAll && (
           <BaseRow align="middle">
             <BaseCol>
-              <ViewAll bordered={false} />
+              <ViewAll bordered={false} onClick={handleViewAllClick} />
             </BaseCol>
 
             <BaseCol>
@@ -60,12 +78,22 @@ export const TrendingCollections: React.FC = () => {
             </BaseCol>
           </BaseRow>
         )}
+        {isTabletOrHigher && showAll && (
+          <BaseRow align="middle">
+            <BaseCol>
+              <S.BackButton type="text" size="small" onClick={handleBackToSlider}>
+                {t('common.back')}
+              </S.BackButton>
+            </BaseCol>
+          </BaseRow>
+        )}
       </NFTCardHeader>
 
       <S.SectionWrapper>
-        {mobileOnly && trendingList.mobile}
+        {mobileOnly && !showAll && trendingList.mobile}
+        {mobileOnly && showAll && <BaseRow gutter={[20, 20]}>{trendingList.grid}</BaseRow>}
 
-        {isTabletOrHigher && trending.length > 0 && (
+        {isTabletOrHigher && !showAll && trending.length > 0 && (
           <BaseCarousel
             ref={sliderRef}
             slidesToShow={3}
@@ -81,11 +109,13 @@ export const TrendingCollections: React.FC = () => {
             {trendingList.tablet}
           </BaseCarousel>
         )}
+
+        {isTabletOrHigher && showAll && <BaseRow gutter={[20, 20]}>{trendingList.grid}</BaseRow>}
       </S.SectionWrapper>
 
-      {mobileOnly && (
+      {mobileOnly && !showAll && (
         <S.ViewAllWrapper>
-          <ViewAll />
+          <ViewAll onClick={handleViewAllClick} />
         </S.ViewAllWrapper>
       )}
     </>

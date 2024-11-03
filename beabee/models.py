@@ -158,7 +158,8 @@ def news_media_path(instance, filename):
 
 class News(models.Model):
     file = models.FileField(upload_to=news_media_path)
-    title = models.CharField(max_length=150)
+    title = models.CharField(max_length=30)
+    description = models.CharField(max_length=2555, default="No description")
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="news_posters")
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -177,8 +178,8 @@ def info_media_path(instance, filename):
 class ImportantInfo(models.Model):
     title = models.CharField(max_length=150)
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="info_posters")
-    file = models.FileField(upload_to=info_media_path)
-    description = models.CharField(max_length=555, default="No Description")
+    image = models.ImageField(upload_to=info_media_path)
+    description = models.CharField(max_length=2555, default="No Description")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
