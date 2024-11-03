@@ -1,7 +1,7 @@
 // TeachersMap.tsx
 
 import React, { useEffect, useState } from 'react';
-import L, { IconOptions, PointExpression } from 'leaflet';
+import L, { IconOptions, PointExpression, LatLngBounds } from 'leaflet';
 import { Marker, Popup, MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import * as S from './TeachersMap.styles';
 import { useResponsive } from 'hooks/useResponsive';
@@ -12,6 +12,12 @@ import axiosInstance from '@app/api/axiosInstance';
 
 const LARGE_MARKER_SIZE: PointExpression = [50, 50];
 const MARKER_SIZE: PointExpression = [30, 30];
+
+// Определяем границы карты
+const MAX_BOUNDS: LatLngBounds = new L.LatLngBounds(
+  [-85, -180], // Южная широта, западная долгота
+  [85, 180], // Северная широта, восточная долгота
+);
 
 const defineIconSize = (isDesktop: boolean): PointExpression => {
   return isDesktop ? LARGE_MARKER_SIZE : MARKER_SIZE;
@@ -35,12 +41,24 @@ const TeachersMapContent: React.FC<{
   tempLocation?: { userId: number; lat: number; lng: number } | null;
   currentUserId: number;
 }> = ({ userLocations, isDesktop, onMapClick, tempLocation, currentUserId }) => {
-  useMapEvents({
+  const map = useMapEvents({
     click(e) {
       const currentUserLocation = userLocations.find((loc) => loc.user?.id === currentUserId);
-      onMapClick(currentUserLocation || null, e.latlng.lat, e.latlng.lng);
+      // Проверяем, находится ли клик в пределах допустимых границ
+      if (MAX_BOUNDS.contains(e.latlng)) {
+        onMapClick(currentUserLocation || null, e.latlng.lat, e.latlng.lng);
+      }
     },
   });
+
+  // Устанавливаем ограничения при монтировании компонента
+  useEffect(() => {
+    if (map) {
+      map.setMaxBounds(MAX_BOUNDS);
+      map.setMinZoom(2); // Минимальный зум, чтобы предотвратить слишком сильное отдаление
+      map.setMaxZoom(18); // Максимальный зум
+    }
+  }, [map]);
 
   return (
     <>
@@ -102,7 +120,6 @@ export const TeachersMap: React.FC<{ currentUserId: number }> = ({ currentUserId
           longitude: lng.toString(),
         });
 
-        // Обновляем данные с сервера для актуального состояния
         getUserLocations().then(setUserLocations);
 
         setSelectedLocation(null);
@@ -127,10 +144,19 @@ export const TeachersMap: React.FC<{ currentUserId: number }> = ({ currentUserId
 
   return (
     <S.TeachersMap>
-      <MapContainer center={[45, 9]} zoom={3} style={{ height: '100%', width: '100%' }}>
+      <MapContainer
+        center={[45, 9]}
+        zoom={3}
+        style={{ height: '100%', width: '100%' }}
+        maxBounds={MAX_BOUNDS}
+        maxBoundsViscosity={1.0} // Предотвращает выход за пределы границ
+        minZoom={2}
+        maxZoom={18}
+      >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+          noWrap={true} // Предотвращает повторение тайлов по горизонтали
         />
         <TeachersMapContent
           userLocations={userLocations}
