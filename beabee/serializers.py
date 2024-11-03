@@ -28,7 +28,7 @@ class TagDetailSerializer(BaseTagSubjectRelatedSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField()
-    user = serializers.CharField(source='user.username', read_only=True)
+    user = serializers.CharField(source='user.nickname', read_only=True)
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
 
     class Meta:
@@ -72,7 +72,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class CommentListSerializer(CommentSerializer):
-    user = serializers.CharField(source='user.username')
+    user = serializers.CharField(source='user.nickname')
 
     class Meta:
         model = Comment
@@ -166,7 +166,7 @@ class ExamDetailSerializer(ExamListSerializer):
 class HomeworkSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
     deadline = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    added_by = serializers.CharField(source='added_by.username', read_only=True)
+    added_by = serializers.CharField(source='added_by.nickname', read_only=True)
 
     class Meta:
         model = Homework
@@ -203,7 +203,7 @@ class HomeworkDetailSerializer(HomeworkListSerializer):
 
 class NewsSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    posted_by = serializers.CharField(source='posted_by.username', read_only=True)
+    posted_by = serializers.CharField(source='posted_by.nickname', read_only=True)
 
     class Meta:
         model = News
@@ -229,7 +229,7 @@ class NewsDetailSerializer(NewsSerializer):
 
 
 class ImportantInfoSerializer(serializers.ModelSerializer):
-    posted_by = serializers.CharField(source='posted_by.username', read_only=True)
+    posted_by = serializers.CharField(source='posted_by.nickname', read_only=True)
     avatar = serializers.CharField(source='user.avatar', read_only=True)
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
 

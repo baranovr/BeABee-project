@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 import { BaseCard } from '@app/components/common/BaseCard/BaseCard';
 import { FirstNameItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/FirstNameItem/FirstNameItem';
@@ -13,12 +14,19 @@ import { EmailItem } from '@app/components/profile/profileCard/profileFormNav/na
 import { CountriesItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/CountriesItem/CountriesItem';
 import { CitiesItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/CitiesItem/CitiesItem';
 import { SocialLinksItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/SocialLinksItem/SocialLinksItem';
+import { StatusInServiceItem } from '@app/components/profile/profileCard/profileFormNav/nav/PersonalInfo/StatusInServiceItem/StatusInServiceItem';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { Dates } from '@app/constants/Dates';
 import { notificationController } from '@app/controllers/notificationController';
-import { PaymentCard } from '@app/interfaces/interfaces';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
+import {
+  selectUserLoading,
+  updateUserProfile,
+  selectUpdateSuccess,
+  selectUserError,
+} from '@app/store/slices/userSlice';
+import dayjs from 'dayjs';
 
 interface PersonalInfoFormValues {
   birthday?: string;
@@ -28,7 +36,6 @@ interface PersonalInfoFormValues {
   nickName: string;
   sex?: string;
   facebook: string;
-  language?: string;
   linkedin: string;
   firstName: string;
   instagram: string;
@@ -36,6 +43,7 @@ interface PersonalInfoFormValues {
   phone: string;
   email: string;
   group: string;
+  statusInService: string;
 }
 
 const initialPersonalInfoValues: PersonalInfoFormValues = {
@@ -44,7 +52,6 @@ const initialPersonalInfoValues: PersonalInfoFormValues = {
   nickName: '',
   sex: undefined,
   birthday: undefined,
-  language: undefined,
   phone: '',
   email: '',
   country: undefined,
@@ -54,13 +61,19 @@ const initialPersonalInfoValues: PersonalInfoFormValues = {
   facebook: '',
   github: '',
   group: '',
+  statusInService: '',
 };
 
 export const PersonalInfo: React.FC = () => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
   const user = useAppSelector((state) => state.user.user);
+  const loading = useSelector(selectUserLoading);
+  useSelector(selectUpdateSuccess);
+  const error = useSelector(selectUserError);
 
   const [isFieldsChanged, setFieldsChanged] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [form] = BaseButtonsForm.useForm();
 
   const userFormValues = useMemo(
     () =>
@@ -70,50 +83,55 @@ export const PersonalInfo: React.FC = () => {
             lastName: user.lastName,
             email: user.email,
             phone: user.phone,
-            nickname: user.userName,
+            nickName: user.nickName,
             sex: user.sex,
             birthday: Dates.getDate(user.birthday),
             country: user.country,
             city: user.city,
-            instagram: user?.socials?.instagram,
-            linkedin: user?.socials?.linkedin,
-            facebook: user?.socials?.facebook,
-            github: user?.socials?.github,
+            instagram: user?.instagram,
+            linkedin: user?.linkedin,
+            facebook: user?.facebook,
+            github: user?.github,
             group: user?.group,
+            statusInService: user.statusInService,
           }
         : initialPersonalInfoValues,
     [user],
   );
 
-  const [form] = BaseButtonsForm.useForm();
+  const handleSubmit = async (values: PersonalInfoFormValues) => {
+    try {
+      // Создаем копию значений для модификации
+      const formattedValues = { ...values };
 
-  const { t } = useTranslation();
+      // Если есть дата рождения, форматируем её в нужный формат
+      if (formattedValues.birthday) {
+        formattedValues.birthday = dayjs(formattedValues.birthday).format('YYYY-MM-DD');
+      }
 
-  const onFinish = useCallback(
-    (values: PaymentCard) => {
-      // todo dispatch an action here
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        setFieldsChanged(false);
+      await dispatch(updateUserProfile(formattedValues));
+
+      if (!error) {
         notificationController.success({ message: t('common.success') });
-        console.log(values);
-      }, 1000);
-    },
-    [t],
-  );
+      } else {
+        notificationController.error({ message: error });
+      }
+    } catch (err) {
+      notificationController.error({ message: t('common.error') });
+    }
+  };
 
   return (
     <BaseCard>
       <BaseButtonsForm
         form={form}
         name="info"
-        loading={isLoading}
+        loading={loading}
         initialValues={userFormValues}
         isFieldsChanged={isFieldsChanged}
         setFieldsChanged={setFieldsChanged}
         onFieldsChange={() => setFieldsChanged(true)}
-        onFinish={onFinish}
+        onSubmit={handleSubmit}
       >
         <BaseRow gutter={{ xs: 10, md: 15, xl: 30 }}>
           <BaseCol span={24}>
@@ -176,12 +194,22 @@ export const PersonalInfo: React.FC = () => {
 
           <BaseCol span={24}>
             <BaseButtonsForm.Item>
-              <BaseButtonsForm.Title>{t('profile.nav.personalInfo.otherInfo')}</BaseButtonsForm.Title>
+              <BaseButtonsForm.Title>{t('common.social_media_links')}</BaseButtonsForm.Title>
             </BaseButtonsForm.Item>
           </BaseCol>
 
           <BaseCol span={24}>
             <SocialLinksItem />
+          </BaseCol>
+
+          <BaseCol span={24}>
+            <BaseButtonsForm.Item>
+              <BaseButtonsForm.Title>{t('common.statuses')}</BaseButtonsForm.Title>
+            </BaseButtonsForm.Item>
+          </BaseCol>
+
+          <BaseCol xs={24} md={12}>
+            <StatusInServiceItem />
           </BaseCol>
         </BaseRow>
       </BaseButtonsForm>

@@ -1,64 +1,161 @@
-import React from 'react';
+// TeachersMap.tsx
+
+import React, { useEffect, useState } from 'react';
 import L, { IconOptions, PointExpression } from 'leaflet';
-import { Marker, Popup } from 'react-leaflet';
-
-import { ReactComponent as MapBackgroundIcon } from 'assets/icons/map-background.svg';
-
+import { Marker, Popup, MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import * as S from './TeachersMap.styles';
 import { useResponsive } from 'hooks/useResponsive';
-
-import { Teacher } from '@app/api/doctors.api';
-import { TeacherProfile } from 'components/common/TeacherProfile/TeacherProfile';
+import { getUserLocations, UserLocation } from '@app/api/user.location.api';
+import { BaseAvatar } from '@app/components/common/BaseAvatar/BaseAvatar';
+import { Modal, Button } from 'antd';
+import axiosInstance from '@app/api/axiosInstance';
 
 const LARGE_MARKER_SIZE: PointExpression = [50, 50];
 const MARKER_SIZE: PointExpression = [30, 30];
 
 const defineIconSize = (isDesktop: boolean): PointExpression => {
-  return (isDesktop && LARGE_MARKER_SIZE) || MARKER_SIZE;
+  return isDesktop ? LARGE_MARKER_SIZE : MARKER_SIZE;
 };
 
 class MarkerTeacher extends L.Icon {
   constructor(props: IconOptions, isDesktop: boolean) {
-    const iconSIze = defineIconSize(isDesktop);
+    const iconSize = defineIconSize(isDesktop);
     super({
-      popupAnchor: iconSIze,
-      iconSize: iconSIze,
+      popupAnchor: iconSize,
+      iconSize,
       ...props,
     });
   }
 }
 
-interface TeachersMapProps {
-  teachers: Teacher[];
-}
+const TeachersMapContent: React.FC<{
+  userLocations: UserLocation[];
+  isDesktop: boolean;
+  onMapClick: (location: UserLocation | null, lat: number, lng: number) => void;
+  tempLocation?: { userId: number; lat: number; lng: number } | null;
+  currentUserId: number;
+}> = ({ userLocations, isDesktop, onMapClick, tempLocation, currentUserId }) => {
+  useMapEvents({
+    click(e) {
+      const currentUserLocation = userLocations.find((loc) => loc.user?.id === currentUserId);
+      onMapClick(currentUserLocation || null, e.latlng.lat, e.latlng.lng);
+    },
+  });
 
-export const TeachersMap: React.FC<TeachersMapProps> = ({ teachers }) => {
+  return (
+    <>
+      {userLocations
+        .filter((location) => location.user)
+        .map((location) => {
+          const isCurrentUserLocation = location.user.id === currentUserId;
+
+          return (
+            <Marker
+              key={location.id}
+              icon={
+                new MarkerTeacher(
+                  {
+                    iconUrl: location.user.avatar,
+                    iconRetinaUrl: location.user.avatar,
+                  },
+                  isDesktop,
+                )
+              }
+              position={
+                isCurrentUserLocation && tempLocation
+                  ? [tempLocation.lat, tempLocation.lng]
+                  : [parseFloat(location.latitude), parseFloat(location.longitude)]
+              }
+            >
+              <Popup>
+                <BaseAvatar src={location.user.avatar} alt="User Avatar" shape="circle" size={40} />
+              </Popup>
+            </Marker>
+          );
+        })}
+    </>
+  );
+};
+
+export const TeachersMap: React.FC<{ currentUserId: number }> = ({ currentUserId }) => {
   const { isDesktop } = useResponsive();
+  const [userLocations, setUserLocations] = useState<UserLocation[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<{
+    userLocation: UserLocation | null;
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [tempLocation, setTempLocation] = useState<{ userId: number; lat: number; lng: number } | null>(null);
 
-  const mapDoctors = teachers.filter(({ gps }) => gps);
+  useEffect(() => {
+    getUserLocations().then(setUserLocations);
+  }, []);
+
+  const handleConfirmLocation = async () => {
+    if (selectedLocation) {
+      const { lat, lng } = selectedLocation;
+
+      try {
+        const response = await axiosInstance.post('platform/map/', {
+          user: currentUserId,
+          latitude: lat.toString(),
+          longitude: lng.toString(),
+        });
+
+        // Обновляем данные с сервера для актуального состояния
+        getUserLocations().then(setUserLocations);
+
+        setSelectedLocation(null);
+        setTempLocation(null);
+      } catch (error) {
+        console.error('Failed to update location:', error);
+      }
+    }
+  };
+
+  const handleCancelLocation = () => {
+    setSelectedLocation(null);
+    setTempLocation(null);
+  };
+
+  const handleMapClick = (userLocation: UserLocation | null, lat: number, lng: number) => {
+    if (!userLocation || userLocation.user?.id === currentUserId) {
+      setSelectedLocation({ userLocation, lat, lng });
+      setTempLocation({ userId: currentUserId, lat, lng });
+    }
+  };
 
   return (
     <S.TeachersMap>
-      <MapBackgroundIcon />
-      {mapDoctors.map((marker) => (
-        <Marker
-          key={marker.id}
-          icon={
-            new MarkerTeacher(
-              {
-                iconUrl: marker.imgUrl,
-                iconRetinaUrl: marker.imgUrl,
-              },
-              isDesktop,
-            )
-          }
-          position={[marker.gps?.latitude || 0, marker.gps?.longitude || 0]}
-        >
-          <Popup>
-            <TeacherProfile avatar={marker.imgUrl} name={marker.name} speciality={marker.specifity} />
-          </Popup>
-        </Marker>
-      ))}
+      <MapContainer center={[45, 9]} zoom={3} style={{ height: '100%', width: '100%' }}>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <TeachersMapContent
+          userLocations={userLocations}
+          isDesktop={isDesktop}
+          onMapClick={handleMapClick}
+          tempLocation={tempLocation}
+          currentUserId={currentUserId}
+        />
+      </MapContainer>
+
+      <Modal
+        title="Are you here?"
+        visible={!!selectedLocation}
+        onCancel={handleCancelLocation}
+        footer={[
+          <Button key="no" onClick={handleCancelLocation}>
+            No
+          </Button>,
+          <Button key="yes" type="primary" onClick={handleConfirmLocation}>
+            Yes
+          </Button>,
+        ]}
+      >
+        <p>Do you want to set this as your new location?</p>
+      </Modal>
     </S.TeachersMap>
   );
 };

@@ -1,3 +1,5 @@
+// userSlice.ts
+
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axiosInstance from '@app/api/axiosInstance';
 import { UserModel } from '@app/domain/UserModel';
@@ -8,7 +10,7 @@ interface BackendUserProfile {
   first_name: string;
   last_name: string;
   avatar: string;
-  username: string;
+  nickname: string;
   email: string;
   phone_number: string | null;
   sex: string;
@@ -20,6 +22,8 @@ interface BackendUserProfile {
   facebook: string | null;
   linkedin: string | null;
   github: string | null;
+  status_in_service: string;
+  date_joined: string;
 }
 
 interface UserState {
@@ -43,7 +47,7 @@ const transformUserData = (data: BackendUserProfile): UserModel => ({
   firstName: data.first_name,
   lastName: data.last_name,
   imgUrl: data.avatar,
-  userName: data.username,
+  nickName: data.nickname,
   email: data.email,
   phone: data.phone_number,
   sex: data.sex,
@@ -51,18 +55,18 @@ const transformUserData = (data: BackendUserProfile): UserModel => ({
   country: data.country,
   city: data.city,
   group: data.group,
-  socials: {
-    instagram: data.instagram,
-    facebook: data.facebook,
-    linkedin: data.linkedin,
-    github: data.github,
-  },
+  instagram: data.instagram,
+  facebook: data.facebook,
+  linkedin: data.linkedin,
+  github: data.github,
+  statusInService: data.status_in_service,
+  date_joined: data.date_joined,
 });
 
 // Async thunks
 export const fetchUserProfile = createAsyncThunk('user/fetchUserProfile', async (_, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.get<BackendUserProfile>('/user/my_profile/');
+    const response = await axiosInstance.get<BackendUserProfile>('user/my_profile/');
     return transformUserData(response.data);
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || 'Failed to fetch user profile');
@@ -73,18 +77,20 @@ export const fetchUserProfile = createAsyncThunk('user/fetchUserProfile', async 
 const transformToBackendFormat = (data: Partial<UserModel>): Partial<BackendUserProfile> => ({
   first_name: data.firstName,
   last_name: data.lastName,
-  username: data.userName,
+  nickname: data.nickName,
+  email: data.email,
   phone_number: data.phone,
   birth_date: data.birthday,
   country: data.country,
   city: data.city,
+  group: data.group,
   sex: data.sex,
-  ...(data.socials && {
-    instagram: data.socials.instagram,
-    facebook: data.socials.facebook,
-    linkedin: data.socials.linkedin,
-    github: data.socials.github,
-  }),
+  instagram: data.instagram,
+  facebook: data.facebook,
+  linkedin: data.linkedin,
+  github: data.github,
+  status_in_service: data.statusInService,
+  date_joined: data.date_joined,
 });
 
 export const updateUserProfile = createAsyncThunk(
@@ -92,13 +98,31 @@ export const updateUserProfile = createAsyncThunk(
   async (data: Partial<UserModel>, { rejectWithValue }) => {
     try {
       const backendData = transformToBackendFormat(data);
-      const response = await axiosInstance.patch<BackendUserProfile>('/user/my_profile/', backendData);
+      const response = await axiosInstance.patch<BackendUserProfile>('user/my_profile/', backendData);
       return transformUserData(response.data);
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update user profile');
     }
   },
 );
+
+// Асинхронное действие для загрузки аватара
+export const uploadAvatar = createAsyncThunk('user/uploadAvatar', async (file: File, { rejectWithValue }) => {
+  try {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const response = await axiosInstance.patch('user/my_profile/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data; // возвращаем обновленные данные пользователя
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || 'Failed to upload avatar');
+  }
+});
 
 // Slice
 const userSlice = createSlice({
@@ -152,6 +176,18 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
         state.updateSuccess = false;
+      })
+      .addCase(uploadAvatar.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(uploadAvatar.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.loading = false;
+      })
+      .addCase(uploadAvatar.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

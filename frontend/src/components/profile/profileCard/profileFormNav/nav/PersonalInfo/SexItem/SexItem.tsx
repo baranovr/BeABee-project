@@ -5,24 +5,37 @@ import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/Ba
 import { BaseSelect, Option } from '@app/components/common/selects/BaseSelect/BaseSelect';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 
-export const SexItem: React.FC = () => {
+const SEX_OPTIONS = [
+  {
+    value: 'Male',
+    label: 'profile.nav.personalInfo.male',
+    icon: <ManOutlined />,
+  },
+  {
+    value: 'Female',
+    label: 'profile.nav.personalInfo.female',
+    icon: <WomanOutlined />,
+  },
+];
+
+interface SexItemProps {
+  initialValue?: string;
+}
+
+export const SexItem: React.FC<SexItemProps> = ({ initialValue }) => {
   const { t } = useTranslation();
 
   return (
-    <BaseButtonsForm.Item name="sex" label={t('profile.nav.personalInfo.sex')}>
-      <BaseSelect>
-        <Option value="male">
-          <BaseSpace align="center">
-            <ManOutlined />
-            {t('profile.nav.personalInfo.male')}
-          </BaseSpace>
-        </Option>
-        <Option value="female">
-          <BaseSpace align="center">
-            <WomanOutlined />
-            {t('profile.nav.personalInfo.female')}
-          </BaseSpace>
-        </Option>
+    <BaseButtonsForm.Item name="sex" label={t('profile.nav.personalInfo.sex')} initialValue={initialValue}>
+      <BaseSelect defaultValue={initialValue}>
+        {SEX_OPTIONS.map((option) => (
+          <Option key={option.value} value={option.value}>
+            <BaseSpace align="center">
+              {option.icon}
+              {t(option.label)}
+            </BaseSpace>
+          </Option>
+        ))}
       </BaseSelect>
     </BaseButtonsForm.Item>
   );

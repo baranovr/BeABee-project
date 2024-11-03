@@ -76,15 +76,15 @@ class PostViewSet(viewsets.ModelViewSet):
         return [int(str_id) for str_id in qs.split(",")]
 
     def get_queryset(self):
-        username = self.request.query_params.get("user__username", None)
+        nickname = self.request.query_params.get("user__nickname", None)
         post_title = self.request.query_params.get("title", None)
         created_at = self.request.query_params.get("created_at", None)
         tags = self.request.query_params.get("tags", None)
 
         queryset = self.queryset
 
-        if username:
-            queryset = queryset.filter(user__username__icontains=username)
+        if nickname:
+            queryset = queryset.filter(user__nickname__icontains=nickname)
 
         if post_title:
             queryset = queryset.filter(title__icontains=post_title)
@@ -147,9 +147,9 @@ class PostViewSet(viewsets.ModelViewSet):
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                name="username",
+                name="nickname",
                 type=OpenApiTypes.STR,
-                description="Filter posts by user username",
+                description="Filter posts by user nickname",
             ),
             OpenApiParameter(
                 name="title",
@@ -188,13 +188,13 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsNotBanned]
 
     def get_queryset(self):
-        username = self.request.query_params.get("user__username", None)
+        nickname = self.request.query_params.get("user__nickname", None)
         created_date = self.request.query_params.get("created_at", None)
 
         queryset = self.queryset
 
-        if username:
-            queryset = self.queryset.filter(username__icontains=username)
+        if nickname:
+            queryset = self.queryset.filter(nickname__icontains=nickname)
 
         if created_date:
             date_c = datetime.strptime(
@@ -252,10 +252,10 @@ class CommentViewSet(viewsets.ModelViewSet):
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                "username",
+                "nickname",
                 type=OpenApiTypes.STR,
                 style="form",
-                description="Filter by commentator username"
+                description="Filter by commentator nickname"
             ),
             OpenApiParameter(
                 "created_at",

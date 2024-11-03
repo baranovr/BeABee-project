@@ -15,8 +15,8 @@ interface SignUpFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  avatar?: File | null;
-  username: string;
+  avatar: File;
+  nickName: string;
   sex: string;
   birthDate: string;
   phoneNumber?: string;
@@ -37,7 +37,7 @@ const mapFormDataToRegisterData = (formData: SignUpFormData): RegisterData => {
     email: formData.email,
     password: formData.password,
     avatar: formData.avatar,
-    username: formData.username,
+    nickname: formData.nickName,
     sex: formData.sex,
     birth_date: formData.birthDate,
     phone_number: formData.phoneNumber,
@@ -48,8 +48,7 @@ const mapFormDataToRegisterData = (formData: SignUpFormData): RegisterData => {
     instagram: formData.instagram,
     github: formData.github,
     group: formData.group,
-    status: formData.statusInService,
-    about_me: 'No content',
+    status_in_service: formData.statusInService,
   };
 };
 
@@ -81,7 +80,7 @@ const initValues = {
   email: '',
   password: '',
   confirmPassword: '',
-  username: '',
+  nickName: '',
   avatar: null,
   sex: SEX_CHOICES.Male,
   birthDate: '2000-01-01',
@@ -153,14 +152,15 @@ export const SignUpForm: React.FC = () => {
         <Auth.FormItem
           name="avatar"
           label={t('common.avatar')}
+          rules={[{ required: true }]}
           valuePropName="file" // Важно для правильной обработки файла
           getValueFromEvent={(e: any) => e?.target?.files?.[0]} // Получаем файл из события
         >
           <Auth.FormInput type="file" accept="image/*" />
         </Auth.FormItem>
 
-        <Auth.FormItem name="username" label={t('Username')} rules={[{ required: true }]}>
-          <Auth.FormInput placeholder={t('Username')} />
+        <Auth.FormItem name="nickName" label={t('common.nickname')} rules={[{ required: true }]}>
+          <Auth.FormInput placeholder={t('common.nickname')} />
         </Auth.FormItem>
 
         <Auth.FormItem name="firstName" label={t('common.firstName')} rules={[{ required: true }]}>
@@ -232,7 +232,7 @@ export const SignUpForm: React.FC = () => {
           />
         </Auth.FormItem>
 
-        <Auth.FormItem name="statusInService" label={t('Status In Service')} rules={[{ required: true }]}>
+        <Auth.FormItem name="statusInService" label={t('common.statusInService')} rules={[{ required: true }]}>
           <Auth.FormSelect
             options={[
               { value: SERVICE_STATUS_CHOICES.User, label: 'User' },

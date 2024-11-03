@@ -1,4 +1,5 @@
 import { ActivityStatusType } from '@app/interfaces/interfaces';
+import { getUsersList } from '@app/api/users.api';
 
 export interface Activity {
   image: string;
@@ -8,8 +9,12 @@ export interface Activity {
   owner: string;
 }
 
-export interface UserActivity extends Omit<Activity, 'owner'> {
-  usd_value: number;
+export interface UserActivity {
+  avatar: string;
+  full_name: string;
+  status_in_service: string;
+  date_joined: string;
+  group: string;
 }
 
 export interface TrendingActivity {
@@ -20,41 +25,15 @@ export interface TrendingActivity {
   usd_value: number;
 }
 
-export const getUserActivities = (): Promise<UserActivity[]> => {
-  return new Promise((res) => {
-    setTimeout(() => {
-      res([
-        {
-          image: process.env.REACT_APP_ASSETS_BUCKET + '/lightence-activity/unsplash_t1PQ4fYJu7M_ueosw4.webp',
-          title: 'Cubic#1',
-          status: 'sold',
-          date: Date.now() - 1000 * 60 * 60 * 24 * 5,
-          usd_value: 240,
-        },
-        {
-          image: process.env.REACT_APP_ASSETS_BUCKET + '/lightence-activity/unsplash_1rBg5YSi00c_ctycjc.webp',
-          title: 'Ancient Nature',
-          status: 'added',
-          date: Date.now() - 1000 * 60 * 60 * 24 * 22,
-          usd_value: 1360,
-        },
-        {
-          image: process.env.REACT_APP_ASSETS_BUCKET + '/lightence-activity/unsplash_t55GeRpETn0_s8myd3.webp',
-          title: 'Art of Mind',
-          status: 'booked',
-          date: Date.now() - 1000 * 60 * 60 * 24 * 156,
-          usd_value: 1895,
-        },
-        {
-          image: process.env.REACT_APP_ASSETS_BUCKET + '/lightence-activity/unsplash_geJHvrH-CgA_n6mmkv.webp',
-          title: 'CryptoBox',
-          status: 'sold',
-          date: Date.now() - 1000 * 60 * 60 * 24 * 31,
-          usd_value: 3920,
-        },
-      ]);
-    }, 0);
-  });
+export const getUserActivities = async (): Promise<UserActivity[]> => {
+  const users = await getUsersList();
+  return users.map((user: any) => ({
+    avatar: user.avatar,
+    full_name: user.full_name,
+    status_in_service: user.status_in_service,
+    date_joined: user.date_joined,
+    group: user.group,
+  }));
 };
 
 export const getActivities = (): Promise<Activity[]> => {

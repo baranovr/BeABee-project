@@ -3,9 +3,12 @@ import styled from 'styled-components';
 import { CountryMap } from '../../../common/CountryMap/CountryMap';
 
 export const TeachersMap = styled(CountryMap)`
-  // Leaflet uses z-index inside. Create a new stacking context for avoiding overlapping
   isolation: isolate;
-  height: 19rem;
+  height: 500px; // Устанавливаем фиксированную высоту
+  aspect-ratio: 1; // Делаем контейнер квадратным
+  width: 100%;
+  max-width: 1800px; // Ограничиваем максимальную ширину
+  margin: 0 auto; // Центрируем карту
 
   &.leaflet-container {
     background: var(--dashboard-map-background-color);

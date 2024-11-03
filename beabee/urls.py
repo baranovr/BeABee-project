@@ -13,7 +13,7 @@ from beabee.views import (
     ImportantInfoViewSet,
     BanViewSet
 )
-
+from user.views import GPSViewSet
 
 router = routers.DefaultRouter()
 
@@ -28,6 +28,7 @@ router.register(r'homeworks', HomeworkViewSet, basename='homeworks')
 router.register(r'news', NewsViewSet, basename='news')
 router.register(r'importantinfo', ImportantInfoViewSet, basename='importantinfo')
 router.register(r'bans', BanViewSet, basename='bans')
+router.register(r"map", GPSViewSet, basename="gps")
 
 urlpatterns = [
     path("", include(router.urls)),

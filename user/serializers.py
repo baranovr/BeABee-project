@@ -3,7 +3,8 @@ from rest_framework import serializers
 
 from beabee.models import Post
 from beabee.serializers import PostListSerializer
-from user.models import User
+from beabee_project import settings
+from user.models import User, GPS
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,17 +22,15 @@ class UserSerializer(serializers.ModelSerializer):
         if avatar:
             instance.avatar = avatar
 
-        instance.username = validated_data.get('username', instance.username)
+        instance.nickname = validated_data.get('nickname', instance.nickname)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.email = validated_data.get('email', instance.email)
         instance.sex = validated_data.get('sex', instance.sex)
         instance.birth_date = validated_data.get('birth_date', instance.birth_date)
-        instance.language = validated_data.get('language', instance.language)
         instance.phone_number = validated_data.get('phone_number', instance.phone_number)
         instance.country = validated_data.get('country', instance.country)
         instance.city = validated_data.get('city', instance.city)
-        instance.twitter = validated_data.get('twitter', instance.twitter)
         instance.linkedin = validated_data.get('linkedin', instance.linkedin)
         instance.facebook = validated_data.get('facebook', instance.facebook)
         instance.instagram = validated_data.get('instagram', instance.instagram)
@@ -46,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'avatar', 'username', 'first_name', 'last_name', 'email',
+            'id', 'avatar', 'nickname', 'first_name', 'last_name', 'email',
             'sex', 'birth_date', 'phone_number', 'country', 'city', 'linkedin',
             'facebook', 'instagram', 'github', 'group', 'status_in_service',
             'password', 'date_joined', 'is_banned', 'ban_reason', 'full_name'
@@ -72,9 +71,72 @@ class MyProfileSerializer(UserSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'avatar', 'username', 'first_name', 'last_name', 'full_name', 'email',
+            'id', 'avatar', 'nickname', 'first_name', 'last_name', 'full_name', 'email',
             'sex', 'birth_date', 'phone_number', 'country', 'city',
             'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service',
             'date_joined', 'posts', 'is_banned', 'ban_reason'
         ]
         read_only_fields = ['is_banned', 'ban_reason', 'full_name', 'date_joined']
+
+
+class UserSearchListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = (
+            "id",
+            "avatar",
+            "full_name",
+            "status_in_service",
+            "date_joined",
+            "group"
+        )
+
+
+class UserSearchDetailSerializer(UserSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = (
+            "id",
+            "avatar",
+            "full_name",
+            "status_in_service",
+            "date_joined",
+            "group"
+        )
+
+
+class GPSUserBasicSerializer(serializers.ModelSerializer):
+    """Базовая информация о пользователе для карты"""
+
+    avatar = serializers.SerializerMethodField()
+
+    def get_avatar(self, obj):
+        request = self.context.get('request')
+        if obj.avatar:
+            avatar_url = obj.avatar.url
+            if request:
+                return request.build_absolute_uri(avatar_url)  # Возвращаем полный URL
+            else:
+                return f"{settings.BASE_URL}{avatar_url}"
+        return None
+
+    class Meta:
+        model = User
+        fields = ('id', 'avatar')
+
+
+class GPSSerializer(serializers.ModelSerializer):
+    """Сериализатор для создания и обновления локации"""
+
+    class Meta:
+        model = GPS
+        fields = ('id', 'latitude', 'longitude')
+
+
+class GPSDetailSerializer(serializers.ModelSerializer):
+    """Сериализатор для отображения данных на карте"""
+    user = GPSUserBasicSerializer(read_only=True)
+
+    class Meta:
+        model = GPS
+        fields = ('id', 'user', 'latitude', 'longitude')

@@ -15,6 +15,10 @@ class UserManager(BaseUserManager):
             raise ValueError("Users must have an email address")
 
         email = self.normalize_email(email)
+        # Используем nickname как username если он есть, иначе часть email
+        username = extra_fields.get('nickname') or email.split('@')[0]
+        extra_fields['username'] = username
+
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -41,36 +45,36 @@ class UserManager(BaseUserManager):
 
 def avatar_path(instance, filename):
     _, extension = os.path.splitext(filename)
-    filename = f"{slugify(instance.username)}-{uuid.uuid4()}{extension}"
+    filename = f"{slugify(instance.nickname)}-{uuid.uuid4()}{extension}"
     return os.path.join("uploads/avatars/", filename)
 
 class SexTextChoices(models.TextChoices):
-    MALE = "Male",
-    FEMALE = "Female",
+    MALE = "Male"
+    FEMALE = "Female"
 
 
 class ServiceStatusChoices(models.TextChoices):
-    CREATOR = "Creator",
-    ADMIN = "Admin",
-    USER = "User",
+    CREATOR = "Creator"
+    ADMIN = "Admin"
+    USER = "User"
 
 
 class GroupChoices(models.TextChoices):
-    CS_31 = "CS_31"
-    CS_32 = "CS-32",
-    CS_33 = "CS-33",
-    CS_34 = "CS-34",
-    CS_41 = "CS_41",
-    CS_42 = "CS-42",
-    CS_43 = "CS-43",
-    CS_44 = "CS-44",
+    CS_31 = "CS-31"
+    CS_32 = "CS-32"
+    CS_33 = "CS-33"
+    CS_34 = "CS-34"
+    CS_41 = "CS-41"
+    CS_42 = "CS-42"
+    CS_43 = "CS-43"
+    CS_44 = "CS-44"
 
 
 class User(AbstractUser):
     avatar = models.ImageField(_("avatar"), upload_to=avatar_path)
-    username = models.CharField(_("username"), max_length=50, unique=True)
-    first_name = models.CharField(_("first name"), max_length=50, null=True, blank=True)
-    last_name = models.CharField(_("last name"), max_length=50, null=True, blank=True)
+    nickname = models.CharField(_("nickname"), max_length=50, unique=True)
+    first_name = models.CharField(_("first name"), max_length=50, unique=True)
+    last_name = models.CharField(_("last name"), max_length=50, unique=True)
     email = models.EmailField(_("email address"), unique=True)
     sex = models.CharField(
         _("sex"),
@@ -118,6 +122,39 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
-    REQUIRED_FIELDS = ["avatar", "username", "status_in_service", "first_name", "last_name", "group"]
+    REQUIRED_FIELDS = ["avatar", "nickname", "status_in_service", "first_name", "last_name", "group"]
 
     objects = UserManager()
+
+
+class GPS(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='location',
+        verbose_name=_("User")
+    )
+    latitude = models.DecimalField(
+        _("Latitude"),
+        max_digits=20,
+        decimal_places=16,
+        help_text=_("Latitude coordinate")
+    )
+    longitude = models.DecimalField(
+        _("Longitude"),
+        max_digits=20,
+        decimal_places=16,
+        help_text=_("Longitude coordinate")
+    )
+
+    class Meta:
+        verbose_name = _("User Location")
+        verbose_name_plural = _("User Locations")
+        ordering = ['-user']
+        indexes = [
+            models.Index(fields=['latitude', 'longitude']),
+        ]
+        unique_together = ('user', 'latitude', 'longitude')
+
+    def __str__(self):
+        return f"{self.user.nickname} at ({self.latitude}, {self.longitude})"

@@ -7,11 +7,14 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 
 export const ActivityStory: React.FC = () => {
   const [story, setStory] = useState<UserActivity[]>([]);
-
+  const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
 
   useEffect(() => {
-    getUserActivities().then((res) => setStory(res));
+    getUserActivities()
+      .then((res) => setStory(res))
+      .catch((err) => console.error('Failed to fetch users:', err))
+      .finally(() => setLoading(false));
   }, []);
 
   const activityStory = useMemo(
@@ -23,6 +26,10 @@ export const ActivityStory: React.FC = () => {
       )),
     [story],
   );
+
+  if (loading) {
+    return <div>Loading...</div>; // Можно заменить на компонент спиннера
+  }
 
   return (
     <S.Wrapper>

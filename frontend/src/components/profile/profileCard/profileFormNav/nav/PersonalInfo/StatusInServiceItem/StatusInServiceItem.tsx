@@ -1,31 +1,26 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TeamOutlined } from '@ant-design/icons';
+import { TeamOutlined, CrownOutlined, UserOutlined } from '@ant-design/icons';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 import { BaseSelect, Option } from '@app/components/common/selects/BaseSelect/BaseSelect';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
 
-const GROUP_OPTIONS = [
-  { value: 'CS-31', label: 'CS-31' },
-  { value: 'CS-32', label: 'CS-32' },
-  { value: 'CS-33', label: 'CS-33' },
-  { value: 'CS-34', label: 'CS-34' },
-  { value: 'CS-41', label: 'CS-41' },
-  { value: 'CS-42', label: 'CS-42' },
-  { value: 'CS-43', label: 'CS-43' },
-  { value: 'CS-44', label: 'CS-44' },
+const STATUS_IN_SERVICE_OPTIONS = [
+  { value: 'Creator', label: 'Creator', icon: <CrownOutlined /> },
+  { value: 'Admin', label: 'Admin', icon: <TeamOutlined /> },
+  { value: 'User', label: 'User', icon: <UserOutlined /> },
 ];
 
-export const GroupItem: React.FC = () => {
+export const StatusInServiceItem: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <BaseButtonsForm.Item name="group" label={t('Group')}>
+    <BaseButtonsForm.Item name="status_in_service" label={t('Status in service')}>
       <BaseSelect placeholder={t('common.select.placeholder')}>
-        {GROUP_OPTIONS.map((option) => (
+        {STATUS_IN_SERVICE_OPTIONS.map((option) => (
           <Option key={option.value} value={option.value}>
             <BaseSpace align="center">
-              <TeamOutlined />
+              {option.icon}
               {option.label}
             </BaseSpace>
           </Option>

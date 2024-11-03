@@ -114,6 +114,10 @@
   },
   "common": {
     "address": "Address",
+    "nickname": "Nickname",
+    "social_media_links": "Social media links",
+    "statuses": "Statuses",
+    "statusInService": "Status in service",
     "advancedForms": "Advanced Forms",
     "age": "Age",
     "alert": "Alert",

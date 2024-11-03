@@ -18,6 +18,7 @@ export const ImgWrapper = styled.div`
   display: flex;
   justify-content: center;
   border-radius: 50%;
+  cursor: pointer;
 
   background: conic-gradient(
     from -35.18deg at 50% 50%,

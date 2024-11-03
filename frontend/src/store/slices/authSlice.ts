@@ -1,7 +1,6 @@
 import axios from 'axios';
 import axiosPublicInstance from '@app/api/axiosPublicInstance';
 import axiosInstance from '@app/api/axiosInstance';
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { jwtDecode } from 'jwt-decode';
 import { fetchUserProfile } from '@app/store/slices/userSlice';
@@ -29,8 +28,8 @@ export interface RegisterData {
   last_name: string;
   email: string;
   password: string;
-  avatar?: File | null;
-  username: string;
+  avatar: File;
+  nickname: string;
   sex: string;
   birth_date: string;
   phone_number?: string;
@@ -41,8 +40,7 @@ export interface RegisterData {
   instagram?: string;
   github?: string;
   group: string;
-  status: string;
-  about_me?: string;
+  status_in_service: string;
 }
 
 export const doLogin = createAsyncThunk(

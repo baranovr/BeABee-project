@@ -1,3 +1,5 @@
+//TeachersMap.tsx
+
 import React from 'react';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { MapCard } from '@app/components/medical-dashboard/mapCard/MapCard';
