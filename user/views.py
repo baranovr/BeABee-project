@@ -35,7 +35,7 @@ class UserSearchListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = get_user_model()
-        queryset = user.objects.all()
+        queryset = user.objects.all().order_by("-date_joined")
 
         nickname = self.request.query_params.get("nickname", None)
         user_id = self.request.query_params.get("user_id", None)

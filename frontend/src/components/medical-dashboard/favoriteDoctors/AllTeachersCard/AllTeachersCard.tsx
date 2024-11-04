@@ -1,11 +1,10 @@
+// AllTeachersCard.tsx
+
 import React, { useEffect, useMemo, useState } from 'react';
 import { DashboardCard } from '@app/components/medical-dashboard/DashboardCard/DashboardCard';
 import { BaseCarousel } from '@app/components/common/BaseCarousel/Carousel';
 import { TeacherCard } from '@app/components/medical-dashboard/favoriteDoctors/TeacherCard/TeacherCard';
-import { Dates } from '@app/constants/Dates';
-import { CalendarEvent, getUserCalendar } from '@app/api/calendar.api';
-import { Teacher, getTeachersData } from '@app/api/doctors.api';
-import { useAppSelector } from '@app/hooks/reduxHooks';
+import { Teacher, getTeachersData } from '@app/api/teachers.api';
 import * as S from './AllTeachersCard.styles';
 import { BREAKPOINTS } from '@app/styles/themes/constants';
 
@@ -21,29 +20,15 @@ const PrevArrow = (props: any) => {
 };
 
 export const AllTeachersCard: React.FC = () => {
-  const [doctors, setDoctors] = useState<Teacher[]>([]);
-  const [calendar, setCalendar] = useState<CalendarEvent[]>([]);
-
-  const user = useAppSelector((state) => state.user.user);
-
-  const today = Dates.getToday();
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
 
   useEffect(() => {
-    getTeachersData().then((res) => setDoctors(res));
+    getTeachersData().then((res) => setTeachers(res));
   }, []);
-
-  useEffect(() => {
-    user && getUserCalendar(user.id).then((res) => setCalendar(res));
-  }, [user]);
-
-  const pastEvents = useMemo(
-    () => calendar.filter((event) => Dates.getDate(event.date).isBefore(today)),
-    [calendar, today],
-  );
 
   return (
     <DashboardCard title={'All teachers'} padding="0 20px">
-      {doctors.length > 0 && calendar.length > 0 && (
+      {teachers.length > 0 && (
         <S.CarouselWrapper>
           <BaseCarousel
             arrows={true}
@@ -101,20 +86,17 @@ export const AllTeachersCard: React.FC = () => {
               },
             ]}
           >
-            {pastEvents.map((event) => {
-              const currentDoctor = doctors.find((doctor) => doctor.id === event.teacher);
-
-              return (
-                <div key={currentDoctor?.id}>
-                  <TeacherCard
-                    imgUrl={currentDoctor?.imgUrl}
-                    name={currentDoctor?.name}
-                    speciality={currentDoctor?.specifity}
-                    date={event.date}
-                  />
-                </div>
-              );
-            })}
+            {teachers.map((teacher) => (
+              <div key={teacher.id}>
+                <TeacherCard
+                  teacher_avatar={teacher.teacher_avatar}
+                  full_name_sur={teacher.full_name_sur}
+                  subjects={teacher.subjects}
+                  degree={teacher.degree}
+                  email={teacher.email} // или можно убрать дату, если она не нужна
+                />
+              </div>
+            ))}
           </BaseCarousel>
         </S.CarouselWrapper>
       )}

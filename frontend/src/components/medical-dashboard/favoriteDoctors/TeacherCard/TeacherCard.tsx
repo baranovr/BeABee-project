@@ -1,31 +1,37 @@
+// TeacherCard.tsx
+
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { specifities } from 'constants/specifities';
 import { Dates } from 'constants/Dates';
 import * as S from './TeacherCard.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseImage } from '@app/components/common/BaseImage/BaseImage';
 
-interface TeacherCardProps {
-  name?: string;
-  speciality?: number;
-  rating?: number;
-  imgUrl?: string;
-  date: number;
+interface Subject {
+  id: number;
+  name: string;
 }
 
-export const TeacherCard: React.FC<TeacherCardProps> = ({ name, speciality, imgUrl, date }) => {
+interface TeacherCardProps {
+  full_name_sur?: string;
+  subjects?: Subject[];
+  degree?: string;
+  teacher_avatar?: string;
+  email: string;
+}
+
+export const TeacherCard: React.FC<TeacherCardProps> = ({ full_name_sur, subjects, degree, teacher_avatar, email }) => {
   const { t } = useTranslation();
 
-  const specifity = specifities.find((el) => el.id === speciality)?.name;
+  const subjectNames = subjects?.map((s) => s.name).join(', ');
 
   return (
     <S.TeacherCard padding="16px">
       <BaseRow gutter={[{}, { xxl: 10 }]}>
         <BaseCol span={24}>
           <S.ImgWrapper>
-            <BaseImage src={imgUrl} alt={name} preview={false} />
+            <BaseImage src={teacher_avatar} alt={full_name_sur} preview={false} />
           </S.ImgWrapper>
         </BaseCol>
 
@@ -36,7 +42,7 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({ name, speciality, imgU
             </BaseCol>
 
             <BaseCol span={24}>
-              <S.Text>{name}</S.Text>
+              <S.Text>{full_name_sur}</S.Text>
             </BaseCol>
           </BaseRow>
         </BaseCol>
@@ -44,23 +50,35 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({ name, speciality, imgU
         <BaseCol span={24}>
           <BaseRow>
             <BaseCol span={24}>
-              <S.Title>{t('common.specifity')}</S.Title>
+              <S.Title>{t('common.subject')}</S.Title>
             </BaseCol>
 
             <BaseCol span={24}>
-              <S.Text>{t(`common.${specifity}`)}</S.Text>
+              <S.Text>{subjectNames}</S.Text>
             </BaseCol>
           </BaseRow>
         </BaseCol>
 
         <BaseCol span={24}>
-          <BaseRow justify="space-between" wrap={false}>
-            <BaseCol>
-              <S.Title>{t('medical-dashboard.favoriteTeachers.lastVisit')}</S.Title>
+          <BaseRow>
+            <BaseCol span={24}>
+              <S.Title>{t('common.degree')}</S.Title>
             </BaseCol>
 
-            <BaseCol>
-              <S.Text>{Dates.format(Dates.getDate(date), 'L')}</S.Text>
+            <BaseCol span={24}>
+              <S.Text>{degree}</S.Text>
+            </BaseCol>
+          </BaseRow>
+        </BaseCol>
+
+        <BaseCol span={24}>
+          <BaseRow>
+            <BaseCol span={24}>
+              <S.Title>{t('Email')}</S.Title>
+            </BaseCol>
+
+            <BaseCol span={24}>
+              <S.Text>{email}</S.Text>
             </BaseCol>
           </BaseRow>
         </BaseCol>

@@ -361,7 +361,7 @@ class TeacherViewSet(viewsets.ModelViewSet):
         first_name = self.request.query_params.get("first_name", None)
         last_name = self.request.query_params.get("last_name", None)
         surname = self.request.query_params.get("surname", None)
-        subject = self.request.query_params.get("subject__name", None)
+        subjects = self.request.query_params.getlist("subjects", None)
         degree = self.request.query_params.get("degree", None)
         
         queryset = self.queryset
@@ -375,8 +375,8 @@ class TeacherViewSet(viewsets.ModelViewSet):
         if surname:
             queryset = queryset.filter(name__icontains=surname)
 
-        if subject:
-            queryset = queryset.filter(subject__icontains=subject)
+        if subjects:
+            queryset = queryset.filter(subjects__name__in=subjects)
 
         if degree:
             queryset = queryset.filter(degree__icontains=degree)
@@ -397,8 +397,12 @@ class TeacherViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
+            subjects = serializer.validated_data["subjects"]
 
             if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+                if len(subjects) > 5:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+
                 serializer.save()
                 headers = self.get_success_headers(serializer.data)
                 return Response(
@@ -412,8 +416,12 @@ class TeacherViewSet(viewsets.ModelViewSet):
             teacher = get_object_or_404(Teacher, pk=kwargs["pk"])
             serializer = self.get_serializer(teacher, data=request.data)
             serializer.is_valid(raise_exception=True)
+            subjects = serializer.validated_data["subjects"]
 
             if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+                if len(subjects) > 5:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -445,9 +453,9 @@ class TeacherViewSet(viewsets.ModelViewSet):
                 description="Filter teacher by surname",
             ),
             OpenApiParameter(
-                name="subject",
-                type=OpenApiTypes.STR,
-                description="Filter teacher by subject",
+                name="subjects",
+                type={"type": "array", "items": {"type": "string"}},
+                description="Filter teacher by subjects",
             ),
             OpenApiParameter(
                 name="degree",
@@ -671,7 +679,7 @@ class FilterByTitleAndDateMixin:
 
 
 class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
-    queryset = News.objects.all()
+    queryset = News.objects.all().order_by("-created_at")
     serializer_class = NewsSerializer
     permission_classes = [IsNotBanned]
 
@@ -741,7 +749,7 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
 
 
 class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
-    queryset = ImportantInfo.objects.all()
+    queryset = ImportantInfo.objects.all().order_by("-created_at")
     serializer_class = ImportantInfoSerializer
     permission_classes = [IsNotBanned]
 

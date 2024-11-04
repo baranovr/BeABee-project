@@ -106,16 +106,30 @@ class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = (
-            "id", "teacher_avatar", "first_name", "last_name", "surname", "subject", "degree"
+            "id",
+            "teacher_avatar",
+            "first_name",
+            "last_name",
+            "surname",
+            "subjects",
+            "degree",
+            "email"
         )
 
 
 class TeacherListSerializer(TeacherSerializer):
-    subject = SubjectSerializer(many=True)
+    subjects = SubjectSerializer(many=True)
 
     class Meta:
         model = Teacher
-        fields = TeacherSerializer.Meta.fields
+        fields = (
+            "id",
+            "teacher_avatar",
+            "full_name_sur",
+            "subjects",
+            "degree",
+            "email"
+        )
 
 
 class TeacherDetailSerializer(TeacherListSerializer):

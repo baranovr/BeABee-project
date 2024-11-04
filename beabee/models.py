@@ -82,11 +82,16 @@ def teachers_avatars_path(instance, filename):
 
 class Teacher(models.Model):
     teacher_avatar = models.ImageField(upload_to=teachers_avatars_path)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    surname = models.CharField(max_length=50)
-    subject = models.ManyToManyField(Subject)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    surname = models.CharField(max_length=20)
+    subjects = models.ManyToManyField(Subject)
     degree = models.CharField(max_length=50, choices=TeacherDegreeChoice.choices)
+    email = models.EmailField(default='noemail@example.com')
+
+    @property
+    def full_name_sur(self):
+        return f"{self.last_name} {self.first_name} {self.surname}"
 
     class Meta:
         ordering = ["last_name", "first_name"]
