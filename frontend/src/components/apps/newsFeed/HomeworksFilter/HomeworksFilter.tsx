@@ -5,16 +5,16 @@ import { BaseHashTag, IHashTag } from '@app/components/common/BaseHashTag/BaseHa
 import { AuthorValidator, TitleValidator, DatesValidator } from '../Validator';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { AppDate, Dates } from '@app/constants/Dates';
-import { Post } from '@app/api/homeworks.api';
+import { Homework } from '@app/api/homeworks.api';
 import * as S from './HomeworksFilter.styles';
 
-interface NewsFilterProps {
-  news: Post[];
+interface HomeworksFilterProps {
+  news: Homework[];
   newsTags?: IHashTag[];
-  children: ({ filteredNews }: { filteredNews: Post[] }) => ReactNode;
+  children: ({ filteredNews }: { filteredNews: Homework[] }) => ReactNode;
 }
 
-interface Filter {
+interface FilterProps {
   author: string;
   title: string;
   onTagClick: (tag: IHashTag) => void;
@@ -26,7 +26,7 @@ interface Filter {
   onReset: () => void;
 }
 
-const Filter: React.FC<Filter> = ({
+const Filter: React.FC<FilterProps> = ({
   author,
   title,
   onTagClick,
@@ -39,18 +39,9 @@ const Filter: React.FC<Filter> = ({
   const { t } = useTranslation();
   const { mobileOnly } = useResponsive();
 
-  const applyFilter = () => {
-    onApply();
-  };
-
-  const resetFilter = () => {
-    onReset();
-  };
-
   return (
     <S.FilterWrapper>
       {!mobileOnly && <S.FilterTitle>{t('newsFeed.filter')}</S.FilterTitle>}
-
       <S.InputWrapper>
         <S.SearchIcon />
         <S.Input
@@ -59,7 +50,6 @@ const Filter: React.FC<Filter> = ({
           onChange={(event) => updateFilteredField('author', event.target.value)}
         />
       </S.InputWrapper>
-
       <S.InputWrapper>
         <S.SearchIcon />
         <S.Input
@@ -68,7 +58,6 @@ const Filter: React.FC<Filter> = ({
           onChange={(event) => updateFilteredField('title', event.target.value)}
         />
       </S.InputWrapper>
-
       {!!selectedTags.length && (
         <S.TagsWrapper>
           {selectedTags.map((tag) => (
@@ -76,23 +65,20 @@ const Filter: React.FC<Filter> = ({
           ))}
         </S.TagsWrapper>
       )}
-
       <S.DateLabels>
         <S.DateLabel>{t('newsFeed.from')}</S.DateLabel>
         <S.DateLabel>{t('newsFeed.to')}</S.DateLabel>
       </S.DateLabels>
-
       <S.RangePicker
         popupClassName="range-picker"
         value={dates}
         onChange={(dates: RangeValue<AppDate>) =>
-          updateFilteredField('dates', [dates?.length ? dates[0] : null, dates?.length ? dates[1] : null])
+          updateFilteredField('dates', [dates?.[0] || null, dates?.[1] || null])
         }
       />
-
       <S.BtnWrapper>
-        <S.Btn onClick={() => resetFilter()}>{t('newsFeed.reset')}</S.Btn>
-        <S.Btn onClick={() => applyFilter()} type="primary">
+        <S.Btn onClick={onReset}>{t('newsFeed.reset')}</S.Btn>
+        <S.Btn onClick={onApply} type="primary">
           {t('newsFeed.apply')}
         </S.Btn>
       </S.BtnWrapper>
@@ -100,100 +86,66 @@ const Filter: React.FC<Filter> = ({
   );
 };
 
-export const HomeworksFilter: React.FC<NewsFilterProps> = ({ news, children }) => {
-  const [filterFields, setFilterFields] = useState<{
-    author: string;
-    title: string;
-    selectedTags: IHashTag[];
-    dates: [AppDate | null, AppDate | null];
-  }>({
+export const HomeworksFilter: React.FC<HomeworksFilterProps> = ({ news, children }) => {
+  const [filterFields, setFilterFields] = useState({
     author: '',
     title: '',
-    selectedTags: [],
-    dates: [null, null],
+    selectedTags: [] as IHashTag[],
+    dates: [null, null] as [AppDate | null, AppDate | null],
   });
   const { author, title, selectedTags, dates } = filterFields;
-  const [filteredNews, setFilteredNews] = useState<Post[]>(news);
+  const [filteredNews, setFilteredNews] = useState<Homework[]>(news);
   const [overlayOpen, setOverlayOpen] = useState<boolean>(false);
   const { mobileOnly } = useResponsive();
   const { t } = useTranslation();
 
-  const selectedTagsIds = useMemo(() => selectedTags.map((item) => item.id), [selectedTags]);
+  const selectedTagsIds = useMemo(() => selectedTags.map((tag) => tag.id), [selectedTags]);
 
-  const onTagClick = useCallback(
-    (tag: IHashTag) => {
-      const isExist = selectedTagsIds.includes(tag.id);
+  const onTagClick = useCallback((tag: IHashTag) => {
+    setFilterFields((prev) => ({
+      ...prev,
+      selectedTags: prev.selectedTags.includes(tag)
+        ? prev.selectedTags.filter((t) => t !== tag)
+        : [...prev.selectedTags, tag],
+    }));
+  }, []);
 
-      if (isExist) {
-        setFilterFields({
-          ...filterFields,
-          selectedTags: selectedTags.filter((item) => item.id !== tag.id),
-        });
-      } else {
-        setFilterFields({
-          ...filterFields,
-          selectedTags: [...selectedTags, tag],
-        });
-      }
-    },
-    [selectedTags, selectedTagsIds, filterFields],
-  );
+  const filterNews = useCallback(() => {
+    let updatedNews = [...news];
 
-  const filterNews = useCallback(
-    (isReset = false) => {
-      let updatedNews = [...news];
-      if ((author || title || dates[0] || selectedTags.length) && !isReset) {
-        updatedNews = news.filter((post) => {
-          const postAuthor = post.author.toLowerCase();
-          const enteredAuthor = author.toLowerCase();
-          const postTitle = post.title.toLowerCase();
-          const enteredTitle = title.toLowerCase();
-          const postDate = Dates.getDate(post.date);
+    if (author || title || dates[0] || selectedTags.length) {
+      updatedNews = news.filter((post) => {
+        const fieldsValidators = [
+          new AuthorValidator(post.teacher.toLowerCase(), author.toLowerCase()),
+          new TitleValidator(post.title.toLowerCase(), title.toLowerCase()),
+          new DatesValidator(Dates.getDate(post.created_at), dates),
+        ];
 
-          const fieldsValidators = [
-            new AuthorValidator(postAuthor, enteredAuthor),
-            new TitleValidator(postTitle, enteredTitle),
-            new DatesValidator(postDate, dates),
-          ];
+        return fieldsValidators.every((validator) => validator.validate());
+      });
+    }
 
-          return fieldsValidators.map((validator) => validator.validate()).every((i) => i);
-        });
-      }
-      setFilteredNews(
-        updatedNews.sort((a, b) => {
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        }),
-      );
-    },
-    [news, author, title, dates, selectedTags],
-  );
+    setFilteredNews(updatedNews.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+  }, [news, author, title, dates, selectedTags]);
 
   useEffect(() => {
     setFilteredNews(news);
-    filterNews(false);
-    // TODO AT-183
-    // eslint-disable-next-line
-  }, [news]);
+    filterNews();
+  }, [news, filterNews]);
 
   const handleClickApply = useCallback(() => {
-    filterNews(false);
-
-    if (mobileOnly) {
-      setOverlayOpen(false);
-    }
-  }, [mobileOnly, filterNews]);
+    filterNews();
+    if (mobileOnly) setOverlayOpen(false);
+  }, [filterNews, mobileOnly]);
 
   const handleClickReset = useCallback(() => {
     setFilterFields({ author: '', title: '', dates: [null, null], selectedTags: [] });
-    filterNews(true);
-
-    if (mobileOnly) {
-      setOverlayOpen(false);
-    }
-  }, [filterNews, setFilterFields, mobileOnly]);
+    setFilteredNews(news);
+    if (mobileOnly) setOverlayOpen(false);
+  }, [news, mobileOnly]);
 
   const updateFilteredField = (field: string, value: string | [AppDate | null, AppDate | null]) => {
-    setFilterFields({ ...filterFields, [field]: value });
+    setFilterFields((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -203,7 +155,7 @@ export const HomeworksFilter: React.FC<NewsFilterProps> = ({ news, children }) =
           <S.FilterPopover
             trigger="click"
             open={overlayOpen}
-            onOpenChange={(open) => setOverlayOpen(open)}
+            onOpenChange={setOverlayOpen}
             content={
               <Filter
                 author={author}
@@ -222,10 +174,8 @@ export const HomeworksFilter: React.FC<NewsFilterProps> = ({ news, children }) =
           </S.FilterPopover>
         )}
       </S.TitleWrapper>
-
       <S.ContentWrapper>
         <S.NewsWrapper>{children({ filteredNews: filteredNews || news })}</S.NewsWrapper>
-
         {!mobileOnly && (
           <Filter
             author={author}

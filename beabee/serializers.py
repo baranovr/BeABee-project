@@ -154,9 +154,7 @@ class ExamSerializer(serializers.ModelSerializer):
 
 class ExamListSerializer(ExamSerializer):
     teacher_avatar = serializers.ImageField(source='teacher.teacher_avatar', read_only=True)
-    teacher_surname = serializers.CharField(source='teacher.surname', read_only=True)
-    teacher_first_name = serializers.CharField(source='teacher.first_name', read_only=True)
-    teacher_last_name = serializers.CharField(source='teacher.last_name', read_only=True)
+    teacher = serializers.CharField(source='teacher.full_name_sur', read_only=True)
     subject = serializers.CharField(source='subject.name')
 
     class Meta:
@@ -164,9 +162,7 @@ class ExamListSerializer(ExamSerializer):
         fields = (
             "id",
             "teacher_avatar",
-            "teacher_surname",
-            "teacher_first_name",
-            "teacher_last_name",
+            "teacher",
             "subject",
             "date_time",
             "group",
@@ -201,12 +197,25 @@ class HomeworkSerializer(serializers.ModelSerializer):
 
 
 class HomeworkListSerializer(HomeworkSerializer):
-    subject = SubjectSerializer()
-    teacher = TeacherDetailSerializer()
+    teacher = serializers.CharField(source='teacher.full_name_sur', read_only=True)
+    teacher_avatar = serializers.ImageField(source='teacher.teacher_avatar', read_only=True)
+    subject = serializers.CharField(source='subject.name')
 
     class Meta:
         model = Homework
-        fields = HomeworkSerializer.Meta.fields
+        fields = (
+            "id",
+            "title",
+            "description",
+            "file",
+            "subject",
+            "type",
+            "teacher_avatar",
+            "teacher",
+            "created_at",
+            "deadline",
+            "added_by"
+        )
 
 
 class HomeworkDetailSerializer(HomeworkListSerializer):
