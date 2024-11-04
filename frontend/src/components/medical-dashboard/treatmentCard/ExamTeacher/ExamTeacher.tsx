@@ -1,43 +1,45 @@
+// ExamTeacher.tsx:
+
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Exam } from '@app/api/exams.api';
 import * as S from './ExamTeacher.styles';
-import { Dates } from '@app/constants/Dates';
-import { BaseAvatar } from '@app/components/common/BaseAvatar/BaseAvatar';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
+import { BaseAvatar } from '@app/components/common/BaseAvatar/BaseAvatar';
 
-export interface ExamTeacher {
-  name: string;
-  imgUrl: string;
-  speciality: string;
-  date: number;
-  address: string;
-  phone: string;
-}
+const formatDate = (timestamp: number) => {
+  return new Date(timestamp).toLocaleString('ru-RU', {
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+};
 
-interface ExamTeacherProps {
-  teacher: ExamTeacher;
-}
-
-export const ExamTeacher: React.FC<ExamTeacherProps> = ({ teacher }) => {
-  const { t } = useTranslation();
-
-  const { name, speciality, address, imgUrl, phone, date } = teacher;
-
+export const ExamTeacher: React.FC<{ exam: Exam }> = ({ exam }) => {
   return (
-    <S.TeacherCard padding={'1rem'}>
+    <S.TeacherCard>
       <S.TeacherCardBody>
-        <BaseAvatar src={imgUrl} alt={teacher.name} size={128} />
+        <BaseAvatar src={exam.teacher.teacher_avatar} size={64} alt="Teacher Avatar" />
+        <S.TeacherName>{exam.teacher.full_name_sur}</S.TeacherName>
+      </S.TeacherCardBody>
 
-        <S.TeacherName>{`${name}, ${t(`common.${speciality}`)}`}</S.TeacherName>
-        <BaseRow gutter={[8, 8]}>
-          <S.LabelCol span={10}>{t('common.dateTime')}</S.LabelCol>
-          <S.ValueCol span={14}>{Dates.format(date, 'lll')}</S.ValueCol>
-          <S.LabelCol span={10}>{t('common.address')}</S.LabelCol>
-          <S.ValueCol span={14}>{address}</S.ValueCol>
-          <S.LabelCol span={10}>{t('common.phone')}</S.LabelCol>
-          <S.ValueCol span={14}>
-            <S.Tel href={`tel:${phone}`}>{phone}</S.Tel>
-          </S.ValueCol>
+      <S.TeacherCardBody>
+        <BaseRow gutter={[16, 16]}>
+          <S.LabelCol span={12}>Subject:</S.LabelCol>
+          <S.ValueCol span={12}>{exam.subject}</S.ValueCol>
+
+          <S.LabelCol span={12}>Date & time:</S.LabelCol>
+          <S.ValueCol span={12}>{formatDate(exam.date_time)}</S.ValueCol>
+
+          <S.LabelCol span={12}>Group:</S.LabelCol>
+          <S.ValueCol span={12}>{exam.group}</S.ValueCol>
+
+          <S.LabelCol span={12}>Type:</S.LabelCol>
+          <S.ValueCol span={12}>{exam.type}</S.ValueCol>
+
+          <S.LabelCol span={12}>Details:</S.LabelCol>
+          <S.ValueCol span={12}>{exam.details}</S.ValueCol>
         </BaseRow>
       </S.TeacherCardBody>
     </S.TeacherCard>

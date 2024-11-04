@@ -1,29 +1,33 @@
+// ExamCard.tsx
+
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useResponsive } from 'hooks/useResponsive';
 import { ExamCalendar } from './ExamCalendar/ExamCalendar';
-import { ExamPanel } from './ExamPanel';
 import { AppDate, Dates } from 'constants/Dates';
 import { DashboardCard } from '../DashboardCard/DashboardCard';
-import { CalendarEvent, getUserCalendar } from 'api/calendar.api';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { BaseButton } from '../../common/BaseButton/BaseButton';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
+import { Exam, getExams } from '@app/api/exams.api';
+import { ExamTeacher } from '@app/components/medical-dashboard/treatmentCard/ExamTeacher/ExamTeacher';
 
 export const ExamCard: React.FC = () => {
   const { isTablet } = useResponsive();
 
   const [selectedDate, setDate] = useState<AppDate>(Dates.getToday());
   const [isDateClicked, setDateClicked] = useState(false);
-  const [calendar, setCalendar] = useState<CalendarEvent[]>([]);
+  const [exams, setExams] = useState<Exam[]>([]);
 
   const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
-    user && getUserCalendar(user?.id).then((res) => setCalendar(res));
+    if (user?.id) {
+      getExams().then((res) => setExams(res));
+    }
   }, [user]);
 
   const { i18n, t } = useTranslation();
@@ -46,7 +50,7 @@ export const ExamCard: React.FC = () => {
 
   const calendarItem = (
     <ExamCalendar
-      calendar={calendar}
+      calendar={exams}
       date={selectedDate}
       setDate={setDate}
       onDecrease={handleDecreaseMonth}
@@ -56,9 +60,9 @@ export const ExamCard: React.FC = () => {
     />
   );
 
-  const currentEvent = calendar.find((event) => Dates.getDate(event.date).isSame(selectedDate, 'date'));
+  const currentExam = exams.find((exam) => Dates.getDate(exam.date_time).isSame(selectedDate, 'date'));
 
-  const panelItem = <ExamPanel event={currentEvent} />;
+  const panelItem = currentExam ? <ExamTeacher exam={currentExam} /> : null;
 
   return (
     <DashboardCard title={t('medical-dashboard.examPlan.title')}>
@@ -68,7 +72,7 @@ export const ExamCard: React.FC = () => {
             <BaseCol md={12}>{calendarItem}</BaseCol>
             <BaseCol md={12}>{panelItem}</BaseCol>
           </>
-        ) : isDateClicked && calendar.some((event) => Dates.getDate(event.date).isSame(selectedDate, 'date')) ? (
+        ) : isDateClicked && exams.some((exam) => Dates.getDate(exam.date_time).isSame(selectedDate, 'date')) ? (
           <BackButtonWrapper span={24}>
             {panelItem}
             <BackButton type="text" icon={<ArrowLeftOutlined />} onClick={() => setDateClicked(false)} />

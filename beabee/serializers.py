@@ -155,15 +155,13 @@ class ExamSerializer(serializers.ModelSerializer):
 
 
 class ExamListSerializer(ExamSerializer):
-    teacher_avatar = serializers.ImageField(source='teacher.teacher_avatar', read_only=True)
-    teacher = serializers.CharField(source='teacher.full_name_sur', read_only=True)
+    teacher = TeacherListSerializer()
     subject = serializers.CharField(source='subject.name')
 
     class Meta:
         model = Exam
         fields = (
             "id",
-            "teacher_avatar",
             "teacher",
             "subject",
             "date_time",
@@ -177,21 +175,6 @@ class ExamDetailSerializer(ExamListSerializer):
     class Meta:
         model = Exam
         fields = ExamListSerializer.Meta.fields
-
-
-class CalendarSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Calendar
-        fields = ('exam', 'date_time')
-
-
-class CalendarListSerializer(serializers.ModelSerializer):
-    exam = serializers.IntegerField(source='exam.id', read_only=True)
-    date_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-
-    class Meta:
-        model = Calendar
-        fields = ("exam", "date_time")
 
 
 class HomeworkSerializer(serializers.ModelSerializer):

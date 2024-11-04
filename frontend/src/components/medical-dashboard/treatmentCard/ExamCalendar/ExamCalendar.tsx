@@ -1,13 +1,15 @@
+// ExamCalendar.tsx
+
 import React, { useMemo } from 'react';
 import enUS from 'antd/lib/calendar/locale/en_US';
 import deDe from 'antd/es/calendar/locale/de_DE';
 import { CalendarSwitch } from '@app/components/common/CalendarSwitch/CalendarSwitch';
 import { useLanguage } from '@app/hooks/useLanguage';
-import { CalendarEvent } from '@app/api/calendar.api';
 import { AppDate, Dates } from '@app/constants/Dates';
 import * as S from './ExamCalendar.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
+import { Exam } from '@app/api/exams.api';
 
 interface ExamCalendarProps {
   date: AppDate;
@@ -16,7 +18,7 @@ interface ExamCalendarProps {
   onDecrease: () => void;
   onToday: () => void;
   setDateClicked: (state: boolean) => void;
-  calendar: CalendarEvent[];
+  calendar: Exam[]; // теперь принимаем массив экзаменов
 }
 
 export const ExamCalendar: React.FC<ExamCalendarProps> = ({
@@ -36,6 +38,10 @@ export const ExamCalendar: React.FC<ExamCalendarProps> = ({
   const handleSelect = (value: AppDate) => {
     setDate(value);
     setDateClicked(true);
+    const hasExamsOnDate = calendar.some((event) => Dates.getDate(event.date_time).isSame(value, 'date'));
+    if (!hasExamsOnDate) {
+      setDateClicked(false);
+    }
   };
 
   const dateFormatted = Dates.format(date, 'MMMM YYYY');
@@ -59,7 +65,7 @@ export const ExamCalendar: React.FC<ExamCalendarProps> = ({
               const today = Dates.getToday();
 
               return calendar.map((event) => {
-                const calendarDate = Dates.getDate(event.date);
+                const calendarDate = Dates.getDate(event.date_time);
 
                 if (
                   calendarDate.isSame(value, 'date') &&
@@ -69,7 +75,7 @@ export const ExamCalendar: React.FC<ExamCalendarProps> = ({
                   const isPast = today.isAfter(calendarDate);
 
                   return (
-                    <S.Event key={event.date} $isPast={isPast}>
+                    <S.Event key={event.date_time} $isPast={isPast}>
                       {calendarDate.format('DD')}
                     </S.Event>
                   );

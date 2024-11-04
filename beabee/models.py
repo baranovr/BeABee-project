@@ -136,7 +136,7 @@ class Exam(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     date_time = models.DateTimeField()
-    details = models.CharField(max_length=150, default="No Details")
+    details = models.CharField(max_length=50, default="No Details")
     group = models.CharField(max_length=50, choices=GroupChoices.choices)
     type = models.CharField(max_length=50, choices=ExamTypeChoices.choices, default=ExamTypeChoices.SPECIFIC_TYPE)
 
@@ -145,23 +145,6 @@ class Exam(models.Model):
 
     def __str__(self):
         return f"{self.teacher} {self.subject} {self.date_time}"
-
-class Calendar(models.Model):
-    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name="calendar")
-    date_time = models.DateTimeField()
-
-    def __str__(self):
-        return f"{self.exam} {self.date_time}"
-
-
-@receiver(post_save, sender=Exam)
-def create_calendar_entry(sender, instance, created, **kwargs):
-    if created:
-        Calendar.objects.create(exam=instance, date_time=instance.date_time)
-
-@receiver(post_delete, sender=Exam)
-def delete_calendar_entry(sender, instance, **kwargs):
-    Calendar.objects.filter(exam=instance).delete()
 
 
 def homework_file_path(instance, filename):
