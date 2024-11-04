@@ -111,18 +111,45 @@ class GroupChoices(models.TextChoices):
     CS_44 = "CS-44",
 
 
+class ExamTypeChoices(models.TextChoices):
+    ANNUAL_EXAM = "Annual exam",
+    ANNUAL_EXAM_RET = "Annual exam (retake)",
+
+    YEAR_SESSION = "Year session",
+    YEAR_SESSION_RET = "Year session (retake)",
+
+    SEM_SESSION = "Semester session",
+    SEM_SESSION_RET = "Semester session (retake)",
+
+    MODULAR_CONTROL_WORK = "Modular control work",
+    MODULAR_CONTROL_WORK_RET = "Modular control work (retake)",
+
+    CONTROL_WORK = "Control work",
+    CONTROL_WORK_RET = "Control work (retake)",
+
+    SPECIFIC_TYPE = "Specific type"
+
+
 class Exam(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     date_time = models.DateTimeField()
     details = models.CharField(max_length=150, default="No Details")
     group = models.CharField(max_length=50, choices=GroupChoices.choices)
+    type = models.CharField(max_length=50, choices=ExamTypeChoices.choices, default=ExamTypeChoices.SPECIFIC_TYPE)
 
     class Meta:
         ordering = ["date_time"]
 
     def __str__(self):
         return f"{self.teacher} {self.subject} {self.date_time}"
+
+class Calendar(models.Model):
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name="calendar")
+    date_time = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.exam} {self.date_time}"
 
 
 def homework_file_path(instance, filename):

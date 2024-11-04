@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from beabee.models import (
-    Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
+    Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam, Calendar
 )
 from beabee_project import settings
 
@@ -149,6 +149,8 @@ class ExamSerializer(serializers.ModelSerializer):
             "subject",
             "date_time",
             "group",
+            "type",
+            "details",
         )
 
 
@@ -166,6 +168,8 @@ class ExamListSerializer(ExamSerializer):
             "subject",
             "date_time",
             "group",
+            "type",
+            "details",
         )
 
 
@@ -173,6 +177,15 @@ class ExamDetailSerializer(ExamListSerializer):
     class Meta:
         model = Exam
         fields = ExamListSerializer.Meta.fields
+
+
+class CalendarListSerializer(serializers.ModelSerializer):
+    exam = serializers.IntegerField(source='exam.id', read_only=True)
+    date_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+
+    class Meta:
+        model = Calendar
+        fields = ("exam", "date_time")
 
 
 class HomeworkSerializer(serializers.ModelSerializer):
