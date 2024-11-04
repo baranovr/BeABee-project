@@ -179,6 +179,12 @@ class ExamDetailSerializer(ExamListSerializer):
         fields = ExamListSerializer.Meta.fields
 
 
+class CalendarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Calendar
+        fields = ('exam', 'date_time')
+
+
 class CalendarListSerializer(serializers.ModelSerializer):
     exam = serializers.IntegerField(source='exam.id', read_only=True)
     date_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M')

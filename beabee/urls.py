@@ -8,10 +8,11 @@ from beabee.views import (
     SubjectViewSet,
     TeacherViewSet,
     ExamViewSet,
+    CalendarViewSet,
     HomeworkViewSet,
     NewsViewSet,
     ImportantInfoViewSet,
-    BanViewSet
+    BanViewSet,
 )
 from user.views import GPSViewSet
 
@@ -24,6 +25,7 @@ router.register(r'comments', CommentViewSet, basename='comments')
 router.register(r'subjects', SubjectViewSet, basename='subjects')
 router.register(r'teachers', TeacherViewSet, basename='teachers')
 router.register(r'exams', ExamViewSet, basename='exams')
+router.register(r'calendar', CalendarViewSet, basename='calendar')
 router.register(r'homeworks', HomeworkViewSet, basename='homeworks')
 router.register(r'news', NewsViewSet, basename='news')
 router.register(r'importantinfo', ImportantInfoViewSet, basename='importantinfo')

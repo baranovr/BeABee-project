@@ -8,14 +8,15 @@ from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from beabee.models import Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
+from beabee.models import Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam, Calendar
 from beabee.serializers import (
     TagSerializer, TagListSerializer, TagDetailSerializer, PostSerializer, PostListSerializer,
     PostDetailSerializer, CommentListSerializer, CommentDetailSerializer, CommentSerializer, SubjectListSerializer,
     SubjectDetailSerializer, SubjectSerializer, TeacherSerializer, TeacherListSerializer, TeacherDetailSerializer,
     HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer,
     NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer, ExamSerializer,
-    ExamListSerializer, ExamDetailSerializer, BanListSerializer, BanDetailSerializer
+    ExamListSerializer, ExamDetailSerializer, BanListSerializer, BanDetailSerializer, CalendarSerializer,
+    CalendarListSerializer
 )
 from beabee.сustom_permissions.is_not_banned_permission import IsNotBanned
 
@@ -541,6 +542,17 @@ class ExamViewSet(viewsets.ModelViewSet):
         :return:
         """
         return super().list(request, *args, **kwargs)
+
+
+class CalendarViewSet(viewsets.ModelViewSet):
+    queryset = Calendar.objects.all()
+    serializer_class = CalendarSerializer
+
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return CalendarListSerializer
+
+        return CalendarSerializer
 
 
 class HomeworkViewSet(viewsets.ModelViewSet):

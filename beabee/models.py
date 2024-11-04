@@ -2,6 +2,8 @@ import os
 import uuid
 
 from django.db import models
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 from django.utils.text import slugify
 from beabee_project import settings
 
@@ -150,6 +152,16 @@ class Calendar(models.Model):
 
     def __str__(self):
         return f"{self.exam} {self.date_time}"
+
+
+@receiver(post_save, sender=Exam)
+def create_calendar_entry(sender, instance, created, **kwargs):
+    if created:
+        Calendar.objects.create(exam=instance, date_time=instance.date_time)
+
+@receiver(post_delete, sender=Exam)
+def delete_calendar_entry(sender, instance, **kwargs):
+    Calendar.objects.filter(exam=instance).delete()
 
 
 def homework_file_path(instance, filename):
