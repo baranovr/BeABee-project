@@ -8,11 +8,11 @@ from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from beabee.models import Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
+from beabee.models import Tag, Post, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
 from beabee.serializers import (
     TagSerializer, TagListSerializer, TagDetailSerializer, PostSerializer, PostListSerializer,
-    PostDetailSerializer, CommentListSerializer, CommentDetailSerializer, CommentSerializer, SubjectListSerializer,
-    SubjectDetailSerializer, SubjectSerializer, TeacherSerializer, TeacherListSerializer, TeacherDetailSerializer,
+    PostDetailSerializer, SubjectListSerializer,SubjectDetailSerializer, SubjectSerializer,
+    TeacherSerializer, TeacherListSerializer, TeacherDetailSerializer,
     HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer,
     NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer, ExamSerializer,
     ExamListSerializer, ExamDetailSerializer, BanListSerializer, BanDetailSerializer
@@ -111,6 +111,11 @@ class PostViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
+            tags = self.validated_data["tags"]
+
+            if len(tags) > 5:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
             serializer.save(user=request.user)
             headers = self.get_success_headers(serializer.data)
             return Response(
@@ -126,6 +131,11 @@ class PostViewSet(viewsets.ModelViewSet):
                 post, data=request.data, partial=True
             )
             serializer.is_valid(raise_exception=True)
+            tags = self.validated_data["tags"]
+
+            if len(tags) > 5:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
             author = post.user
 
             if author == request.user:
@@ -174,102 +184,6 @@ class PostViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         """
         List all posts, or create a new post.
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        return super().list(request, *args, **kwargs)
-
-
-class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    permission_classes = [IsNotBanned]
-
-    def get_queryset(self):
-        nickname = self.request.query_params.get("user__nickname", None)
-        created_date = self.request.query_params.get("created_at", None)
-
-        queryset = self.queryset
-
-        if nickname:
-            queryset = self.queryset.filter(nickname__icontains=nickname)
-
-        if created_date:
-            date_c = datetime.strptime(
-                created_date, "%Y-%m-%d-%H-%M"
-            ).date()
-            queryset = queryset.filter(created_date__date=date_c)
-
-        return queryset.distinct()
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return CommentListSerializer
-
-        if self.action == "retrieve":
-            return CommentDetailSerializer
-
-        return CommentSerializer
-
-    def create(self, request, *args, **kwargs):
-        with transaction.atomic():
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save(user=request.user)
-            headers = self.get_success_headers(serializer.data)
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED, headers=headers
-            )
-
-    def update(self, request, *args, **kwargs):
-        with transaction.atomic():
-            comment = get_object_or_404(
-                Comment, pk=kwargs["pk"], user=request.user
-            )
-            serializer = self.get_serializer(comment, data=request.data)
-            serializer.is_valid(raise_exception=True)
-            commentator = comment.user
-
-            if request.user == commentator.user:
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
-
-            return Response(status=status.HTTP_403_FORBIDDEN)
-
-    def destroy(self, request, *args, **kwargs):
-        comment = get_object_or_404(Comment, pk=kwargs["pk"])
-        author = comment.post.user
-        commentator = comment.user
-
-        if author == request.user or commentator == request.user:
-            super().destroy(request, *args, **kwargs)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        return Response(status=status.HTTP_403_FORBIDDEN)
-
-    @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                "nickname",
-                type=OpenApiTypes.STR,
-                style="form",
-                description="Filter by commentator nickname"
-            ),
-            OpenApiParameter(
-                "created_at",
-                type=OpenApiTypes.DATE,
-                description=(
-                        "Filter by created creation date "
-                        "(ex. ?date=20024-04-05)"
-                )
-            )
-        ]
-    )
-    def list(self, request, *args, **kwargs):
-        """
-        List all comments, find specific comment
         :param request:
         :param args:
         :param kwargs:

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from beabee.models import (
-    Tag, Post, Comment, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam, Calendar
+    Tag, Post, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
 )
 from beabee_project import settings
 
@@ -30,6 +30,7 @@ class TagDetailSerializer(BaseTagSubjectRelatedSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField()
+    avatar = serializers.ImageField(source='user.avatar')
     user = serializers.CharField(source='user.nickname', read_only=True)
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
 
@@ -39,6 +40,7 @@ class PostSerializer(serializers.ModelSerializer):
             "id",
             "photo",
             "title",
+            "avatar",
             "user",
             "description",
             "created_at",
@@ -58,33 +60,6 @@ class PostDetailSerializer(PostListSerializer):
     class Meta:
         model = Post
         fields = PostSerializer.Meta.fields
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
-
-    class Meta:
-        model = Comment
-        fields = (
-            "id",
-            "post",
-            "text",
-            "created_at",
-        )
-
-
-class CommentListSerializer(CommentSerializer):
-    user = serializers.CharField(source='user.nickname')
-
-    class Meta:
-        model = Comment
-        fields = CommentSerializer.Meta.fields + ("user",)
-
-
-class CommentDetailSerializer(CommentSerializer):
-    class Meta:
-        model = Comment
-        fields = CommentListSerializer.Meta.fields
 
 
 class SubjectSerializer(BaseTagSubjectRelatedSerializer):

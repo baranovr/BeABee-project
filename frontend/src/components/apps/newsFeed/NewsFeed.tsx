@@ -1,29 +1,29 @@
+// NewsFeed.tsx
+
 import React, { useEffect, useState } from 'react';
 import { BaseArticle } from '@app/components/common/BaseArticle/BaseArticle';
 import { BaseFeed } from '@app/components/common/BaseFeed/BaseFeed';
-import { HomeworksFilter } from '@app/components/apps/newsFeed/HomeworksFilter/HomeworksFilter';
-
+import { NewsFilter } from '@app/components/apps/newsFeed/NewsFilter/NewsFilter';
+import { getNews, Post } from '@app/api/news.api';
 import { BaseEmpty } from '@app/components/common/BaseEmpty/BaseEmpty';
-import { getHomeworks, Homework } from '@app/api/homeworks.api';
-import { getHomeworksList } from '@app/constants/dashboardHomeworks';
 
-export const HomeworksFeed: React.FC = () => {
-  const [homeworks, setHomeworks] = useState<Homework[]>([]);
+export const NewsFeed: React.FC = () => {
+  const [news, setNews] = useState<Post[]>([]);
   const [hasMore] = useState<boolean>(true);
   const [loaded, setLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    getHomeworksList()
-      .then((res) => setHomeworks(res))
+    getNews()
+      .then((res) => setNews(res))
       .finally(() => setLoaded(true));
   }, []);
 
   const next = () => {
-    getHomeworks().then((newHomeworks) => setHomeworks(homeworks.concat(newHomeworks)));
+    getNews().then((newNews) => setNews(news.concat(newNews)));
   };
 
   return (
-    <HomeworksFilter news={homeworks}>
+    <NewsFilter news={news}>
       {({ filteredNews }) =>
         filteredNews?.length || !loaded ? (
           <BaseFeed next={next} hasMore={hasMore}>
@@ -31,11 +31,12 @@ export const HomeworksFeed: React.FC = () => {
               <BaseArticle
                 key={index}
                 title={post.title}
-                description={post.description}
-                date={post.created_at}
-                imgUrl={post.file}
-                author={post.teacher}
-                avatar={post.teacher_avatar}
+                description={post.text}
+                date={post.date}
+                imgUrl={post.img}
+                author={post.author}
+                avatar={post.avatarUrl}
+                tags={post.tags}
               />
             ))}
           </BaseFeed>
@@ -43,6 +44,6 @@ export const HomeworksFeed: React.FC = () => {
           <BaseEmpty />
         )
       }
-    </HomeworksFilter>
+    </NewsFilter>
   );
 };

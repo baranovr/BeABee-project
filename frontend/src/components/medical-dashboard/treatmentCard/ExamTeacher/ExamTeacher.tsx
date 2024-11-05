@@ -20,15 +20,14 @@ export const ExamTeacher: React.FC<{ exam: Exam }> = ({ exam }) => {
   return (
     <S.TeacherCard>
       <S.TeacherCardBody>
-        <BaseAvatar src={exam.teacher.teacher_avatar} size={64} alt="Teacher Avatar" />
-        <S.TeacherName>{exam.teacher.full_name_sur}</S.TeacherName>
+        <BaseAvatar src={exam.teacher.teacher_avatar} size={128} alt="Teacher Avatar" />
+        <S.TeacherName>
+          {exam.teacher.full_name_sur}, {exam.subject}
+        </S.TeacherName>
       </S.TeacherCardBody>
 
       <S.TeacherCardBody>
         <BaseRow gutter={[16, 16]}>
-          <S.LabelCol span={12}>Subject:</S.LabelCol>
-          <S.ValueCol span={12}>{exam.subject}</S.ValueCol>
-
           <S.LabelCol span={12}>Date & time:</S.LabelCol>
           <S.ValueCol span={12}>{formatDate(exam.date_time)}</S.ValueCol>
 

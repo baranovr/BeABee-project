@@ -1,3 +1,5 @@
+// BaseArticle.styles.ts
+
 import styled from 'styled-components';
 import { BORDER_RADIUS, FONT_SIZE, FONT_WEIGHT, media } from '@app/styles/themes/constants';
 import { BaseTypography } from '../BaseTypography/BaseTypography';

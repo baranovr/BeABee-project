@@ -39,25 +39,6 @@ class Post(models.Model):
         return self.title
 
 
-class Comment(models.Model):
-    post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name="comments",
-    )
-    text = models.TextField()
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="user_comments",
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["created_at"]
-
-    def __str__(self):
-        return self.text
-
-
 class Subject(models.Model):
     name = models.CharField(max_length=150, unique=True)
 
@@ -107,7 +88,7 @@ class GroupChoices(models.TextChoices):
     CS_32 = "CS-32",
     CS_33 = "CS-33",
     CS_34 = "CS-34",
-    CS_41 = "CS_41",
+    CS_41 = "CS-41",
     CS_42 = "CS-42",
     CS_43 = "CS-43",
     CS_44 = "CS-44",

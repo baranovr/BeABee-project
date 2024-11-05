@@ -1,3 +1,5 @@
+// BaseArticle.tsx
+
 import React from 'react';
 import { Dates } from '@app/constants/Dates';
 import { BaseHashTag, IHashTag } from '../BaseHashTag/BaseHashTag';
@@ -9,7 +11,7 @@ export interface BaseArticleProps {
   author?: React.ReactNode;
   imgUrl: string;
   title: string;
-  date: string;
+  date: number | string;
   description: string;
   avatar?: string;
   tags?: IHashTag[];

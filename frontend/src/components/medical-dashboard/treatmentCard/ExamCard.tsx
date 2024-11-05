@@ -14,6 +14,7 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { Exam, getExams } from '@app/api/exams.api';
 import { ExamTeacher } from '@app/components/medical-dashboard/treatmentCard/ExamTeacher/ExamTeacher';
+import { ExamNotFound } from './ExamNotFound/ExamNotFound';
 
 export const ExamCard: React.FC = () => {
   const { isTablet } = useResponsive();
@@ -62,7 +63,7 @@ export const ExamCard: React.FC = () => {
 
   const currentExam = exams.find((exam) => Dates.getDate(exam.date_time).isSame(selectedDate, 'date'));
 
-  const panelItem = currentExam ? <ExamTeacher exam={currentExam} /> : null;
+  const panelItem = currentExam ? <ExamTeacher exam={currentExam} /> : <ExamNotFound />;
 
   return (
     <DashboardCard title={t('medical-dashboard.examPlan.title')}>
@@ -72,7 +73,7 @@ export const ExamCard: React.FC = () => {
             <BaseCol md={12}>{calendarItem}</BaseCol>
             <BaseCol md={12}>{panelItem}</BaseCol>
           </>
-        ) : isDateClicked && exams.some((exam) => Dates.getDate(exam.date_time).isSame(selectedDate, 'date')) ? (
+        ) : isDateClicked ? (
           <BackButtonWrapper span={24}>
             {panelItem}
             <BackButton type="text" icon={<ArrowLeftOutlined />} onClick={() => setDateClicked(false)} />

@@ -1,3 +1,5 @@
+// doctors.api.ts
+
 export interface Teacher {
   id: number;
   name: string;
@@ -58,22 +60,6 @@ export const getTeachersData = (): Promise<Teacher[]> => {
           imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/sara-mills.webp',
           phone: '+X-XXX-XXX-XXXX',
           address: '850 South Tunnel St. Newburgh, NY 12550',
-        },
-        {
-          id: 7,
-          name: 'Francisco Venancio',
-          specifity: 7,
-          imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/francisco-venancio.webp',
-          phone: '+X-XXX-XXX-XXXX',
-          address: '322 South Del Monte Rd. West Hempstead, NY 11552',
-        },
-        {
-          id: 8,
-          name: 'Jorden Cannon',
-          specifity: 8,
-          imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/jorden-cannon.webp',
-          phone: '+X-XXX-XXX-XXXX',
-          address: '7634 Taylor St. Boston, MA 02127',
         },
       ]);
     }, 0);
