@@ -99,6 +99,6 @@ export const Description = styled.div`
 export const TagsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.625rem;
-  padding: 0 1.25rem 1.25rem;
+  gap: 0.5rem;
+  margin-top: 1rem;
 `;

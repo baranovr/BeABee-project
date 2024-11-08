@@ -1,3 +1,5 @@
+// SettingsOverlay.tsx
+
 import React from 'react';
 import { DropdownCollapse } from '@app/components/header/Header.styles';
 import { useTranslation } from 'react-i18next';

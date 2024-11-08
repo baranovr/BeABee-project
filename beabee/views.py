@@ -8,10 +8,10 @@ from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from beabee.models import Tag, Post, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
+from beabee.models import Post, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
 from beabee.serializers import (
-    TagSerializer, TagListSerializer, TagDetailSerializer, PostSerializer, PostListSerializer,
-    PostDetailSerializer, SubjectListSerializer,SubjectDetailSerializer, SubjectSerializer,
+    PostSerializer, PostListSerializer, PostDetailSerializer,
+    SubjectListSerializer,SubjectDetailSerializer, SubjectSerializer,
     TeacherSerializer, TeacherListSerializer, TeacherDetailSerializer,
     HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer,
     NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer, ExamSerializer,
@@ -20,53 +20,8 @@ from beabee.serializers import (
 from beabee.сustom_permissions.is_not_banned_permission import IsNotBanned
 
 
-class TagViewSet(viewsets.ModelViewSet):
-    queryset = Tag.objects.all()
-    serializer_class = TagSerializer
-    permission_classes = [IsNotBanned]
-
-    def get_queryset(self):
-        name = self.request.query_params.get("name", None)
-
-        queryset = self.queryset
-
-        if name:
-            queryset = queryset.filter(name__icontains=name)
-
-        return queryset.distinct()
-
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return TagListSerializer
-
-        if self.action == "retrieve":
-            return TagDetailSerializer
-        
-        return TagSerializer
-
-    @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                name="name",
-                type=OpenApiTypes.STR,
-                description="Filter tags by name",
-            )
-        ]
-    )
-    def list(self, request, *args, **kwargs):
-        """
-        List all tags, or create a new tag.
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        return super().list(request, *args, **kwargs)
-
-
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by("-created_at")
     serializer_class = PostSerializer
     permission_classes = [IsNotBanned]
 
@@ -111,11 +66,6 @@ class PostViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            tags = self.validated_data["tags"]
-
-            if len(tags) > 5:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-
             serializer.save(user=request.user)
             headers = self.get_success_headers(serializer.data)
             return Response(
@@ -131,11 +81,6 @@ class PostViewSet(viewsets.ModelViewSet):
                 post, data=request.data, partial=True
             )
             serializer.is_valid(raise_exception=True)
-            tags = self.validated_data["tags"]
-
-            if len(tags) > 5:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-
             author = post.user
 
             if author == request.user:

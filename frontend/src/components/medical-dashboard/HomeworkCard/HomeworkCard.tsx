@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { getHomeworksList, Homework } from '@app/constants/dashboardHomeworks';
 import { DashboardCard } from '../DashboardCard/DashboardCard';
-import * as S from './NewsCard.styles';
+import * as S from './HomeworkCard.styles';
 import { useTranslation } from 'react-i18next';
-import { BaseArticle } from '@app/components/common/BaseArticle/BaseArticle';
+import { BaseArticleNoImg } from '@app/components/common/BaseArticle/BaseArticle';
 
-export const NewsCard: React.FC = () => {
+export const HomeworkCard: React.FC = () => {
   const { t } = useTranslation();
   const [homeworks, setHomeworks] = useState<Homework[]>([]);
 
@@ -22,9 +22,8 @@ export const NewsCard: React.FC = () => {
     <DashboardCard title={t('medical-dashboard.news')}>
       <S.Wrapper>
         {homeworks.map((homework) => (
-          <BaseArticle
+          <BaseArticleNoImg
             key={homework.id}
-            imgUrl={homework.file}
             title={homework.title}
             date={new Date(homework.created_at).toLocaleDateString()}
             description={homework.description}

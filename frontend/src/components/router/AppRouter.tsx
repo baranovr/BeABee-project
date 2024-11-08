@@ -22,7 +22,6 @@ const NotificationsPage = React.lazy(() => import('@app/pages/NotificationsPage'
 const ResultsPage = React.lazy(() => import('@app/pages/inFuturePages/ResultsPage'));
 const PlansPage = React.lazy(() => import('@app/pages/inFuturePages/PlansPage'));
 const UploadsPage = React.lazy(() => import('@app/pages/inFuturePages/UploadsPage'));
-const GoogleMaps = React.lazy(() => import('@app/pages/maps/GoogleMapsPage/GoogleMapsPage'));
 const Logout = React.lazy(() => import('./Logout'));
 
 export const NFT_DASHBOARD_PATH = '/';
@@ -36,9 +35,6 @@ const NewsFeed = withLoading(NewsFeedPage);
 const Uploads = withLoading(UploadsPage);
 const Results = withLoading(ResultsPage);
 const Plans = withLoading(PlansPage);
-
-// Maps
-const Google = withLoading(GoogleMaps);
 
 const ServerError = withLoading(ServerErrorPage);
 const Error404 = withLoading(Error404Page);
@@ -65,9 +61,6 @@ export const AppRouter: React.FC = () => {
           <Route path={MEDICAL_DASHBOARD_PATH} element={<MedicalDashboard />} />
           <Route path="apps">
             <Route path="feed" element={<NewsFeed />} />
-          </Route>
-          <Route path="maps">
-            <Route path="google-maps" element={<Google />} />
           </Route>
           <Route path="server-error" element={<ServerError />} />
           <Route path="404" element={<Error404 />} />

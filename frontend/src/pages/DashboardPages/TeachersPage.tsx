@@ -6,7 +6,7 @@ import { ExamCard } from '@app/components/medical-dashboard/treatmentCard/ExamCa
 import { AllTeachersCard } from '@app/components/medical-dashboard/favoriteDoctors/AllTeachersCard/AllTeachersCard';
 import { PatientResultsCard } from '@app/components/medical-dashboard/PatientResultsCard/PatientResultsCard';
 import { StatisticsCards } from '@app/components/medical-dashboard/statisticsCards/StatisticsCards';
-import { NewsCard } from '@app/components/medical-dashboard/TeacherCard/NewsCard';
+import { HomeworkCard } from '@app/components/medical-dashboard/HomeworkCard/HomeworkCard';
 import { References } from '@app/components/common/References/References';
 import { useResponsive } from '@app/hooks/useResponsive';
 import * as S from './DashboardPage.styles';
@@ -41,7 +41,7 @@ const TeachersPage: React.FC = () => {
           </BaseCol>
 
           <BaseCol id="news" span={24}>
-            <NewsCard />
+            <HomeworkCard />
           </BaseCol>
         </BaseRow>
         <References />
@@ -77,7 +77,7 @@ const TeachersPage: React.FC = () => {
       </BaseCol>
 
       <BaseCol id="news" xs={24} md={24} order={(isTablet && 14) || 0}>
-        <NewsCard />
+        <HomeworkCard />
       </BaseCol>
     </BaseRow>
   );

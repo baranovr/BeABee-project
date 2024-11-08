@@ -49,6 +49,8 @@ export const ExamCard: React.FC = () => {
     setDate(Dates.getToday());
   };
 
+  const examsByDate = exams.filter(exam => Dates.getDate(exam.date_time).isSame(selectedDate, 'date'));
+
   const calendarItem = (
     <ExamCalendar
       calendar={exams}
@@ -61,9 +63,21 @@ export const ExamCard: React.FC = () => {
     />
   );
 
-  const currentExam = exams.find((exam) => Dates.getDate(exam.date_time).isSame(selectedDate, 'date'));
+  const ExamContainer = styled.div`
+    margin-bottom: 1rem;  // Adjust spacing as needed
+    padding: 1rem;
+    background-color: var(--card-bg-color);  // Use a background color to make each card stand out
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  `;
 
-  const panelItem = currentExam ? <ExamTeacher exam={currentExam} /> : <ExamNotFound />;
+  const panelItem = examsByDate.length > 0
+  ? examsByDate.map(exam => (
+      <ExamContainer key={exam.id}>
+        <ExamTeacher exam={exam} />
+      </ExamContainer>
+    ))
+  : <ExamNotFound />;
 
   return (
     <DashboardCard title={t('medical-dashboard.examPlan.title')}>

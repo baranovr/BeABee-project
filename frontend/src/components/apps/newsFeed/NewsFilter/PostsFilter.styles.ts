@@ -1,4 +1,4 @@
-// NewsFilter.styles.ts
+// PostsFilter.styles.ts
 
 import styled from 'styled-components';
 import { SearchOutlined, PlusCircleFilled, CloseOutlined } from '@ant-design/icons';
@@ -8,14 +8,6 @@ import { BasePopover } from '@app/components/common/BasePopover/BasePopover';
 import { BaseInput } from '@app/components/common/inputs/BaseInput/BaseInput';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';
 import { BaseCheckbox } from '@app/components/common/BaseCheckbox/BaseCheckbox';
-
-export const AddTagText = styled.span`
-  color: var(--text-main-color);
-  font-size: ${FONT_SIZE.md};
-  font-weight: ${FONT_WEIGHT.semibold};
-  line-height: 1.375rem;
-`;
-
 export const TitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -46,32 +38,15 @@ export const DateLabel = styled.div`
   margin-bottom: 0.4375rem;
   font-size: ${FONT_SIZE.xs};
 `;
-
-export const AddTagWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  margin-bottom: 1rem;
-`;
-
-export const TagsWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-  gap: 0.625rem;
-`;
-
 export const BtnWrapper = styled.div`
   display: flex;
   gap: 1rem;
 `;
-
-export const PlusIcon = styled(PlusCircleFilled)`
+styled(PlusCircleFilled)`
   color: var(--lightgrey);
   font-size: 1.5625rem;
   margin-right: 1rem;
 `;
-
 export const SearchIcon = styled(SearchOutlined)`
   position: absolute;
   z-index: 2;
@@ -93,17 +68,6 @@ export const ContentWrapper = styled.div`
   justify-content: center;
   margin-top: 1.875rem;
 `;
-
-export const TitleHeader = styled.div`
-  display: inline-block;
-  padding: 1rem;
-  margin-bottom: 1.25rem;
-  box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.07);
-  cursor: pointer;
-  background-color: var(--background-color);
-  border-radius: ${BORDER_RADIUS};
-`;
-
 export const Input = styled(BaseInput)`
   height: 3.125rem;
   border: none;
@@ -169,34 +133,14 @@ export const FilterTitle = styled.div`
   color: var(--text-main-color);
   margin-bottom: 1rem;
 `;
-
-export const TagPopoverLine = styled.span`
-  line-height: 1.25rem;
-  display: flex;
-  &:last-child {
-    padding-bottom: 0;
-  }
-  align-items: center;
-  cursor: pointer;
-`;
-
-export const PopoverCheckbox = styled(BaseCheckbox)`
+styled(BaseCheckbox)`
   margin-right: 1rem;
 `;
-
-export const ClosePopoverWrapper = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  cursor: pointer;
-`;
-
-export const ClosePopover = styled(CloseOutlined)`
+styled(CloseOutlined)`
   color: var(--primary-color);
   width: 0.875rem;
   height: 0.875rem;
 `;
-
 export const FilterPopover = styled(BasePopover)`
   & .ant-popover-inner-content {
     padding: 0;

@@ -113,6 +113,11 @@
     "unchecked": "Unchecked"
   },
   "common": {
+    "postError": "Error",
+    "postCreated": "Post has been created!",
+    "title": "Title",
+    "uploadPhoto": "Upload photo",
+    "description": "Description",
     "address": "Address",
     "nickname": "Nickname",
     "social_media_links": "Social media links",
@@ -476,6 +481,7 @@
       "to": "To",
       "h": "h"
     },
+    "createPost": "Create Post",
     "notifications": {
       "loginAttempt": "There was an attempt to log in to your account from another device",
       "mention": "mentioned you in <0>{{place}}</0>",

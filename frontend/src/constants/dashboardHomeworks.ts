@@ -7,7 +7,6 @@ export interface Homework {
   title: string;
   description: string;
   created_at: string;
-  file: string;
   teacher_avatar: string;
   teacher: string;
   subject: string;
@@ -26,7 +25,6 @@ export const getHomeworksList = async (): Promise<Homework[]> => {
         title: homework.title,
         description: homework.description,
         created_at: homework.created_at,
-        file: homework.file,
         teacher_avatar: homework.teacher_avatar,
         teacher: homework.teacher,
         subject: homework.subject,

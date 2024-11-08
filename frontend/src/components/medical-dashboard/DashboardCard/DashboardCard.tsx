@@ -1,3 +1,5 @@
+// DashboardCard.tsx
+
 import React from 'react';
 import { BaseCard, BaseCardProps } from '@app/components/common/BaseCard/BaseCard';
 import { useResponsive } from 'hooks/useResponsive';

@@ -46,7 +46,7 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
           <BaseCol span={8}>
             <BaseRow gutter={[16, 16]}>
               <BaseCol span={24}>
-                <S.DateText>{Dates.getDate(date_joined).format('L')}</S.DateText>
+                <S.DateText>{Dates.getDate(date_joined).format('ll')}</S.DateText>
               </BaseCol>
 
               <BaseCol span={24}>

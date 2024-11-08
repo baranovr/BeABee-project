@@ -4,6 +4,7 @@ import { ProfileDropdown } from '../components/profileDropdown/ProfileDropdown/P
 import { HeaderSearch } from '../components/HeaderSearch/HeaderSearch';
 import { SettingsDropdown } from '../components/settingsDropdown/SettingsDropdown';
 import { HeaderFullscreen } from '../components/HeaderFullscreen/HeaderFullscreen';
+import { CreateObjectsDropdown } from "@app/components/header/components/createObjectsDropdown/CreateObjectsDropdown";
 import * as S from '../Header.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
@@ -43,6 +44,9 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({ isTwoColumnsLayout
         <BaseRow align="middle" justify="end" gutter={[5, 5]}>
           <BaseCol>
             <BaseRow gutter={[{ xxl: 5 }, { xxl: 5 }]}>
+              <BaseCol>
+                <CreateObjectsDropdown />
+              </BaseCol>
               <BaseCol>
                 <HeaderFullscreen />
               </BaseCol>

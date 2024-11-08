@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from beabee.models import (
-    Tag, Post, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
+    Post, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
 )
 from beabee_project import settings
 
@@ -13,24 +13,9 @@ class BaseTagSubjectRelatedSerializer(serializers.ModelSerializer):
             "name"
         )
 
-class TagSerializer(BaseTagSubjectRelatedSerializer):
-    class Meta(BaseTagSubjectRelatedSerializer.Meta):
-        model = Tag
-
-
-class TagListSerializer(BaseTagSubjectRelatedSerializer):
-    class Meta(BaseTagSubjectRelatedSerializer.Meta):
-        model = Tag
-
-
-class TagDetailSerializer(BaseTagSubjectRelatedSerializer):
-    class Meta(BaseTagSubjectRelatedSerializer.Meta):
-        model = Tag
-
 
 class PostSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField()
-    avatar = serializers.ImageField(source='user.avatar')
     user = serializers.CharField(source='user.nickname', read_only=True)
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
 
@@ -40,26 +25,24 @@ class PostSerializer(serializers.ModelSerializer):
             "id",
             "photo",
             "title",
-            "avatar",
             "user",
             "description",
             "created_at",
-            "tags"
         )
 
 
 class PostListSerializer(PostSerializer):
-    tags = TagSerializer(many=True)
+    avatar = serializers.ImageField(source='user.avatar')
 
     class Meta:
         model = Post
-        fields = PostSerializer.Meta.fields
+        fields = PostSerializer.Meta.fields + ("avatar",)
 
 
 class PostDetailSerializer(PostListSerializer):
     class Meta:
         model = Post
-        fields = PostSerializer.Meta.fields
+        fields = PostListSerializer.Meta.fields
 
 
 class SubjectSerializer(BaseTagSubjectRelatedSerializer):
@@ -163,7 +146,6 @@ class HomeworkSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "description",
-            "file",
             "subject",
             "type",
             "teacher",
@@ -184,7 +166,6 @@ class HomeworkListSerializer(HomeworkSerializer):
             "id",
             "title",
             "description",
-            "file",
             "subject",
             "type",
             "teacher_avatar",

@@ -1,4 +1,4 @@
-// TeacherCard.styles.ts
+// HomeworkCard.styles.ts
 
 import { BaseTypography } from '@app/components/common/BaseTypography/BaseTypography';
 import { BaseRate } from '@app/components/common/BaseRate/BaseRate';
@@ -14,7 +14,7 @@ export const ImgWrapper = styled.div`
   position: relative;
   overflow: hidden;
   margin: -1rem -1rem 0;
-  padding-top: 150%; /* Создаем соотношение 2:3 (150% = 3/2 * 100%) */
+  padding-top: 120%; /* Создаем соотношение 2:3 (150% = 3/2 * 100%) */
   border-top-left-radius: ${BORDER_RADIUS};
   border-top-right-radius: ${BORDER_RADIUS};
   background-color: var(--secondary-background-color);

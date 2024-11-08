@@ -6,7 +6,6 @@ export interface Homework {
   id: number;
   title: string;
   description: string;
-  file: string;
   subject: string;
   type: string;
   teacher_avatar: string;

@@ -18,7 +18,7 @@ interface ExamCalendarProps {
   onDecrease: () => void;
   onToday: () => void;
   setDateClicked: (state: boolean) => void;
-  calendar: Exam[]; // теперь принимаем массив экзаменов
+  calendar: Exam[];
 }
 
 export const ExamCalendar: React.FC<ExamCalendarProps> = ({

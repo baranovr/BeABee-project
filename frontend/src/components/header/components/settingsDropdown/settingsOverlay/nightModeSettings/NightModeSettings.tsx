@@ -1,3 +1,5 @@
+// NightModeSettings.tsx
+
 import React from 'react';
 import { NightTimePicker } from './NightTimePicker/NightTimePicker';
 import { BaseSwitch } from '@app/components/common/BaseSwitch/BaseSwitch';

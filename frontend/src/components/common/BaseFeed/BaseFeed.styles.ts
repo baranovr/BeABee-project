@@ -1,3 +1,5 @@
+// BaseFeed.styles.ts
+
 import { media } from '@app/styles/themes/constants';
 import styled from 'styled-components';
 

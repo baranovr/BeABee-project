@@ -48,53 +48,9 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
     icon: <UserOutlined />,
     children: [
       {
-        title: 'common.login',
-        key: 'login',
-        url: '/auth/login',
-      },
-      {
-        title: 'common.signUp',
-        key: 'singUp',
-        url: '/auth/sign-up',
-      },
-      {
         title: 'common.ban',
         key: 'ban',
         url: '/auth/ban',
-      },
-    ],
-  },
-  {
-    title: 'common.maps',
-    key: 'maps',
-    icon: <CompassOutlined />,
-    children: [
-      {
-        title: 'common.googleMap',
-        key: 'google-maps',
-        url: '/maps/google-maps',
-      },
-    ],
-  },
-  {
-    title: 'common.pages',
-    key: 'pages',
-    icon: <LayoutOutlined />,
-    children: [
-      {
-        title: 'common.profilePage',
-        key: 'profile',
-        url: '/profile',
-      },
-      {
-        title: 'common.serverError',
-        key: 'serverError',
-        url: '/server-error',
-      },
-      {
-        title: 'common.clientError',
-        key: '404Error',
-        url: '/404',
       },
     ],
   },

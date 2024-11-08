@@ -1,3 +1,5 @@
+// ExamTeacher.styles.ts
+
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import styled from 'styled-components';
 import { BaseCard } from '../../../common/BaseCard/BaseCard';
