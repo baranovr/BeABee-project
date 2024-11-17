@@ -90,15 +90,39 @@ export const DateTime = styled(BaseTypography.Text)`
 export const Description = styled.div`
   font-size: ${FONT_SIZE.xs};
   color: var(--text-main-color);
+  white-space: pre-wrap;
+  word-break: break-word;
 
   @media only screen and ${media.xxl} {
     font-size: 1rem;
   }
 `;
 
-export const TagsWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+export const Detail = styled.div`
+  font-size: ${FONT_SIZE.xs};
+  color: #2aabd2;
+  margin-top: 0.5rem;
+
+  &:first-of-type {
+    margin-top: 1rem;
+  }
+
+  @media only screen and ${media.xxl} {
+    font-size: 1rem;
+  }
+`;
+
+export const TaskWrapper = styled.div`
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: ${BORDER_RADIUS};
   margin-top: 1rem;
+
+  @media only screen and ${media.xl} {
+    padding: 1rem;
+  }
+
+  @media only screen and ${media.xxl} {
+    padding: 1.85rem;
+  }
 `;

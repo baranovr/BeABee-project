@@ -11,8 +11,9 @@ export interface Homework {
   teacher: string;
   subject: string;
   type: string;
-  deadline: number;
+  deadline: string;
   added_by: string;
+  for_group: string;
 }
 
 export const getHomeworksList = async (): Promise<Homework[]> => {
@@ -31,6 +32,7 @@ export const getHomeworksList = async (): Promise<Homework[]> => {
         type: homework.type,
         deadline: homework.deadline,
         added_by: homework.added_by,
+        for_group: homework.for_group,
       }),
     );
   } catch (error) {

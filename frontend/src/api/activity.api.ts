@@ -11,8 +11,10 @@ export interface Activity {
 }
 
 export interface ImportantInfo {
+  id: number;
   title: string;
   owner: string;
+  status_in_service: string;
   image: string;
   description: string;
   created_at: number;
@@ -21,6 +23,7 @@ export interface ImportantInfo {
 
 export interface UserActivity {
   avatar: string;
+  nickname: string;
   full_name: string;
   status_in_service: string;
   date_joined: string;
@@ -31,6 +34,7 @@ export const getUserActivities = async (): Promise<UserActivity[]> => {
   const users = await getUsersList();
   return users.map((user: any) => ({
     avatar: user.avatar,
+    nickname: user.nickname,
     full_name: user.full_name,
     status_in_service: user.status_in_service,
     date_joined: user.date_joined,
@@ -44,8 +48,10 @@ export const getTrendingActivities = async (): Promise<ImportantInfo[]> => {
 
     return importantInfos.map(
       (info): ImportantInfo => ({
+        id: info.id,
         title: info.title,
         owner: info.owner,
+        status_in_service: info.status_in_service,
         created_at: info.created_at,
         description: info.description,
         image: info.image,

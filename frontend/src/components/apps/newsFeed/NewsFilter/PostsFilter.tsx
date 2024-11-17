@@ -1,6 +1,6 @@
 // PostsFilter.ts
 
-import React, { ReactNode, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { ReactNode, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RangeValue } from 'rc-picker/lib/interface.d';
 import { AuthorValidator, TitleValidator, DatesValidator } from '../Validator';
@@ -8,7 +8,6 @@ import { useResponsive } from '@app/hooks/useResponsive';
 import { AppDate, Dates } from '@app/constants/Dates';
 import { Post } from '@app/api/posts.api';
 import * as S from './PostsFilter.styles';
-import { BaseDropdown } from '@app/components/common/BaseDropdown/Dropdown';
 
 interface PostsFilterProps {
   news: Post[];

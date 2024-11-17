@@ -149,6 +149,20 @@ export const BidButton = styled(BaseButton)`
   font-size: ${FONT_SIZE.md};
 `;
 
+export const BidButtonDelete = styled(BaseButton)`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 8px;
+
+  color: red;
+
+  border-color: red;
+
+  font-size: ${FONT_SIZE.xxs};
+`;
+
+
 export const Card = styled(NFTCard)<CardInternalProps>`
   overflow: hidden;
 
@@ -171,7 +185,7 @@ export const Card = styled(NFTCard)<CardInternalProps>`
     }
 
     ${AuthorAvatarWrapper} {
-      transform: translateY(-70px) scale(1.1);
+      transform: translateY(10px) translateX(-10px) scale(0.6);
     }
 
     ${BidButton} {

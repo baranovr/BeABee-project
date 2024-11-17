@@ -113,9 +113,16 @@
     "unchecked": "Unchecked"
   },
   "common": {
-    "postError": "Error",
-    "postCreated": "Post has been created!",
+    "creatingError": "Error creating object! Make sure all fields are filled in correctly and try again!",
+    "postCreated": "Post created successfully!",
+    "subjectCreated": "Subject created successfully!",
+    "newsCreated": "News created successfully!",
+    "importantInfoCreated": "Important info created successfully!",
+    "homeworkCreated": "Homework created successfully!",
+    "examCreated": "Exam created successfully!",
     "title": "Title",
+    "details": "Details",
+    "name": "Name",
     "uploadPhoto": "Upload photo",
     "description": "Description",
     "address": "Address",
@@ -198,7 +205,6 @@
     "maps": "Maps",
     "modal": "Modal",
     "moreDetails": "More details",
-    "name": "Name",
     "neurologist": "Neurologist",
     "newPassword": "New Password",
     "notFound": "Sorry, there’s nothing found",
@@ -482,6 +488,12 @@
       "h": "h"
     },
     "createPost": "Create Post",
+    "createSubject": "Create Subject",
+    "createNews": "Create News",
+    "createTeacher": "Create Teacher",
+    "createImportantInfo": "Create Im. Info",
+    "createHomework": "Create Homework",
+    "createExam": "Create Exam",
     "notifications": {
       "loginAttempt": "There was an attempt to log in to your account from another device",
       "mention": "mentioned you in <0>{{place}}</0>",
@@ -865,6 +877,8 @@
     "trendingCollections": "What's important?",
     "close": "Close",
     "recentlyAddedNFTs": "Recently News",
-    "trendingCreators": "Stories"
+    "trendingCreators": "Stories",
+    "accessDeniedDelete": "You cannot delete this object. Access denied!",
+    "deletedSuccessfully": "Object deleted successfully!"
   }
 }

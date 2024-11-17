@@ -1,6 +1,5 @@
-//TeachersMap.tsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { MapCard } from '@app/components/medical-dashboard/mapCard/MapCard';
 import { References } from '@app/components/common/References/References';
@@ -15,6 +14,11 @@ import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 
 const MedicalDashboardPage: React.FC = () => {
   const { isDesktop } = useResponsive();
+  const [refreshNews, setRefreshNews] = useState(0);
+
+  const handleNewsUpdate = () => {
+    setRefreshNews((prev) => prev + 1);
+  };
 
   const desktopLayout = (
     <BaseRow>

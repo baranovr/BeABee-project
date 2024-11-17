@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Input, Button, Upload, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import axiosInstance from "@app/api/axiosInstance";
 import { RcFile } from 'antd/lib/upload';
 
 export const CreatePostForm: React.FC = () => {
@@ -16,9 +16,18 @@ export const CreatePostForm: React.FC = () => {
     setIsModalVisible(true);
   };
 
+  const validateAvatar = (file: RcFile) => {
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must be smaller than 2MB!');
+      return false;
+    }
+    return true;
+  };
+
   const handleOk = () => {
     if (!title || !description || !photo) {
-      message.error(t('common.fillAllFields'));
+      message.error(t('common.creatingError'));
       return;
     }
 
@@ -31,7 +40,7 @@ export const CreatePostForm: React.FC = () => {
 
     const token = localStorage.getItem('access');
 
-    axios.post('http://localhost:8000/api/platform/posts/', formData, {
+    axiosInstance.post('platform/posts/', formData, {
       headers: {
       'Content-Type': 'multipart/form-data',
         'Authorization': `Bearer ${token}`,
@@ -46,7 +55,7 @@ export const CreatePostForm: React.FC = () => {
     })
     .catch((error) => {
       console.error('Error creating post:', error);
-      message.error(t('common.postError'));
+      message.error(t('common.creatingError'));
     });
   };
 
@@ -55,8 +64,11 @@ export const CreatePostForm: React.FC = () => {
   };
 
   const handlePhotoChange = (file: RcFile) => {
-    setPhoto(file);
-    return false; // Останавливает автоматическую загрузку
+    if (validateAvatar(file)) {
+      setPhoto(file);
+      return false;
+    }
+    return false;
   };
 
   return (
@@ -73,10 +85,11 @@ export const CreatePostForm: React.FC = () => {
         cancelText={t('common.cancel')}
       >
         <Input
-          placeholder={t('common.title')}
+          placeholder={t('common.title') + ' (max 50 chars)'}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           style={{ marginBottom: '1rem' }}
+          maxLength={50}
         />
         <Input.TextArea
           placeholder={t('common.description')}
@@ -88,18 +101,30 @@ export const CreatePostForm: React.FC = () => {
         <Upload
           listType="picture-card"
           showUploadList={false}
-          beforeUpload={handlePhotoChange} // Используем новую функцию для обработки файла
+          beforeUpload={handlePhotoChange}
           onRemove={() => setPhoto(null)}
+          accept=".jpg,.jpeg,.png,.webp"
         >
           {photo ? (
-            <img src={URL.createObjectURL(photo)} alt="Post Photo" style={{ width: '100%' }} />
+            <img
+              src={URL.createObjectURL(photo)}
+              alt="Post Photo"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+            />
           ) : (
             <div>
               <PlusOutlined />
-              <div style={{ marginTop: 8 }}>{t('common.uploadPhoto')}</div>
+              <div style={{ marginTop: 8 }}>Upload Image</div>
             </div>
           )}
         </Upload>
+        <div style={{ marginTop: '8px', color: '#666' }}>
+          Supported formats: JPG, PNG, WEBP (max: 2MB)
+        </div>
       </Modal>
     </>
   );

@@ -16,13 +16,17 @@ export interface BaseArticleProps {
   className?: string;
 }
 
-export interface BaseArticlePropsNoImg {
-  author?: React.ReactNode;
+export interface BaseArticlePropsNoImg extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
-  date: number | string;
+  date: string;
   description: string;
-  avatar?: string;
-  className?: string;
+  author: string;
+  subject: string
+  avatar: string;
+  type?: string;
+  deadline?: string;
+  addedBy?: string;
+  forGroup?: string;
 }
 
 export const BaseArticle: React.FC<BaseArticleProps> = ({
@@ -60,6 +64,11 @@ export const BaseArticleNoImg: React.FC<BaseArticlePropsNoImg> = ({
   description,
   author,
   avatar,
+  subject,
+  type,
+  deadline,
+  addedBy,
+  forGroup,
   className,
 }) => {
   return (
@@ -68,14 +77,21 @@ export const BaseArticleNoImg: React.FC<BaseArticlePropsNoImg> = ({
         {!!avatar && <BaseAvatar src={avatar} alt="author" size={43} />}
         <S.AuthorWrapper>
           {author && <S.Author>{author}</S.Author>}
-          <S.DateTime>{Dates.format(date, 'L')}</S.DateTime>
+          <S.DateTime>{`Added by ${addedBy}`} at {date}</S.DateTime>
         </S.AuthorWrapper>
       </S.Header>
       <S.InfoWrapper>
         <S.InfoHeader>
           <S.Title>{title}</S.Title>
         </S.InfoHeader>
-        <S.Description>{description}</S.Description>
+        {type && <S.Detail>{`Subject: ${subject}`}</S.Detail>}
+        {deadline && <S.Detail>{`Deadline: ${deadline}`}</S.Detail>}
+        {forGroup && <S.Detail>{`For group: ${forGroup}`}</S.Detail>}
+        <S.TaskWrapper>
+          <S.Description>
+            {description}
+          </S.Description>
+        </S.TaskWrapper>
       </S.InfoWrapper>
     </S.Wrapper>
   );

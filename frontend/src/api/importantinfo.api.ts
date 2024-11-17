@@ -5,6 +5,7 @@ import axiosInstance from '@app/api/axiosInstance';
 export interface ImportantInfo {
   id: number;
   title: string;
+  status_in_service: string;
   owner: string;
   image: string;
   description: string;

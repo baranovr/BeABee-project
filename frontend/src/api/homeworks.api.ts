@@ -11,7 +11,8 @@ export interface Homework {
   teacher_avatar: string;
   teacher: string;
   created_at: string;
-  deadline: number;
+  deadline: string;
+  for_group: string;
   added_by: string;
 }
 

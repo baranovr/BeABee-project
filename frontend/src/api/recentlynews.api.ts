@@ -8,7 +8,9 @@ export interface News {
   title: string;
   description: string;
   created_at: number;
+  posted_by_id: number;
   posted_by: string;
+  status_in_service: string;
   avatar: string;
 }
 

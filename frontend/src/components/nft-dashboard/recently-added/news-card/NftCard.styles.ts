@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import { NFTCard } from '@app/components/nft-dashboard/common/NFTCard/NFTCard';
 import { Button as AntButton } from 'antd';
 import { FONT_SIZE, FONT_WEIGHT, FONT_FAMILY, media, BREAKPOINTS, BORDER_RADIUS } from '@app/styles/themes/constants';
@@ -86,16 +86,6 @@ export const CurrentBid = styled(InfoText)`
 
   color: var(--text-main-color);
 `;
-
-export const BidCrypto = styled.span`
-  transition: all 0.5s ease;
-
-  font-size: ${FONT_SIZE.xs};
-
-  @media only screen and ${media.xl} {
-    font-size: ${FONT_SIZE.md};
-  }
-`;
 styled(CurrentBid)`
   font-size: ${FONT_SIZE.xs};
 
@@ -121,6 +111,42 @@ export const ViewButton = styled(BaseButton)`
   z-index: 1;
 `;
 
+const gradientAnimation = keyframes`
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+`;
+
+export const DeleteNewsButton = styled(BaseButton)`
+  position: absolute;
+  bottom: 135px;
+  right: 20px;
+  padding: 5px 8px;
+  color: white;
+  font-size: ${FONT_SIZE.xs};
+  z-index: 1;
+  border: none;
+  background: linear-gradient(45deg, #ff0000, #ff5e5e, #ff0000);
+  background-size: 200% 200%;
+  animation: ${gradientAnimation} 6s ease infinite;
+
+  &:hover {
+    filter: brightness(1.2);
+  }
+`;
+
+export const DeleteButton = styled(AntButton)`
+  margin-top: 10px;
+  width: 100%;
+`;
+
+
 export const Button = styled(AntButton)`
   border-radius: ${BORDER_RADIUS};
 `;
@@ -128,13 +154,13 @@ export const Button = styled(AntButton)`
 export const StyledModal = styled(AntdModal)`
   .ant-modal-content {
     border-radius: ${BORDER_RADIUS};
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.6);
     color: var(--text-primary-color);
   }
 
   .ant-modal-header {
     border-bottom: none;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.6);
     border-top-left-radius: ${BORDER_RADIUS};
     border-top-right-radius: ${BORDER_RADIUS};
     padding: 16px;
@@ -156,7 +182,7 @@ export const StyledModal = styled(AntdModal)`
     font-size: ${FONT_SIZE.md};
     line-height: 1.5;
     color: var(--text-primary-color);
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.6);
   }
 
   .ant-modal-footer {
@@ -164,7 +190,7 @@ export const StyledModal = styled(AntdModal)`
     padding: 16px 24px;
     display: flex;
     justify-content: flex-end;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.6);
 
     button {
       border-radius: ${BORDER_RADIUS};
@@ -172,6 +198,58 @@ export const StyledModal = styled(AntdModal)`
       padding: 6px 12px;
     }
   }
+`;
+
+export const StyledModalDelete = styled(AntdModal)`
+    .ant-modal-content {
+        border-radius: ${BORDER_RADIUS};
+        background-color: rgba(0, 0, 0, 0.6);
+        color: var(--text-primary-color);
+    }
+
+    .ant-modal-header {
+        border-bottom: none;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-top-left-radius: ${BORDER_RADIUS};
+        border-top-right-radius: ${BORDER_RADIUS};
+        padding: 16px;
+    }
+
+    .ant-modal-title {
+        font-size: ${FONT_SIZE.lg};
+        font-weight: ${FONT_WEIGHT.bold};
+        color: var(--text-secondary-color);
+    }
+
+    .ant-modal-close {
+        color: var(--text-secondary-color);
+        font-size: ${FONT_SIZE.md};
+    }
+
+    .ant-modal-body {
+        padding: 24px;
+        font-size: ${FONT_SIZE.md};
+        line-height: 1.5;
+        color: var(--text-primary-color);
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .ant-modal-footer {
+        border-top: none;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: flex-end;
+        background-color: rgba(0, 0, 0, 0.6);
+
+        button {
+            border-radius: ${BORDER_RADIUS};
+            font-size: ${FONT_SIZE.md};
+            padding: 6px 12px;
+        }
+    }
+    .confirm_message {
+        color: red;
+    }
 `;
 
 export const Card = styled(NFTCard)<CardInternalProps>`

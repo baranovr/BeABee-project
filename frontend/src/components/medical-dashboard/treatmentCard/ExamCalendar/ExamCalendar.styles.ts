@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import dayjsGenerateConfig from 'rc-picker/lib/generate/dayjs';
 import generateCalendar from 'antd/lib/calendar/generateCalendar';
-import { AppDate } from '@app/constants/Dates';
+import { AppDate } from '../../../../constants/Dates';
 import { BORDER_RADIUS, FONT_SIZE, FONT_WEIGHT } from '@app/styles/themes/constants';
 
 const AntCalendar = generateCalendar<AppDate>(dayjsGenerateConfig);

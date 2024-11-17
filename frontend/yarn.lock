@@ -11069,6 +11069,7 @@ __metadata:
     less: ^4.1.2
     less-plugin-clean-css: ^1.5.1
     lint-staged: ^11.0.0
+    lucide-react: ^0.460.0
     pigeon-maps: ^0.19.7
     prettier: ^2.3.1
     react: ^18.2.0
@@ -11404,6 +11405,15 @@ __metadata:
   version: 7.14.1
   resolution: "lru-cache@npm:7.14.1"
   checksum: d72c6713c6a6d86836a7a6523b3f1ac6764768cca47ec99341c3e76db06aacd4764620e5e2cda719a36848785a52a70e531822dc2b33fb071fa709683746c104
+  languageName: node
+  linkType: hard
+
+"lucide-react@npm:^0.460.0":
+  version: 0.460.0
+  resolution: "lucide-react@npm:0.460.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
+  checksum: 6106dc16dd7ce7928d6136e81c9e84e87e1b6b0910a0c78777a387c795c0512755e8bf4c602ab8f09518919999a494ed86ba7190863e8e7aec6c82665147ead3
   languageName: node
   linkType: hard
 
