@@ -70,7 +70,7 @@ class Teacher(models.Model):
 
 
 class GroupChoices(models.TextChoices):
-    CS_31 = "CS_31"
+    CS_31 = "CS-31"
     CS_32 = "CS-32",
     CS_33 = "CS-33",
     CS_34 = "CS-34",
@@ -134,6 +134,7 @@ class Homework(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="teacher_homeworks")
     created_at = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField(null=True, blank=True)
+    for_group = models.CharField(max_length=50, choices=GroupChoices.choices, default="No group")
     added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="added_by_homeworks")
 
     class Meta:
@@ -152,7 +153,7 @@ def news_media_path(instance, filename):
 class News(models.Model):
     file = models.FileField(upload_to=news_media_path)
     title = models.CharField(max_length=30)
-    description = models.CharField(max_length=2555, default="No description")
+    description = models.CharField(max_length=3000, default="No description")
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="news_posters")
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -172,7 +173,7 @@ class ImportantInfo(models.Model):
     title = models.CharField(max_length=150)
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="info_posters")
     image = models.ImageField(upload_to=info_media_path)
-    description = models.CharField(max_length=2555, default="No Description")
+    description = models.CharField(max_length=3000, default="No Description")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

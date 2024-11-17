@@ -13,6 +13,7 @@ import RequireAuth from '@app/components/router/RequireAuth';
 import { withLoading } from '@app/hocs/withLoading.hoc';
 import NftDashboardPage from '@app/pages/DashboardPages/MainPage';
 import TeachersPage from '@app/pages/DashboardPages/TeachersPage';
+import TwoFAPage from "@app/pages/TwoFAPage";
 
 const NewsFeedPage = React.lazy(() => import('@app/pages/HomeworksFeedPage'));
 const ServerErrorPage = React.lazy(() => import('@app/pages/ServerErrorPage'));
@@ -76,6 +77,7 @@ export const AppRouter: React.FC = () => {
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>
           <Route path="login" element={<LoginPage />} />
+          <Route path="2fa" element={<TwoFAPage />} />
           <Route path="sign-up" element={<SignUpPage />} />
           <Route
             path="ban"

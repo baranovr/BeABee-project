@@ -151,6 +151,7 @@ class HomeworkSerializer(serializers.ModelSerializer):
             "teacher",
             "created_at",
             "deadline",
+            "for_group",
             "added_by"
         )
 
@@ -172,6 +173,7 @@ class HomeworkListSerializer(HomeworkSerializer):
             "teacher",
             "created_at",
             "deadline",
+            "for_group",
             "added_by"
         )
 
@@ -186,6 +188,8 @@ class HomeworkDetailSerializer(HomeworkListSerializer):
 
 class NewsSerializer(serializers.ModelSerializer):
     posted_by = serializers.CharField(source='posted_by.nickname', read_only=True)
+    posted_by_id = serializers.CharField(source='posted_by.id', read_only=True)
+    status_in_service = serializers.CharField(source='posted_by.status_in_service', read_only=True)
     avatar = serializers.ImageField(source='posted_by.avatar', read_only=True)
 
     class Meta:
@@ -195,7 +199,9 @@ class NewsSerializer(serializers.ModelSerializer):
             "file",
             "title",
             "description",
+            "posted_by_id",
             "posted_by",
+            "status_in_service",
             "avatar"
         )
 
@@ -216,6 +222,7 @@ class NewsDetailSerializer(NewsSerializer):
 
 class ImportantInfoSerializer(serializers.ModelSerializer):
     owner = serializers.CharField(source='posted_by.nickname', read_only=True)
+    status_in_service = serializers.CharField(source="posted_by.status_in_service", read_only=True)
     avatar = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
 
@@ -231,6 +238,7 @@ class ImportantInfoSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "owner",
+            "status_in_service",
             "image",
             "description",
             "created_at",

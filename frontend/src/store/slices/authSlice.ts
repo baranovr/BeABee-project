@@ -63,6 +63,95 @@ export const doLogin = createAsyncThunk(
   },
 );
 
+const API_BASE_URL = 'http://localhost:8000/api';
+
+const fetchConfig = {
+  credentials: 'include' as RequestCredentials,
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+  }
+};
+
+export const send2FACode = createAsyncThunk(
+  'auth/send2FACode',
+  async (credentials: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/user/login/2fa/`, {
+        ...fetchConfig,
+        method: 'POST',
+        body: JSON.stringify(credentials)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.error || 'Failed to send 2FA code');
+      }
+
+      // Log cookies after response
+      console.log('Cookies after 2FA request:', document.cookie);
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      return rejectWithValue('Network error occurred');
+    }
+  }
+);
+
+export const verify2FACode = createAsyncThunk(
+  'auth/verify2FACode',
+  async (payload: { code: string }, { dispatch, rejectWithValue }) => {
+    try {
+      // Send verification request
+      const response = await fetch(`${API_BASE_URL}/user/login/2fa/verify/`, {
+        ...fetchConfig,
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to verify 2FA code');
+      }
+
+      const data = await response.json();
+      const { access, refresh } = data;
+
+      // Store tokens
+      localStorage.setItem('access', access);
+      localStorage.setItem('refresh', refresh);
+
+      // Set authorization header for future requests
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+
+      // Fetch user profile
+      await dispatch(fetchUserProfile());
+
+      return { access, refresh };
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('An unexpected error occurred');
+    }
+  }
+);
+
+// Вспомогательная функция для проверки статуса сессии
+export const checkSession = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/check-session/`, {
+      ...fetchConfig,
+      method: 'GET'
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
+};
+
 export const refreshToken = createAsyncThunk('auth/refreshToken', async (_, { rejectWithValue }) => {
   try {
     const refreshToken = localStorage.getItem('refresh');
@@ -187,6 +276,33 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Login failed';
         state.isAuthenticated = false;
+      })
+      .addCase(send2FACode.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(send2FACode.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(send2FACode.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(verify2FACode.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verify2FACode.fulfilled, (state, action) => {
+        state.loading = false;
+        state.accessToken = action.payload.access;
+        state.refreshToken = action.payload.refresh;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
+      .addCase(verify2FACode.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       })
       .addCase(refreshToken.fulfilled, (state, action) => {
         state.accessToken = action.payload;

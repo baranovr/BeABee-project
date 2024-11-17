@@ -474,8 +474,8 @@ class HomeworkViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
     def destroy(self, request, *args, **kwargs):
-        news = get_object_or_404(News, pk=kwargs["pk"])
-        author = news.posted_by
+        homework = get_object_or_404(Homework, pk=kwargs["pk"])
+        author = homework.added_by
 
         if author == request.user or request.user.status_in_service == "Creator":
             super().destroy(request, *args, **kwargs)
@@ -582,7 +582,10 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
         news = get_object_or_404(News, pk=kwargs["pk"])
         author = news.posted_by
 
-        if author == request.user or request.user.status_in_service == "Creator":
+        if (author == request.user or
+                request.user.status_in_service == "Creator" or
+                (request.user.status_in_service == "Admin" and author.status_in_service == "User")
+        ):
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -647,9 +650,10 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
         imp_info = get_object_or_404(ImportantInfo, pk=kwargs["pk"])
         author = imp_info.posted_by
 
-        if (
-                author == request.user and author.status_in_service != request.user.status_in_service
-        ) or request.user.status_in_service == "Creator":
+        if (author == request.user or
+                request.user.status_in_service == "Creator" or
+                (request.user.status_in_service == "Admin" and author.status_in_service == "User")
+        ):
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 

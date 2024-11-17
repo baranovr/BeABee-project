@@ -7,17 +7,27 @@ from user.views import (
     MyProfileView,
     UserSearchListView,
     UserSearchDetailView,
+    CurrentUserView,
+    TwoFactorAuthView,
+    VerifyCodeView,
+    CheckSessionView,
 )
 
 urlpatterns = [
     path("register/", CreateUserViewSet.as_view(), name="register"),
     path("my_profile/", MyProfileView.as_view(), name="my-profile"),
+
     path("token/", CustomTokenObtainPairView.as_view(), name="create-token"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
     path("token/verify/", TokenVerifyView.as_view(), name="token-verify"),
 
+    path('login/2fa/', TwoFactorAuthView.as_view(), name='2fa-login'),
+    path('login/2fa/verify/', VerifyCodeView.as_view(), name='2fa-verify'),
+    path('check-session/', CheckSessionView.as_view(), name='check-session'),
+
     path("users/", UserSearchListView.as_view(), name="users"),
     path("users/<int:pk>/", UserSearchDetailView.as_view(), name="profile"),
+    path("current_user/", CurrentUserView.as_view(), name="current-user"),
 ]
 
 app_name = "user"

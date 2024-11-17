@@ -79,12 +79,19 @@ class MyProfileSerializer(UserSerializer):
         read_only_fields = ['is_banned', 'ban_reason', 'full_name', 'date_joined']
 
 
+class CurrentUserSerializer(UserSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "nickname", "status_in_service"]
+
+
 class UserSearchListSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = (
             "id",
             "avatar",
+            "nickname",
             "full_name",
             "status_in_service",
             "date_joined",
@@ -98,6 +105,7 @@ class UserSearchDetailSerializer(UserSerializer):
         fields = (
             "id",
             "avatar",
+            "nickname",
             "full_name",
             "status_in_service",
             "date_joined",
@@ -140,3 +148,12 @@ class GPSDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = GPS
         fields = ('id', 'user', 'latitude', 'longitude')
+
+
+class TwoFactorAuthSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(style={'input_type': 'password'})
+
+
+class VerifyCodeSerializer(serializers.Serializer):
+    code = serializers.CharField(min_length=6, max_length=6)
