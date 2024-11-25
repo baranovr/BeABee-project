@@ -5,6 +5,30 @@ from django.db import models
 from django.utils.text import slugify
 from beabee_project import settings
 
+
+class GroupChoices(models.TextChoices):
+    CS_31 = "CS-31"
+    CS_32 = "CS-32",
+    CS_33 = "CS-33",
+    CS_34 = "CS-34",
+    CS_41 = "CS-41",
+    CS_42 = "CS-42",
+    CS_43 = "CS-43",
+    CS_44 = "CS-44",
+
+
+class SubGroupChoices(models.TextChoices):
+    FIRST = "1"
+    SECOND = "2"
+
+
+class TeacherDegreeChoice(models.TextChoices):
+    BACHELOR = "Bachelor's Degree"
+    MASTER = "Master's Degree"
+    CANDIDATE = "Candidate of Sciences"
+    DOCTOR = "Doctor of Sciences"
+
+
 def photo_path(instance, filename):
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
@@ -27,19 +51,14 @@ class Post(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length=150, unique=True)
+    group = models.CharField(max_length=8, choices=GroupChoices, default="NO_GROUP")
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     class Meta:
         ordering = ["name"]
 
     def __str__(self):
         return self.name
-
-
-class TeacherDegreeChoice(models.TextChoices):
-    BACHELOR = "Bachelor's Degree"
-    MASTER = "Master's Degree"
-    CANDIDATE = "Candidate of Sciences"
-    DOCTOR = "Doctor of Sciences"
 
 
 def teachers_avatars_path(instance, filename):
@@ -67,17 +86,6 @@ class Teacher(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} {self.surname}"
-
-
-class GroupChoices(models.TextChoices):
-    CS_31 = "CS-31"
-    CS_32 = "CS-32",
-    CS_33 = "CS-33",
-    CS_34 = "CS-34",
-    CS_41 = "CS-41",
-    CS_42 = "CS-42",
-    CS_43 = "CS-43",
-    CS_44 = "CS-44",
 
 
 class ExamTypeChoices(models.TextChoices):
@@ -222,3 +230,40 @@ class Ban(models.Model):
 
     def __str__(self):
         return f"Ban for {self.user.email} - {self.reason}"
+
+
+class RoleChoices(models.TextChoices):
+    HEADMAN = "Headman"
+    D_HEADMAN = "Deputy headman"
+    STUDENT = "Student"
+
+
+class LocationChoices(models.TextChoices):
+    IN_UKR = "In Ukraine"
+    ABOARD = "Lives aboard"
+
+
+class StudentInTable(models.Model):
+    first_name = models.CharField(max_length=15)
+    last_name = models.CharField(max_length=15)
+    surname = models.CharField(max_length=15)
+    group = models.CharField(max_length=5, choices=GroupChoices.choices)
+    subgroup = models.CharField(max_length=2, choices=SubGroupChoices.choices)
+    email = models.EmailField(default="<--- noemail@example.com --->")
+    role = models.CharField(max_length=15, choices=RoleChoices.choices)
+    location = models.CharField(max_length=13, choices=LocationChoices.choices)
+
+    @property
+    def last_first_sur(self):
+        return f"{self.last_name} {self.first_name} {self.surname}"
+
+    @property
+    def full_group(self):
+        return f"{self.group}/{self.subgroup}"
+
+    @property
+    def role_and_location(self):
+        return f"{self.role} {self.location}"
+
+    def __str__(self):
+        return f"{self.last_name}, {self.group}"

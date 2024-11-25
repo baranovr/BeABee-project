@@ -1,23 +1,37 @@
 from datetime import datetime
+from functools import partial
 
+from django.core.mail import send_mail
 from django.db import transaction
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from rest_framework import viewsets, status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from beabee.models import Post, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
+from beabee.models import (
+    Post,
+    Subject,
+    Teacher,
+    Homework,
+    News,
+    ImportantInfo,
+    Ban,
+    Exam,
+    StudentInTable,
+)
 from beabee.serializers import (
     PostSerializer, PostListSerializer, PostDetailSerializer,
-    SubjectListSerializer,SubjectDetailSerializer, SubjectSerializer,
-    TeacherSerializer, TeacherListSerializer, TeacherDetailSerializer,
+    SubjectListSerializer, SubjectSerializer, TeacherSerializer, TeacherListSerializer,
     HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer,
     NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer, ExamSerializer,
-    ExamListSerializer, ExamDetailSerializer, BanListSerializer, BanDetailSerializer
+    ExamListSerializer, ExamDetailSerializer, BanListSerializer, BanDetailSerializer, StudentInTableSerializer,
 )
 from beabee.сustom_permissions.is_not_banned_permission import IsNotBanned
+from beabee_project import settings
+from user.models import User
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -153,11 +167,8 @@ class SubjectViewSet(viewsets.ModelViewSet):
         return queryset.distinct()
 
     def get_serializer_class(self):
-        if self.action == "list":
+        if self.action in ["list", "retrieve"]:
             return SubjectListSerializer
-
-        if self.action == "retrieve":
-            return SubjectDetailSerializer
 
         return SubjectSerializer
 
@@ -174,7 +185,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         with transaction.atomic():
             subject = get_object_or_404(Subject, pk=kwargs["pk"])
-            serializer = self.get_serializer(subject, data=request.data)
+            serializer = self.get_serializer(subject, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
 
             if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
@@ -244,11 +255,8 @@ class TeacherViewSet(viewsets.ModelViewSet):
         return queryset.distinct()
     
     def get_serializer_class(self):
-        if self.action == "list":
+        if self.action in ["list", "retrieve"]:
             return TeacherListSerializer
-        
-        if self.action == "retrieve":
-            return TeacherDetailSerializer
 
         return TeacherSerializer
 
@@ -256,12 +264,8 @@ class TeacherViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            subjects = serializer.validated_data["subjects"]
 
             if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
-                if len(subjects) > 5:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
-
                 serializer.save()
                 headers = self.get_success_headers(serializer.data)
                 return Response(
@@ -273,14 +277,10 @@ class TeacherViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         with transaction.atomic():
             teacher = get_object_or_404(Teacher, pk=kwargs["pk"])
-            serializer = self.get_serializer(teacher, data=request.data)
+            serializer = self.get_serializer(teacher, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
-            subjects = serializer.validated_data["subjects"]
 
             if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
-                if len(subjects) > 5:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
-
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -642,7 +642,7 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
 
             if author == request.user:
                 serializer.save()
-                return Response(serializer.data)
+                return Response(serializer.data, status=status.HTTP_200_OK)
 
             return Response(status=status.HTTP_403_FORBIDDEN)
 
@@ -722,3 +722,91 @@ class BanViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+class StudentInTableViewSet(viewsets.ModelViewSet):
+    queryset = StudentInTable.objects.all()
+    serializer_class = StudentInTableSerializer
+    permission_classes = [IsNotBanned]
+
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            if request.user.status_in_service != "User":
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def update(self, request, *args, **kwargs):
+        with transaction.atomic():
+            student_in_lst = get_object_or_404(StudentInTable, pk=kwargs["pk"])
+            serializer = self.get_serializer(student_in_lst, data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            if request.user.status_in_service != "User":
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        with transaction.atomic():
+            if request.user.status_in_service != "User":
+                super().destroy(request, *args, **kwargs)
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+@api_view(['POST'])
+@permission_classes([IsNotBanned])
+def invite_student(request, student_id):
+    try:
+        # Получаем студента из таблицы студентов
+        student = StudentInTable.objects.get(id=student_id)
+
+        # Проверяем, существует ли пользователь с таким же first_name
+        existing_user = User.objects.filter(first_name=student.first_name).exists()
+
+        if existing_user:
+            return Response(
+                {"message": "User already exists"},
+                status=400
+            )
+
+        # Отправляем инвайт на почту
+        send_mail(
+            subject='Invitation to Join Platform',
+            message=f"""
+            Hello {student.first_name} {student.last_name},
+
+            You have been invited to join BeABee platform.
+            To become part of our team you should join by this link: <link>
+            
+            Note: please register using this email address.
+
+            Best regards,
+            BeABee Team
+            """,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[student.email],
+        )
+
+        return Response(
+            {"message": "Invitation sent successfully"},
+            status=200
+        )
+
+    except StudentInTable.DoesNotExist:
+        return Response(
+            {"message": "Student not found"},
+            status=404
+        )
+    except Exception as e:
+        return Response(
+            {"message": str(e)},
+            status=500
+        )

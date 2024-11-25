@@ -1,12 +1,13 @@
 // AllTeachersCard.tsx
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DashboardCard } from '@app/components/medical-dashboard/DashboardCard/DashboardCard';
 import { BaseCarousel } from '@app/components/common/BaseCarousel/Carousel';
 import { TeacherCard } from '@app/components/medical-dashboard/favoriteDoctors/TeacherCard/TeacherCard';
 import { Teacher, getTeachersData } from '@app/api/teachers.api';
 import * as S from './AllTeachersCard.styles';
 import { BREAKPOINTS } from '@app/styles/themes/constants';
+
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const NextArrow = (props: any) => {
@@ -22,8 +23,16 @@ const PrevArrow = (props: any) => {
 export const AllTeachersCard: React.FC = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
 
+  const refreshTeachers = () => {
+    getTeachersData()
+      .then(setTeachers)
+      .catch((error) => {
+        console.error('Failed to load teachers:', error);
+      });
+  };
+
   useEffect(() => {
-    getTeachersData().then((res) => setTeachers(res));
+    refreshTeachers();
   }, []);
 
   return (
@@ -89,11 +98,13 @@ export const AllTeachersCard: React.FC = () => {
             {teachers.map((teacher) => (
               <div key={teacher.id}>
                 <TeacherCard
+                  id={teacher.id}
                   teacher_avatar={teacher.teacher_avatar}
                   full_name_sur={teacher.full_name_sur}
                   subjects={teacher.subjects}
                   degree={teacher.degree}
-                  email={teacher.email} // или можно убрать дату, если она не нужна
+                  email={teacher.email}
+                  onDeleteSuccess={refreshTeachers}
                 />
               </div>
             ))}

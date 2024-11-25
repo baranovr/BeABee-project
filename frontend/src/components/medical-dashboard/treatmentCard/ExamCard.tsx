@@ -49,6 +49,18 @@ export const ExamCard: React.FC = () => {
     setDate(Dates.getToday());
   };
 
+  const refreshExams = () => {
+    getExams()
+      .then(setExams)
+        .catch((error) => {
+          console.error('Failed to load exams:', error)
+    });
+  };
+
+  useEffect(() => {
+    refreshExams()
+  }, []);
+
   const examsByDate = exams.filter(exam => Dates.getDate(exam.date_time).isSame(selectedDate, 'date'));
 
   const calendarItem = (
@@ -74,7 +86,7 @@ export const ExamCard: React.FC = () => {
   const panelItem = examsByDate.length > 0
   ? examsByDate.map(exam => (
       <ExamContainer key={exam.id}>
-        <ExamTeacher exam={exam} />
+        <ExamTeacher exam={exam} onDeleteSuccess={refreshExams}/>
       </ExamContainer>
     ))
   : <ExamNotFound />;

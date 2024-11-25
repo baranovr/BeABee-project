@@ -1,43 +1,79 @@
-// HomeworkCard.tsx
-
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { getHomeworksList, Homework } from '@app/constants/dashboardHomeworks';
 import { DashboardCard } from '../DashboardCard/DashboardCard';
-import * as S from './HomeworkCard.styles';
 import { useTranslation } from 'react-i18next';
-import { BaseArticleNoImg } from '@app/components/common/BaseArticle/BaseArticle';
-import moment from 'moment';
+import { HomeworkTeacher } from '@app/components/common/BaseArticle/BaseArticle';
+import { Loading } from '@app/components/common/Loading/Loading';
+import { Button } from 'antd';
+import styled from 'styled-components';
+
+// Стили
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+`;
+
+const LoadButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  min-height: 100px;
+`;
+
+const SpinnerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+`;
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const HomeworkCard: React.FC = () => {
   const { t } = useTranslation();
   const [homeworks, setHomeworks] = useState<Homework[]>([]);
-  useEffect(() => {
-    getHomeworksList()
-      .then(setHomeworks)
-      .catch((error) => {
-        console.error('Failed to load homeworks:', error);
-      });
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const loadHomeworks = async () => {
+    try {
+      setIsLoading(true);
+      await sleep(2000);
+      const data = await getHomeworksList();
+      setHomeworks(data);
+      setIsVisible(true);
+    } catch (error) {
+      console.error('Failed to load homeworks:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <DashboardCard title={t('medical-dashboard.news')}>
-      <S.Wrapper>
-        {homeworks.map((homework) => (
-          <BaseArticleNoImg
-            key={homework.id}
-            title={homework.title}
-            date={moment(homework.created_at).format('MM/DD/YYYY HH:mm')}
-            description={homework.description}
-            avatar={homework.teacher_avatar}
-            author={homework.teacher}
-            subject={homework.subject}
-            type={homework.type}
-            deadline={moment(homework.deadline).format('MM/DD/YYYY HH:mm')}
-            addedBy={homework.added_by}
-            forGroup={homework.for_group}
-          />
-        ))}
-      </S.Wrapper>
+      {!isVisible ? (
+        <LoadButtonWrapper>
+          <Button onClick={loadHomeworks} disabled={isLoading} className="w-full max-w-md">
+            {isLoading ? (
+              <SpinnerWrapper>
+                <Loading />
+              </SpinnerWrapper>
+            ) : (
+              'Load Homeworks'
+            )}
+          </Button>
+        </LoadButtonWrapper>
+      ) : (
+        <Wrapper>
+          {homeworks.map((homework) => (
+            <HomeworkTeacher key={homework.id} homework={homework} />
+          ))}
+        </Wrapper>
+      )}
     </DashboardCard>
   );
 };

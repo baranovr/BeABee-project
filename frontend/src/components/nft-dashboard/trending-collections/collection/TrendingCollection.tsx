@@ -10,6 +10,7 @@ import { useAppSelector} from "@app/hooks/reduxHooks";
 
 interface ImportantInfoProps extends ImportantInfo {
   onDelete?: (id: number) => void; // Функция обратного вызова для удаления элемента
+  onDeleteSuccess?: () => void;
 }
 
 export const TrendingCollection: React.FC<ImportantInfoProps> = ({
@@ -22,6 +23,7 @@ export const TrendingCollection: React.FC<ImportantInfoProps> = ({
   avatar,
   description,
   onDelete,
+  onDeleteSuccess,
 }) => {
   const { t } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -40,7 +42,10 @@ export const TrendingCollection: React.FC<ImportantInfoProps> = ({
       message.success(t('nft.deletedSuccessfully'));
       setIsDeleteConfirmVisible(false);
       if (onDelete) {
-        onDelete(id); // Уведомляем родительский компонент о удалении
+        onDelete(id);
+      }
+      if (onDeleteSuccess) {
+          onDeleteSuccess()
       }
     } catch (error) {
       console.error(`Failed to delete important info with ID ${id}:`, error);

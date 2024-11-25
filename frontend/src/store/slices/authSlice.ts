@@ -140,18 +140,6 @@ export const verify2FACode = createAsyncThunk(
 );
 
 // Вспомогательная функция для проверки статуса сессии
-export const checkSession = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/check-session/`, {
-      ...fetchConfig,
-      method: 'GET'
-    });
-    return response.ok;
-  } catch {
-    return false;
-  }
-};
-
 export const refreshToken = createAsyncThunk('auth/refreshToken', async (_, { rejectWithValue }) => {
   try {
     const refreshToken = localStorage.getItem('refresh');

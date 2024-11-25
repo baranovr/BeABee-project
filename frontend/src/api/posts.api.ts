@@ -2,20 +2,15 @@
 
 import axiosInstance from '@app/api/axiosInstance';
 
-interface Tag {
-  id: number;
-  name: string;
-}
-
 export interface Post {
   id: number;
   photo: string;
   title: string;
   avatar: string;
-  user: string;
+  author: string;
+  status_in_service: string
   description: string;
   created_at: number;
-  tags: Tag[];
 }
 
 export const getPosts = async (): Promise<Post[]> => {

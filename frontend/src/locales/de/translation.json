@@ -816,8 +816,7 @@
     "delete": "Löschen",
     "editableTable": "Bearbeitbare Tabelle",
     "invite": "Einladen",
-    "inviteMessage": "{{name}} hat erfolgreich eingeladen ",
-    "treeTable": "Baumtisch"
+    "inviteMessage": "{{name}} hat erfolgreich eingeladen "
   },
   "tabs": {
     "basic": "Grundlegende Registerkarten",

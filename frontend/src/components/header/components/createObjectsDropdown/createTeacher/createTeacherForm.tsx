@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Input, Button, Upload, Select, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { RcFile } from 'antd/lib/upload';
-import axiosInstance from "@app/api/axiosInstance";
-import {useTranslation} from "react-i18next";
+import axiosInstance from '@app/api/axiosInstance';
+import { useTranslation } from 'react-i18next';
 
 interface Subject {
   id: number;
@@ -19,16 +19,16 @@ export const CreateTeacherForm: React.FC = () => {
     last_name: '',
     surname: '',
     subjects: [] as number[],
-    degree: '',
-    email: ''
+    degree: "Bachelor's Degree",
+    email: '',
   });
   const [avatar, setAvatar] = useState<RcFile | null>(null);
 
   const degreeOptions = [
     { value: "Bachelor's Degree", label: "Bachelor's Degree" },
     { value: "Master's Degree", label: "Master's Degree" },
-    { value: "Candidate of Sciences", label: "Candidate of Sciences" },
-    { value: "Doctor of Sciences", label: "Doctor of Sciences" }
+    { value: 'Candidate of Sciences', label: 'Candidate of Sciences' },
+    { value: 'Doctor of Sciences', label: 'Doctor of Sciences' },
   ];
 
   useEffect(() => {
@@ -38,8 +38,8 @@ export const CreateTeacherForm: React.FC = () => {
         const token = localStorage.getItem('access');
         const response = await axiosInstance.get('platform/subjects/', {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         setSubjects(response.data);
       } catch (error) {
@@ -70,8 +70,16 @@ export const CreateTeacherForm: React.FC = () => {
   };
 
   const handleOk = () => {
-    if (!formData.first_name || !formData.last_name || !formData.surname ||
-        !formData.degree || !formData.email || !avatar || formData.subjects.length === 0 || formData.subjects.length > 5) {
+    if (
+      !formData.first_name ||
+      !formData.last_name ||
+      !formData.surname ||
+      !formData.degree ||
+      !formData.email ||
+      !avatar ||
+      formData.subjects.length === 0 ||
+      formData.subjects.length > 5
+    ) {
       message.error(t('common.creatingError'));
       return;
     }
@@ -85,7 +93,7 @@ export const CreateTeacherForm: React.FC = () => {
     formDataToSend.append('first_name', formData.first_name);
     formDataToSend.append('last_name', formData.last_name);
     formDataToSend.append('surname', formData.surname);
-    formData.subjects.forEach(subjectId => {
+    formData.subjects.forEach((subjectId) => {
       formDataToSend.append('subjects', subjectId.toString());
     });
     formDataToSend.append('degree', formData.degree);
@@ -96,29 +104,30 @@ export const CreateTeacherForm: React.FC = () => {
 
     const token = localStorage.getItem('access');
 
-    axiosInstance.post('platform/teachers/', formDataToSend, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-    .then(() => {
-      setFormData({
-        first_name: '',
-        last_name: '',
-        surname: '',
-        subjects: [],
-        degree: '',
-        email: ''
+    axiosInstance
+      .post('platform/teachers/', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        setFormData({
+          first_name: '',
+          last_name: '',
+          surname: '',
+          subjects: [],
+          degree: '',
+          email: '',
+        });
+        setAvatar(null);
+        setIsModalVisible(false);
+        message.success('Teacher created successfully');
+      })
+      .catch((error) => {
+        console.error('Error creating teacher:', error);
+        message.error('Error while creating teacher');
       });
-      setAvatar(null);
-      setIsModalVisible(false);
-      message.success('Teacher created successfully');
-    })
-    .catch((error) => {
-      console.error('Error creating teacher:', error);
-      message.error('Error while creating teacher');
-    });
   };
 
   const handleCancel = () => {
@@ -129,7 +138,7 @@ export const CreateTeacherForm: React.FC = () => {
       surname: '',
       subjects: [],
       degree: '',
-      email: ''
+      email: '',
     });
     setAvatar(null);
   };
@@ -194,7 +203,7 @@ export const CreateTeacherForm: React.FC = () => {
           optionFilterProp="children"
           maxTagCount={5}
         >
-          {subjects.map(subject => (
+          {subjects.map((subject) => (
             <Select.Option key={subject.id} value={subject.id}>
               {subject.name}
             </Select.Option>
@@ -207,7 +216,7 @@ export const CreateTeacherForm: React.FC = () => {
           onChange={(value) => setFormData({ ...formData, degree: value })}
           style={{ width: '100%', marginBottom: '1rem' }}
         >
-          {degreeOptions.map(option => (
+          {degreeOptions.map((option) => (
             <Select.Option key={option.value} value={option.value}>
               {option.label}
             </Select.Option>
@@ -233,9 +242,7 @@ export const CreateTeacherForm: React.FC = () => {
             </div>
           )}
         </Upload>
-        <div style={{ marginTop: '8px', color: '#666' }}>
-          Supported formats: JPG, PNG, WEBP (max: 2MB)
-        </div>
+        <div style={{ marginTop: '8px', color: '#666' }}>Supported formats: JPG, PNG, WEBP (max: 2MB)</div>
       </Modal>
     </>
   );

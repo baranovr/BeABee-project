@@ -13,6 +13,9 @@ import { getTrendingActivities, ImportantInfo } from '@app/api/activity.api';
 import * as S from './TrendingCollections.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
+import {getImportantInfoList} from "@app/api/importantinfo.api";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 export const TrendingCollections: React.FC = () => {
   const [trending, setTrending] = useState<ImportantInfo[]>([]);
@@ -24,6 +27,18 @@ export const TrendingCollections: React.FC = () => {
     getTrendingActivities().then((res) => setTrending(res));
   }, []);
 
+  const refreshInfo = () => {
+      getImportantInfoList()
+          .then(setTrending)
+          .catch((error) => {
+              console.error('Failed to load important info:', error);
+          });
+  };
+
+    useEffect(() => {
+        refreshInfo()
+    }, []);
+
   const { t } = useTranslation();
 
   const trendingList = useMemo(() => {
@@ -32,14 +47,14 @@ export const TrendingCollections: React.FC = () => {
       tablet: trending.map((item, index) => (
         <div key={index}>
           <S.CardWrapper>
-            <TrendingCollection {...item} />
+            <TrendingCollection {...item} onDeleteSuccess={refreshInfo}/>
           </S.CardWrapper>
         </div>
       )),
       grid: trending.map((item, index) => (
         <BaseCol key={index} xs={24} sm={12} md={8}>
           <S.CardWrapper>
-            <TrendingCollection {...item} />
+            <TrendingCollection {...item} onDeleteSuccess={refreshInfo}/>
           </S.CardWrapper>
         </BaseCol>
       )),

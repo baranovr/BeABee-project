@@ -1,7 +1,15 @@
 from rest_framework import serializers
 
 from beabee.models import (
-    Post, Subject, Teacher, Homework, News, ImportantInfo, Ban, Exam
+    Post,
+    Subject,
+    Teacher,
+    Homework,
+    News,
+    ImportantInfo,
+    Ban,
+    Exam,
+    StudentInTable
 )
 from beabee_project import settings
 
@@ -16,7 +24,8 @@ class BaseTagSubjectRelatedSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField()
-    user = serializers.CharField(source='user.nickname', read_only=True)
+    author = serializers.CharField(source='user.nickname', read_only=True)
+    status_in_service = serializers.CharField(source='user.status_in_service', read_only=True)
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
 
     class Meta:
@@ -25,7 +34,8 @@ class PostSerializer(serializers.ModelSerializer):
             "id",
             "photo",
             "title",
-            "user",
+            "author",
+            "status_in_service",
             "description",
             "created_at",
         )
@@ -45,19 +55,20 @@ class PostDetailSerializer(PostListSerializer):
         fields = PostListSerializer.Meta.fields
 
 
-class SubjectSerializer(BaseTagSubjectRelatedSerializer):
-    class Meta(BaseTagSubjectRelatedSerializer.Meta):
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
         model = Subject
+        fields = (
+            "id",
+            "name",
+            "group",
+        )
 
 
-class SubjectListSerializer(BaseTagSubjectRelatedSerializer):
-    class Meta(BaseTagSubjectRelatedSerializer.Meta):
+class SubjectListSerializer(SubjectSerializer):
+    class Meta:
         model = Subject
-
-
-class SubjectDetailSerializer(BaseTagSubjectRelatedSerializer):
-    class Meta(BaseTagSubjectRelatedSerializer.Meta):
-        model = Subject
+        fields = SubjectSerializer.Meta.fields + ("created_at",)
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -83,17 +94,14 @@ class TeacherListSerializer(TeacherSerializer):
         fields = (
             "id",
             "teacher_avatar",
+            "first_name",
+            "last_name",
+            "surname",
             "full_name_sur",
             "subjects",
             "degree",
             "email"
         )
-
-
-class TeacherDetailSerializer(TeacherListSerializer):
-    class Meta:
-        model = Teacher
-        fields = TeacherSerializer.Meta.fields
 
 
 class ExamSerializer(serializers.ModelSerializer):
@@ -285,3 +293,17 @@ class BanDetailSerializer(BanSerializer):
     class Meta:
         model = Ban
         fields = BanSerializer.Meta.fields
+
+
+class StudentInTableSerializer(serializers.ModelSerializer):
+    last_first_sur = serializers.ReadOnlyField()
+    full_group = serializers.ReadOnlyField()
+    role_and_location = serializers.ReadOnlyField()
+
+    class Meta:
+        model = StudentInTable
+        fields = [
+            'id', 'first_name', 'last_name', 'surname',
+            'last_first_sur', 'group', 'subgroup', 'full_group',
+            'email', 'role', 'location', 'role_and_location'
+        ]

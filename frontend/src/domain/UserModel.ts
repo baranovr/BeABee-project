@@ -17,4 +17,6 @@ export interface UserModel {
   github?: string | null; // github
   statusInService: string; //status_in_service
   date_joined: string;
+  isBanned: boolean;
+  banReason?: string;
 }

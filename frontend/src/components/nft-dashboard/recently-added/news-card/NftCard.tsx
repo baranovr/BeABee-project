@@ -4,25 +4,26 @@ import { useTranslation } from 'react-i18next';
 import { News } from '@app/api/mainpageDashboard.api';
 import axiosInstance from '@app/api/axiosInstance';
 import * as S from './NftCard.styles';
-import { message } from "antd";
-import { useAppSelector} from "@app/hooks/reduxHooks";
+import { message } from 'antd';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 interface NftCardProps {
   newsItem: News;
   onDelete?: (id: number) => void; // Функция обратного вызова для удаления новости из списка
+  onDeleteSuccess?: () => void;
 }
 
-const truncateText = (text: string, maxLength = 30) => {
+const truncateText = (text: string, maxLength = 24) => {
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 };
 
-export const NftCard: React.FC<NftCardProps> = ({ newsItem, onDelete }) => {
+export const NftCard: React.FC<NftCardProps> = ({ newsItem, onDelete, onDeleteSuccess }) => {
   const { isTablet } = useResponsive();
   const { t } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { user } = useAppSelector(state => state.user)
+  const { user } = useAppSelector((state) => state.user);
 
   const handleViewClick = () => {
     setIsModalVisible(true);
@@ -45,10 +46,15 @@ export const NftCard: React.FC<NftCardProps> = ({ newsItem, onDelete }) => {
     try {
       await axiosInstance.delete(`platform/news/${newsItem.id}/`);
       console.log(`News with ID ${newsItem.id} deleted successfully.`);
-      message.success(t('nft.deletedSuccessfully'))
+      message.success(t('nft.deletedSuccessfully'));
       setIsDeleteConfirmVisible(false);
+
       if (onDelete) {
         onDelete(newsItem.id);
+      }
+
+      if (onDeleteSuccess) {
+        onDeleteSuccess();
       }
     } catch (error) {
       console.error(`Failed to delete news with ID ${newsItem.id}:`, error);
@@ -95,61 +101,57 @@ export const NftCard: React.FC<NftCardProps> = ({ newsItem, onDelete }) => {
   );
 
   return (
-      <><S.Card padding={0} $img={newsItem.file}>
-          <S.NftImage src={newsItem.file} alt="newsImage"/>
-          <S.ViewButton type="ghost" onClick={handleViewClick}>
-              {t('nft.read_news')}
-          </S.ViewButton>
-          {user && (
-          newsItem.posted_by === user.nickName ||
-          user.statusInService === "Creator" ||
-          (user.statusInService === "Admin" && newsItem.status_in_service === "User")
-        ) && (
-          <S.DeleteNewsButton type="ghost" onClick={handleDeleteClick}>
-            {'Delete'}
-          </S.DeleteNewsButton>
-        )}
-          <S.NftInfo>
-              <S.InfoRow>
-                  <S.Title>{newsItem.title}</S.Title>
-              </S.InfoRow>
-              {isTablet ? tabletLayout : mobileLayout}
-          </S.NftInfo>
+    <>
+      <S.Card padding={0} $img={newsItem.file}>
+        <S.NftImage src={newsItem.file} alt="newsImage" />
+        <S.ViewButton type="ghost" onClick={handleViewClick}>
+          {t('nft.read_news')}
+        </S.ViewButton>
+        {user &&
+          (newsItem.posted_by === user.nickName ||
+            user.statusInService === 'Creator' ||
+            (user.statusInService === 'Admin' && newsItem.status_in_service === 'User')) && (
+            <S.DeleteNewsButton type="ghost" onClick={handleDeleteClick}>
+              {'Delete'}
+            </S.DeleteNewsButton>
+          )}
+        <S.NftInfo>
+          <S.InfoRow>
+            <S.Title>{newsItem.title}</S.Title>
+          </S.InfoRow>
+          {isTablet ? tabletLayout : mobileLayout}
+        </S.NftInfo>
 
-          <S.AuthorAvatar src={newsItem.avatar} alt={newsItem.posted_by}/>
+        <S.AuthorAvatar src={newsItem.avatar} alt={newsItem.posted_by} />
 
-          <S.StyledModal
-              title={newsItem.title}
-              visible={isModalVisible}
-              onCancel={handleCloseModal}
-              footer={[
-                  <S.Button key="close" type="primary" onClick={handleCloseModal}>
-                      {t('nft.close')}
-                  </S.Button>,
-              ]}
-          >
-              <p>{newsItem.description}</p>
-          </S.StyledModal>
-      </S.Card><S.StyledModalDelete
-          title='Confirm delete'
-          visible={isDeleteConfirmVisible}
-          onCancel={handleDeleteCancel}
+        <S.StyledModal
+          title={newsItem.title}
+          visible={isModalVisible}
+          onCancel={handleCloseModal}
           footer={[
-              <S.Button key="cancel" onClick={handleDeleteCancel} disabled={isDeleting}>
-                  {t('common.cancel')}
-              </S.Button>,
-              <S.Button
-                  key={t('common.login')}
-                  type="primary"
-                  danger
-                  onClick={handleDeleteConfirm}
-                  loading={isDeleting}
-              >
-                  {t('common.confirm')}
-              </S.Button>,
+            <S.Button key="close" type="primary" onClick={handleCloseModal}>
+              {t('nft.close')}
+            </S.Button>,
           ]}
+        >
+          <p>{newsItem.description}</p>
+        </S.StyledModal>
+      </S.Card>
+      <S.StyledModalDelete
+        title="Confirm delete"
+        visible={isDeleteConfirmVisible}
+        onCancel={handleDeleteCancel}
+        footer={[
+          <S.Button key="cancel" onClick={handleDeleteCancel} disabled={isDeleting}>
+            {t('common.cancel')}
+          </S.Button>,
+          <S.Button key={t('common.login')} type="primary" danger onClick={handleDeleteConfirm} loading={isDeleting}>
+            {t('common.confirm')}
+          </S.Button>,
+        ]}
       >
-          <p className="confirm_message">Are you sure you want to delete "{newsItem.title}" news?</p>
-      </S.StyledModalDelete></>
+        <p className="confirm_message">Are you sure you want to delete "{newsItem.title}" news?</p>
+      </S.StyledModalDelete>
+    </>
   );
 };

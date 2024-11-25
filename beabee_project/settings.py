@@ -140,12 +140,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATICFILES_DIRS = [
-    BASE_DIR / "user/../templates/images",  # Указать конкретные папки
-]
-
 STATIC_URL = "/staticfiles/"
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Каталог, куда будет собираться статика
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
@@ -172,7 +168,7 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "anon": "100000/day",
         "user": "3000000/day",
-        "try_login": "3/hour",
+        "try_login": "3/day",
     }
 }
 
@@ -255,3 +251,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+DEFAULT_FROM_EMAIL="beabee.official2425@gmail.com"

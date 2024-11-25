@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Input, Button, Select, DatePicker, message } from 'antd';
-import { useTranslation } from "react-i18next";
-import axiosInstance from "@app/api/axiosInstance";
+import { useTranslation } from 'react-i18next';
+import axiosInstance from '@app/api/axiosInstance';
 import { Moment } from 'moment';
 import moment from 'moment';
 
@@ -56,12 +56,12 @@ export const CreateHomeworkForm: React.FC = () => {
         const [subjectsResponse, teachersResponse] = await Promise.all([
           axiosInstance.get('platform/subjects/', {
             headers: {
-              'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           }),
           axiosInstance.get('platform/teachers/', {
             headers: {
-              'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           }),
         ]);
@@ -82,36 +82,45 @@ export const CreateHomeworkForm: React.FC = () => {
   };
 
   const handleOk = () => {
-    if (!formData.title || !formData.description || !formData.subject || !formData.type || !formData.teacher || !formData.for_group || !formData.deadline) {
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.subject ||
+      !formData.type ||
+      !formData.teacher ||
+      !formData.for_group ||
+      !formData.deadline
+    ) {
       message.error(t('common.creatingError'));
       return;
     }
 
     const token = localStorage.getItem('access');
 
-    axiosInstance.post('platform/homeworks/', formData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-    .then(() => {
-      setFormData({
-        title: '',
-        description: '',
-        subject: null,
-        type: '',
-        teacher: null,
-        deadline: null,
-        for_group: '',
+    axiosInstance
+      .post('platform/homeworks/', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        setFormData({
+          title: '',
+          description: '',
+          subject: null,
+          type: '',
+          teacher: null,
+          deadline: null,
+          for_group: '',
+        });
+        setIsModalVisible(false);
+        message.success(t('common.homeworkCreated'));
+      })
+      .catch((error) => {
+        console.error('Error creating homework:', error);
+        message.error(t('common.creatingError'));
       });
-      setIsModalVisible(false);
-      message.success(t('common.homeworkCreated'));
-    })
-    .catch((error) => {
-      console.error('Error creating homework:', error);
-      message.error(t('common.creatingError'));
-    });
   };
 
   const handleCancel = () => {
@@ -152,10 +161,11 @@ export const CreateHomeworkForm: React.FC = () => {
           maxLength={50}
         />
         <Input.TextArea
-          placeholder={t('common.description')}
+          placeholder={t('common.description') + ' (max 3000 chars)'}
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           rows={4}
+          maxLength={3000}
           style={{ marginBottom: '1rem' }}
         />
         <Select

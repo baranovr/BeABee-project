@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Input, Button, Select, DatePicker, message } from 'antd';
-import { useTranslation } from "react-i18next";
-import axiosInstance from "@app/api/axiosInstance";
+import { useTranslation } from 'react-i18next';
+import axiosInstance from '@app/api/axiosInstance';
 import { Moment } from 'moment';
 import moment from 'moment';
 
@@ -64,12 +64,12 @@ export const CreateExamForm: React.FC = () => {
         const [subjectsResponse, teachersResponse] = await Promise.all([
           axiosInstance.get('platform/subjects/', {
             headers: {
-              'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           }),
           axiosInstance.get('platform/teachers/', {
             headers: {
-              'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           }),
         ]);
@@ -97,28 +97,29 @@ export const CreateExamForm: React.FC = () => {
 
     const token = localStorage.getItem('access');
 
-    axiosInstance.post('platform/exams/', formData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-    .then(() => {
-      setFormData({
-        teacher: null,
-        subject: null,
-        date_time: null,
-        details: '',
-        group: '',
-        type: ExamTypeChoices.SPECIFIC_TYPE,
+    axiosInstance
+      .post('platform/exams/', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        setFormData({
+          teacher: null,
+          subject: null,
+          date_time: null,
+          details: '',
+          group: '',
+          type: ExamTypeChoices.SPECIFIC_TYPE,
+        });
+        setIsModalVisible(false);
+        message.success(t('common.examCreated'));
+      })
+      .catch((error) => {
+        console.error('Error creating exam:', error);
+        message.error(t('common.creatingError'));
       });
-      setIsModalVisible(false);
-      message.success(t('common.examCreated'));
-    })
-    .catch((error) => {
-      console.error('Error creating exam:', error);
-      message.error(t('common.creatingError'));
-    });
   };
 
   const handleCancel = () => {
@@ -221,32 +222,21 @@ export const CreateExamForm: React.FC = () => {
 };
 
 // Enum definitions from the original code
-export class GroupChoices {
-  static CS_31 = "CS-31";
-  static CS_32 = "CS-32";
-  static CS_33 = "CS-33";
-  static CS_34 = "CS-34";
-  static CS_41 = "CS-41";
-  static CS_42 = "CS-42";
-  static CS_43 = "CS-43";
-  static CS_44 = "CS-44";
-}
-
 export class ExamTypeChoices {
-  static ANNUAL_EXAM = "Annual exam";
-  static ANNUAL_EXAM_RET = "Annual exam (retake)";
+  static ANNUAL_EXAM = 'Annual exam';
+  static ANNUAL_EXAM_RET = 'Annual exam (retake)';
 
-  static YEAR_SESSION = "Year session";
-  static YEAR_SESSION_RET = "Year session (retake)";
+  static YEAR_SESSION = 'Year session';
+  static YEAR_SESSION_RET = 'Year session (retake)';
 
-  static SEM_SESSION = "Semester session";
-  static SEM_SESSION_RET = "Semester session (retake)";
+  static SEM_SESSION = 'Semester session';
+  static SEM_SESSION_RET = 'Semester session (retake)';
 
-  static MODULAR_CONTROL_WORK = "Modular control work";
-  static MODULAR_CONTROL_WORK_RET = "Modular control work (retake)";
+  static MODULAR_CONTROL_WORK = 'Modular control work';
+  static MODULAR_CONTROL_WORK_RET = 'Modular control work (retake)';
 
-  static CONTROL_WORK = "Control work";
-  static CONTROL_WORK_RET = "Control work (retake)";
+  static CONTROL_WORK = 'Control work';
+  static CONTROL_WORK_RET = 'Control work (retake)';
 
-  static SPECIFIC_TYPE = "Specific type";
+  static SPECIFIC_TYPE = 'Specific type';
 }

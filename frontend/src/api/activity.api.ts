@@ -22,23 +22,30 @@ export interface ImportantInfo {
 }
 
 export interface UserActivity {
+  id: number;
   avatar: string;
   nickname: string;
   full_name: string;
   status_in_service: string;
   date_joined: string;
   group: string;
+  is_banned: boolean;
+  ban_reason: string;
+  onDeleteSuccess?: () => void;
 }
 
 export const getUserActivities = async (): Promise<UserActivity[]> => {
   const users = await getUsersList();
   return users.map((user: any) => ({
+    id: user.id,
     avatar: user.avatar,
     nickname: user.nickname,
     full_name: user.full_name,
     status_in_service: user.status_in_service,
     date_joined: user.date_joined,
     group: user.group,
+    is_banned: user.is_banned,
+    ban_reason: user.ban_reason,
   }));
 };
 

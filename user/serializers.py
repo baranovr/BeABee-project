@@ -92,10 +92,14 @@ class UserSearchListSerializer(serializers.ModelSerializer):
             "id",
             "avatar",
             "nickname",
+            "first_name",
             "full_name",
+            "email",
             "status_in_service",
             "date_joined",
-            "group"
+            "group",
+            "is_banned",
+            "ban_reason",
         )
 
 
@@ -109,7 +113,9 @@ class UserSearchDetailSerializer(UserSerializer):
             "full_name",
             "status_in_service",
             "date_joined",
-            "group"
+            "group",
+            "is_banned",
+            "ban_reason",
         )
 
 

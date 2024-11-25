@@ -24,6 +24,9 @@ interface BackendUserProfile {
   github: string | null;
   status_in_service: string;
   date_joined: string;
+  is_banned: boolean;
+  ban_reason: string;
+
 }
 
 interface UserState {
@@ -61,6 +64,8 @@ const transformUserData = (data: BackendUserProfile): UserModel => ({
   github: data.github,
   statusInService: data.status_in_service,
   date_joined: data.date_joined,
+  isBanned: data.is_banned,
+  banReason: data.ban_reason,
 });
 
 // Async thunks
@@ -69,7 +74,7 @@ export const fetchUserProfile = createAsyncThunk('user/fetchUserProfile', async 
     const response = await axiosInstance.get<BackendUserProfile>('user/my_profile/');
     return transformUserData(response.data);
   } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || 'Failed to fetch user profile');
+    return rejectWithValue(error.response?.data?.message || 'Failed to load your profile!');
   }
 });
 

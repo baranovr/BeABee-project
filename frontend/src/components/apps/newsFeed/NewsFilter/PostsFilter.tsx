@@ -108,7 +108,7 @@ export const PostsFilter: React.FC<PostsFilterProps> = ({ news, children }) => {
       let updatedNews = [...news];
       if ((author || title || dates[0]) && !isReset) {
         updatedNews = news.filter((post) => {
-          const postAuthor = post.user.toLowerCase();
+          const postAuthor = post.author.toLowerCase();
           const enteredAuthor = author.toLowerCase();
           const postTitle = post.title.toLowerCase();
           const enteredTitle = title.toLowerCase();

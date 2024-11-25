@@ -128,9 +128,9 @@ export const components: Component[] = [
   {
     name: 'Ban',
     title: 'common.ban',
-    url: `/auth/ban`,
-    categories: ['auth'],
-    keywords: ['auth', 'ban'],
+    url: `/ban`,
+    categories: [],
+    keywords: ['ban'],
   },
   {
     name: 'Dynamic form',
@@ -168,18 +168,18 @@ export const components: Component[] = [
     keywords: ['basic table', 'data tables'],
   },
   {
+    name: 'Editable table',
+    title: 'tables.editableTeachersTable',
+    url: `/data-tables/#editable-table`,
+    categories: ['data tables'],
+    keywords: ['editable table', 'data tables'],
+  },
+  {
     name: 'Tree table',
     title: 'tables.treeTable',
     url: `/data-tables/#tree-table`,
     categories: ['data tables'],
     keywords: ['tree table', 'data tables'],
-  },
-  {
-    name: 'Editable table',
-    title: 'tables.editableTable',
-    url: `/data-tables/#editable-table`,
-    categories: ['data tables'],
-    keywords: ['editable table', 'data tables'],
   },
   {
     name: 'Gradient stacked area',

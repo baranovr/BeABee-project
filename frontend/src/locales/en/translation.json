@@ -123,6 +123,8 @@
     "title": "Title",
     "details": "Details",
     "name": "Name",
+    "group": "Group",
+    "role_location": "Role/Location",
     "uploadPhoto": "Upload photo",
     "description": "Description",
     "address": "Address",
@@ -822,14 +824,18 @@
     "yes": "Yes"
   },
   "tables": {
+    "deleteSuccess": "Element deleted successfully!",
+    "alreadyUser": "Joined",
+    "alreadyJoined": "The user has already joined the service!",
     "actions": "Actions",
     "basicTable": "Basic Table",
+    "existStudentsTable": "Existing students table",
     "cancelInfo": "Sure to cancel?",
     "delete": "Delete",
-    "editableTable": "Editable Table",
+    "editableTable": "Teachers management",
+    "treeTable": "Subjects management",
     "invite": "Invite",
-    "inviteMessage": "{{name}} invited successfully",
-    "treeTable": "Tree Table"
+    "inviteMessage": "{{name}} invited successfully"
   },
   "tabs": {
     "basic": "Basic tabs",

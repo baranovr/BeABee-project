@@ -10,6 +10,7 @@ from beabee.views import (
     NewsViewSet,
     ImportantInfoViewSet,
     BanViewSet,
+    StudentInTableViewSet, invite_student
 )
 from user.views import GPSViewSet
 
@@ -25,8 +26,14 @@ router.register(r'importantinfo', ImportantInfoViewSet, basename='importantinfo'
 router.register(r'bans', BanViewSet, basename='bans')
 router.register(r"map", GPSViewSet, basename="gps")
 
+# Data tables
+router.register(r'students_table', StudentInTableViewSet, basename='students_table')
+
 urlpatterns = [
     path("", include(router.urls)),
+
+    # Invite
+    path('students/<int:student_id>/invite/', invite_student, name='invite-student')
 ]
 
 app_name = 'beabee'

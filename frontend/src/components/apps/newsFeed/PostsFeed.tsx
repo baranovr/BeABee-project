@@ -1,6 +1,4 @@
-// PostsFeed.tsx
-
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { BaseArticle } from '@app/components/common/BaseArticle/BaseArticle';
 import { BaseFeed } from '@app/components/common/BaseFeed/BaseFeed';
 import { PostsFilter } from '@app/components/apps/newsFeed/NewsFilter/PostsFilter';
@@ -8,39 +6,45 @@ import { getPosts, Post } from '@app/api/posts.api';
 import { BaseEmpty } from '@app/components/common/BaseEmpty/BaseEmpty';
 
 export const PostsFeed: React.FC = () => {
-  const [news, setNews] = useState<Post[]>([]);
-  const [hasMore] = useState<boolean>(true);
-  const [loaded, setLoaded] = useState<boolean>(false);
+  const [news, setNews] = useState<Post[]>([]); // Список постов
+  const [hasMore] = useState<boolean>(true); // Для бесконечной прокрутки
+  const [loaded, setLoaded] = useState<boolean>(false); // Индикатор загрузки
 
-  useEffect(() => {
+  // Загрузка постов
+  const refreshPosts = () => {
     getPosts()
-      .then((res) => setNews(res))
-      .finally(() => setLoaded(true));
-  }, []);
+      .then(setNews)
+      .catch((error) => {
+        console.error('Failed to load posts:', error);
+      })
+      .finally(() => setLoaded(true)); // Устанавливаем, что данные загружены
+  };
 
+  // Загрузка дополнительных постов (для пагинации)
   const next = () => {
     getPosts().then((newPosts) => setNews(news.concat(newPosts)));
   };
+
+  // Изначальная загрузка постов
+  useEffect(() => {
+    refreshPosts();
+  }, []);
 
   return (
     <PostsFilter news={news}>
       {({ filteredNews }) =>
         filteredNews?.length || !loaded ? (
           <BaseFeed next={next} hasMore={hasMore}>
-            {filteredNews.map((post, index) => (
+            {filteredNews.map((post) => (
               <BaseArticle
-                key={index}
-                title={post.title}
-                description={post.description}
-                date={post.created_at}
-                imgUrl={post.photo}
-                author={post.user}
-                avatar={post.avatar}
+                key={post.id}
+                post={post}
+                onDeleteSuccess={refreshPosts}
               />
             ))}
           </BaseFeed>
         ) : (
-          <BaseEmpty />
+          <BaseEmpty /> // Пустое состояние
         )
       }
     </PostsFilter>

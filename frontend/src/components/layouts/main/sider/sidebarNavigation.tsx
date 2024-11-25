@@ -1,10 +1,9 @@
 import React from 'react';
 import {
-  CompassOutlined,
   FormOutlined,
   HomeOutlined,
   LayoutOutlined,
-  UserOutlined,
+  TableOutlined,
   BlockOutlined,
 } from '@ant-design/icons';
 
@@ -43,14 +42,24 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
     ],
   },
   {
-    title: 'common.authPages',
-    key: 'auth',
-    icon: <UserOutlined />,
+    title: 'common.dataTables',
+    key: 'dataTables',
+    icon: <TableOutlined />,
     children: [
       {
-        title: 'common.ban',
-        key: 'ban',
-        url: '/auth/ban',
+        title: 'Students',
+        key: 'students',
+        url: '/data-tables/students',
+      },
+      {
+        title: 'Teachers',
+        key: 'teacher',
+        url: '/data-tables/teachers',
+      },
+      {
+        title: 'Subjects',
+        key: 'subjects',
+        url: '/data-tables/subjects',
       },
     ],
   },

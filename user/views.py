@@ -36,7 +36,6 @@ class CreateUserViewSet(generics.CreateAPIView):
 
 class MyProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = MyProfileSerializer
-    permission_classes = [IsNotBanned]
 
     def get_object(self):
         return self.request.user
@@ -50,7 +49,7 @@ class CurrentUserView(generics.RetrieveUpdateAPIView):
 
 class UserSearchListView(generics.ListAPIView):
     serializer_class = UserSearchListSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsNotBanned)
 
     def get_queryset(self):
         user = get_user_model()
@@ -71,7 +70,7 @@ class UserSearchListView(generics.ListAPIView):
 
 class UserSearchDetailView(generics.RetrieveAPIView):
     serializer_class = UserSearchDetailSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, IsNotBanned)
 
     def get_queryset(self):
         user = get_user_model()
@@ -86,7 +85,7 @@ class UserSearchDetailView(generics.RetrieveAPIView):
 
 class GPSViewSet(viewsets.ModelViewSet):
     serializer_class = GPSSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, IsNotBanned)
 
     def get_queryset(self):
         return GPS.objects.select_related('user')

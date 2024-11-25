@@ -1,7 +1,9 @@
 export interface UserInList {
   id: number;
   avatar: string;
+  first_name: string;
   full_name: string;
+  email: string;
   status_in_service: ServiceStatus;
   date_joined: string;
   group: GroupType;

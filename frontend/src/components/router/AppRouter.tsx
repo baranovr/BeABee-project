@@ -5,7 +5,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 const AuthLayout = React.lazy(() => import('@app/components/layouts/AuthLayout/AuthLayout'));
 import LoginPage from '@app/pages/LoginPage';
 import SignUpPage from '@app/pages/SignUpPage';
-import BanPage from '@app/pages/BanPage';
 
 import MainLayout from '@app/components/layouts/main/MainLayout/MainLayout';
 import ProfileLayout from '@app/components/profile/ProfileLayout';
@@ -13,10 +12,13 @@ import RequireAuth from '@app/components/router/RequireAuth';
 import { withLoading } from '@app/hocs/withLoading.hoc';
 import NftDashboardPage from '@app/pages/DashboardPages/MainPage';
 import TeachersPage from '@app/pages/DashboardPages/TeachersPage';
-import TwoFAPage from "@app/pages/TwoFAPage";
+import TwoFAPage from '@app/pages/TwoFAPage';
 
 const NewsFeedPage = React.lazy(() => import('@app/pages/HomeworksFeedPage'));
 const ServerErrorPage = React.lazy(() => import('@app/pages/ServerErrorPage'));
+const DataTableStudentsPage = React.lazy(() => import('@app/pages/DataTableStudentsPage'));
+const DataTableTeachersPage = React.lazy(() => import('@app/pages/DataTableTeachersPage'));
+const DataSubjectsTablePage = React.lazy(() => import('@app/pages/DataTableSubjectsPage'));
 const Error404Page = React.lazy(() => import('@app/pages/Error404Page'));
 const PersonalInfoPage = React.lazy(() => import('@app/pages/PersonalInfoPage'));
 const NotificationsPage = React.lazy(() => import('@app/pages/NotificationsPage'));
@@ -47,6 +49,11 @@ const Notifications = withLoading(NotificationsPage);
 const AuthLayoutFallback = withLoading(AuthLayout);
 const LogoutFallback = withLoading(Logout);
 
+// Tables
+const DataTableStudents = withLoading(DataTableStudentsPage);
+const DataTableTeachers = withLoading(DataTableTeachersPage);
+const DataSubjectsTable = withLoading(DataSubjectsTablePage);
+
 export const AppRouter: React.FC = () => {
   const protectedLayout = (
     <RequireAuth>
@@ -69,6 +76,11 @@ export const AppRouter: React.FC = () => {
             <Route path="personal-info" element={<PersonalInfo />} />
             <Route path="notifications" element={<Notifications />} />
           </Route>
+          <Route path="data-tables">
+            <Route path="students" element={<DataTableStudents />} />
+            <Route path="teachers" element={<DataTableTeachers />} />
+            <Route path="subjects" element={<DataSubjectsTable />} />
+          </Route>
           <Route path="in-future">
             <Route path="upload" element={<Uploads />} />
             <Route path="result" element={<Results />} />
@@ -79,14 +91,6 @@ export const AppRouter: React.FC = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="2fa" element={<TwoFAPage />} />
           <Route path="sign-up" element={<SignUpPage />} />
-          <Route
-            path="ban"
-            element={
-              <RequireAuth>
-                <BanPage />
-              </RequireAuth>
-            }
-          />
         </Route>
         <Route path="/logout" element={<LogoutFallback />} />
       </Routes>

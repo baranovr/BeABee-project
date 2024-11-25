@@ -12,6 +12,7 @@ import { useResponsive } from '@app/hooks/useResponsive';
 import * as S from './RecentlyAddedNews.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
+import {getNewsList} from "@app/api/recentlynews.api";
 
 export const RecentlyAddedNews: React.FC = () => {
   const [news, setNews] = useState<News[]>([]);
@@ -19,6 +20,18 @@ export const RecentlyAddedNews: React.FC = () => {
 
   const { t } = useTranslation();
   const { mobileOnly, isTablet } = useResponsive();
+
+  const refreshNews = () => {
+      getNewsList()
+          .then(setNews)
+          .catch((error) => {
+              console.error('Failed to load news:', error);
+          });
+  };
+
+    useEffect(() => {
+        refreshNews()
+    }, []);
 
   useEffect(() => {
     getRecentlyAddedNews().then((result) => {
@@ -32,14 +45,14 @@ export const RecentlyAddedNews: React.FC = () => {
       tablet: news.map((item) => (
         <div key={item.title}>
           <S.CardWrapper>
-            <NftCard newsItem={item} />
+            <NftCard newsItem={item} onDeleteSuccess={refreshNews}/>
           </S.CardWrapper>
         </div>
       )),
       grid: news.map((item) => (
         <BaseCol key={item.title} xs={24} sm={12} md={8}>
           <S.CardWrapper>
-            <NftCard newsItem={item} />
+            <NftCard newsItem={item} onDeleteSuccess={refreshNews}/>
           </S.CardWrapper>
         </BaseCol>
       )),

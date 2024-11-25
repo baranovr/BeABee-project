@@ -1,6 +1,6 @@
 import axiosInstance from '@app/api/axiosInstance';
 
-interface Subject {
+export interface Subject {
   id: number;
   name: string;
 }
@@ -8,6 +8,9 @@ interface Subject {
 export interface Teacher {
   id: number;
   teacher_avatar: string;
+  first_name: string;
+  last_name: string;
+  surname: string;
   full_name_sur: string;
   subjects: Subject[];
   degree: string;

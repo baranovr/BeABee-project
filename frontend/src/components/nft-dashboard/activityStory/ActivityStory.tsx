@@ -17,18 +17,30 @@ export const ActivityStory: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const refreshActivities = () => {
+    getUserActivities()
+      .then(setStory)
+      .catch((error) => {
+        console.error('Failed to fetch posts:', error);
+      });
+  };
+
+  useEffect(() => {
+    refreshActivities(); // Загружаем посты при монтировании
+  }, []);
+
   const activityStory = useMemo(
     () =>
       story.map((item, index) => (
         <BaseCol key={index} span={24}>
-          <ActivityStoryItem {...item} />
+          <ActivityStoryItem {...item} onDeleteSuccess={refreshActivities}/>
         </BaseCol>
       )),
     [story],
   );
 
   if (loading) {
-    return <div>Loading...</div>; // Можно заменить на компонент спиннера
+    return <div>Loading...</div>;
   }
 
   return (
