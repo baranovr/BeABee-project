@@ -1,5 +1,4 @@
 from datetime import datetime
-from functools import partial
 
 from django.core.mail import send_mail
 from django.db import transaction
@@ -620,16 +619,13 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
         return self.filter_by_title_and_date(queryset)
 
     def create(self, request, *args, **kwargs):
-        with transaction.atomic():
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
-                serializer.save(posted_by=request.user)
-                headers = self.get_success_headers(serializer.data)
-                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        serializer.save(posted_by=request.user)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
 
     def update(self, request, *args, **kwargs):
         with transaction.atomic():

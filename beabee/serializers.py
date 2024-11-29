@@ -100,7 +100,10 @@ class TeacherListSerializer(TeacherSerializer):
             "full_name_sur",
             "subjects",
             "degree",
-            "email"
+            "email",
+            "math_phy_count",
+            "prog_net_count",
+            "lang_cul_count",
         )
 
 

@@ -74,8 +74,11 @@ class Teacher(models.Model):
     last_name = models.CharField(max_length=20)
     surname = models.CharField(max_length=20)
     subjects = models.ManyToManyField(Subject)
-    degree = models.CharField(max_length=50, choices=TeacherDegreeChoice.choices)
+    degree = models.CharField(max_length=25, choices=TeacherDegreeChoice.choices)
     email = models.EmailField(default='noemail@example.com')
+    math_phy_count = models.IntegerField(default=0)
+    prog_net_count = models.IntegerField(default=0)
+    lang_cul_count = models.IntegerField(default=0)
 
     @property
     def full_name_sur(self):
@@ -112,8 +115,8 @@ class Exam(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     date_time = models.DateTimeField()
     details = models.CharField(max_length=50, default="No Details")
-    group = models.CharField(max_length=50, choices=GroupChoices.choices)
-    type = models.CharField(max_length=50, choices=ExamTypeChoices.choices, default=ExamTypeChoices.SPECIFIC_TYPE)
+    group = models.CharField(max_length=5, choices=GroupChoices.choices)
+    type = models.CharField(max_length=35, choices=ExamTypeChoices.choices, default=ExamTypeChoices.SPECIFIC_TYPE)
 
     class Meta:
         ordering = ["date_time"]
@@ -148,6 +151,39 @@ class Homework(models.Model):
     class Meta:
         ordering = ["created_at"]
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            original = Homework.objects.get(pk=self.pk)
+            if original.type != self.type or original.teacher != self.teacher:
+                if original.type == HomeworkTypeChoice.MATH_PHYSICS:
+                    original.teacher.math_phy_count -= 1
+                elif original.type == HomeworkTypeChoice.PROG_NETWORKS:
+                    original.teacher.prog_net_count -= 1
+                elif original.type == HomeworkTypeChoice.LANG_CULTURE:
+                    original.teacher.lang_cul_count -= 1
+                original.teacher.save()
+
+        super().save(*args, **kwargs)
+
+        if self.type == HomeworkTypeChoice.MATH_PHYSICS:
+            self.teacher.math_phy_count += 1
+        elif self.type == HomeworkTypeChoice.PROG_NETWORKS:
+            self.teacher.prog_net_count += 1
+        elif self.type == HomeworkTypeChoice.LANG_CULTURE:
+            self.teacher.lang_cul_count += 1
+        self.teacher.save()
+
+    def delete(self, *args, **kwargs):
+        if self.type == HomeworkTypeChoice.MATH_PHYSICS:
+            self.teacher.math_phy_count -= 1
+        elif self.type == HomeworkTypeChoice.PROG_NETWORKS:
+            self.teacher.prog_net_count -= 1
+        elif self.type == HomeworkTypeChoice.LANG_CULTURE:
+            self.teacher.lang_cul_count -= 1
+        self.teacher.save()
+
+        super().delete(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
@@ -161,7 +197,7 @@ def news_media_path(instance, filename):
 class News(models.Model):
     file = models.FileField(upload_to=news_media_path)
     title = models.CharField(max_length=30)
-    description = models.CharField(max_length=3000, default="No description")
+    description = models.CharField(max_length=1200, default="No description")
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="news_posters")
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -181,7 +217,7 @@ class ImportantInfo(models.Model):
     title = models.CharField(max_length=150)
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="info_posters")
     image = models.ImageField(upload_to=info_media_path)
-    description = models.CharField(max_length=3000, default="No Description")
+    description = models.CharField(max_length=1200, default="No Description")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -203,7 +239,7 @@ class Ban(models.Model):
         on_delete=models.CASCADE,
         related_name="banned_users",
     )
-    reason = models.CharField(max_length=55, choices=BanReasonsChoices.choices)
+    reason = models.CharField(max_length=30, choices=BanReasonsChoices.choices)
     created_at = models.DateTimeField(auto_now_add=True)
     banned_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="banners")
 
@@ -244,12 +280,12 @@ class LocationChoices(models.TextChoices):
 
 
 class StudentInTable(models.Model):
-    first_name = models.CharField(max_length=15)
-    last_name = models.CharField(max_length=15)
-    surname = models.CharField(max_length=15)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    surname = models.CharField(max_length=20)
     group = models.CharField(max_length=5, choices=GroupChoices.choices)
     subgroup = models.CharField(max_length=2, choices=SubGroupChoices.choices)
-    email = models.EmailField(default="<--- noemail@example.com --->")
+    email = models.EmailField(default="noemail@example.com")
     role = models.CharField(max_length=15, choices=RoleChoices.choices)
     location = models.CharField(max_length=13, choices=LocationChoices.choices)
 
