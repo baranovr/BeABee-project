@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Modal, Input, Button, Upload, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { RcFile } from 'antd/lib/upload';
-import axiosInstance from "@app/api/axiosInstance";
-import { useTranslation } from "react-i18next";
+import axiosInstance from '@app/api/axiosInstance';
+import { useTranslation } from 'react-i18next';
 
 export const CreateNewsForm: React.FC = () => {
   const { t } = useTranslation();
@@ -41,25 +41,26 @@ export const CreateNewsForm: React.FC = () => {
 
     const token = localStorage.getItem('access');
 
-    axiosInstance.post('platform/news/', formDataToSend, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-    .then(() => {
-      setFormData({
-        title: '',
-        description: '',
+    axiosInstance
+      .post('platform/news/', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        setFormData({
+          title: '',
+          description: '',
+        });
+        setFile(null);
+        setIsModalVisible(false);
+        message.success(t('common.newsCreated'));
+      })
+      .catch((error) => {
+        console.error('Error creating news:', error);
+        message.error(t('common.creatingError'));
       });
-      setFile(null);
-      setIsModalVisible(false);
-      message.success(t('common.newsCreated'));
-    })
-    .catch((error) => {
-      console.error('Error creating news:', error);
-      message.error(t('common.creatingError'));
-    });
   };
 
   const handleCancel = () => {
@@ -77,7 +78,6 @@ export const CreateNewsForm: React.FC = () => {
       return false; // Prevent automatic upload
     }
   };
-
 
   return (
     <>
@@ -100,11 +100,11 @@ export const CreateNewsForm: React.FC = () => {
           maxLength={30}
         />
         <Input.TextArea
-          placeholder={t('common.description') + ' (max 3000 chars, optional)'}
+          placeholder={t('common.description') + ' (max 1000 chars, optional)'}
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           rows={4}
-          maxLength={3000}
+          maxLength={1000}
           style={{ marginBottom: '1rem' }}
         />
         <Upload
@@ -121,7 +121,7 @@ export const CreateNewsForm: React.FC = () => {
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover'
+                objectFit: 'cover',
               }}
             />
           ) : (
@@ -131,9 +131,7 @@ export const CreateNewsForm: React.FC = () => {
             </div>
           )}
         </Upload>
-        <div style={{ marginTop: '8px', color: '#666' }}>
-          Supported formats: JPG, PNG, WEBP, GIF (max: 2MB)
-        </div>
+        <div style={{ marginTop: '8px', color: '#666' }}>Supported formats: JPG, PNG, WEBP, GIF (max: 2MB)</div>
       </Modal>
     </>
   );

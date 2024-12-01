@@ -1,6 +1,7 @@
 import os
 import uuid
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.text import slugify
 from beabee_project import settings
@@ -50,7 +51,7 @@ class Post(models.Model):
 
 
 class Subject(models.Model):
-    name = models.CharField(max_length=150, unique=True)
+    name = models.CharField(max_length=30, unique=True)
     group = models.CharField(max_length=8, choices=GroupChoices, default="NO_GROUP")
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
@@ -67,7 +68,6 @@ def teachers_avatars_path(instance, filename):
     return os.path.join("uploads/teachers_avatars/", filename)
 
 
-
 class Teacher(models.Model):
     teacher_avatar = models.ImageField(upload_to=teachers_avatars_path)
     first_name = models.CharField(max_length=20)
@@ -76,9 +76,9 @@ class Teacher(models.Model):
     subjects = models.ManyToManyField(Subject)
     degree = models.CharField(max_length=25, choices=TeacherDegreeChoice.choices)
     email = models.EmailField(default='noemail@example.com')
-    math_phy_count = models.IntegerField(default=0)
-    prog_net_count = models.IntegerField(default=0)
-    lang_cul_count = models.IntegerField(default=0)
+    math_phy_count = models.PositiveIntegerField(default=0)
+    prog_net_count = models.PositiveIntegerField(default=0)
+    lang_cul_count = models.PositiveIntegerField(default=0)
 
     @property
     def full_name_sur(self):
@@ -138,14 +138,14 @@ class HomeworkTypeChoice(models.TextChoices):
 
 
 class Homework(models.Model):
-    title = models.CharField(max_length=150)
+    title = models.CharField(max_length=50)
     description = models.TextField()
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name="subject_homeworks")
-    type = models.CharField(max_length=50, choices=HomeworkTypeChoice.choices)
+    type = models.CharField(max_length=13, choices=HomeworkTypeChoice.choices)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="teacher_homeworks")
     created_at = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField(null=True, blank=True)
-    for_group = models.CharField(max_length=50, choices=GroupChoices.choices, default="No group")
+    for_group = models.CharField(max_length=8, choices=GroupChoices.choices, default="No group")
     added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="added_by_homeworks")
 
     class Meta:
@@ -214,7 +214,7 @@ def info_media_path(instance, filename):
 
 
 class ImportantInfo(models.Model):
-    title = models.CharField(max_length=150)
+    title = models.CharField(max_length=50)
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="info_posters")
     image = models.ImageField(upload_to=info_media_path)
     description = models.CharField(max_length=1200, default="No Description")
@@ -303,3 +303,31 @@ class StudentInTable(models.Model):
 
     def __str__(self):
         return f"{self.last_name}, {self.group}"
+
+
+class SystemTypesChoices(models.TextChoices):
+    SUCCESS = "Success"
+    WARNING = "Warning"
+    ERROR = "Error"
+
+
+class SystemNotifications(models.Model):
+    type = models.CharField(max_length=7, choices=SystemTypesChoices.choices)
+    description = models.CharField(max_length=150)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    show_once = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.description
+
+class SystemNotificationView(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    notification = models.ForeignKey(SystemNotifications, on_delete=models.CASCADE)
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'notification')

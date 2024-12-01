@@ -16,7 +16,8 @@ import { themeObject } from './styles/themes/themeVariables';
 import { checkAuthStatus } from '@app/store/slices/authSlice';
 import { AppDispatch } from '@app/store/store';
 import { useDispatch } from 'react-redux';
-import { BanOverlay } from "@app/pages/BanOverlay";
+import { BanOverlay } from '@app/pages/BanOverlay';
+import { AutoPopupNotifications } from '@app/pages/AutoPopupNotifications';
 
 const App: React.FC = () => {
   const { language } = useLanguage();
@@ -39,8 +40,9 @@ const App: React.FC = () => {
       <GlobalStyle />
       <HelmetProvider>
         <ConfigProvider locale={language === 'en' ? enUS : deDe}>
-            <AppRouter />
-            <BanOverlay />
+          <AppRouter />
+          <BanOverlay />
+          <AutoPopupNotifications />
         </ConfigProvider>
       </HelmetProvider>
     </>

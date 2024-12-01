@@ -140,12 +140,10 @@ export const DeleteNewsButton = styled(BaseButton)`
     filter: brightness(1.2);
   }
 `;
-
-export const DeleteButton = styled(AntButton)`
+styled(AntButton)`
   margin-top: 10px;
   width: 100%;
 `;
-
 
 export const Button = styled(AntButton)`
   border-radius: ${BORDER_RADIUS};

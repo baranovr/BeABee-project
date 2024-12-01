@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { TeamOutlined, CrownOutlined, UserOutlined } from '@ant-design/icons';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 import { BaseSelect, Option } from '@app/components/common/selects/BaseSelect/BaseSelect';
@@ -11,12 +10,14 @@ const STATUS_IN_SERVICE_OPTIONS = [
   { value: 'User', label: 'User', icon: <UserOutlined /> },
 ];
 
-export const StatusInServiceItem: React.FC = () => {
-  const { t } = useTranslation();
+interface StatusItemProps {
+  initialValue?: string;
+}
 
+export const StatusInServiceItem: React.FC<StatusItemProps> = ({ initialValue }) => {
   return (
-    <BaseButtonsForm.Item name="status_in_service" label={t('Status in service')}>
-      <BaseSelect placeholder={t('common.select.placeholder')}>
+    <BaseButtonsForm.Item name="status_in_service" label={'Status in service'} initialValue={initialValue}>
+      <BaseSelect defaultValue={initialValue}>
         {STATUS_IN_SERVICE_OPTIONS.map((option) => (
           <Option key={option.value} value={option.value}>
             <BaseSpace align="center">

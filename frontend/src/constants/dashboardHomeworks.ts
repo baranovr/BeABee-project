@@ -9,6 +9,9 @@ export interface Homework {
   created_at: string;
   teacher_avatar: string;
   teacher: string;
+  teacher_first_name: string;
+  teacher_last_name: string;
+  teacher_surname: string;
   subject: string;
   type: string;
   deadline: string;
@@ -28,6 +31,9 @@ export const getHomeworksList = async (): Promise<Homework[]> => {
         created_at: homework.created_at,
         teacher_avatar: homework.teacher_avatar,
         teacher: homework.teacher,
+        teacher_first_name: homework.teacher_first_name,
+        teacher_last_name: homework.teacher_last_name,
+        teacher_surname: homework.teacher_surname,
         subject: homework.subject,
         type: homework.type,
         deadline: homework.deadline,

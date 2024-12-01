@@ -26,7 +26,6 @@ interface BackendUserProfile {
   date_joined: string;
   is_banned: boolean;
   ban_reason: string;
-
 }
 
 interface UserState {

@@ -1,3 +1,5 @@
+import axiosInstance from '@app/api/axiosInstance';
+
 export interface Statistic {
   id: number;
   value: number;
@@ -5,35 +7,7 @@ export interface Statistic {
   unit: '%';
 }
 
-export const getStatistics = (): Promise<Statistic[]> => {
-  return new Promise((res) => {
-    setTimeout(() => {
-      res([
-        {
-          id: 1,
-          value: 45,
-          prevValue: 30,
-          unit: '%',
-        },
-        {
-          id: 2,
-          value: 12,
-          prevValue: 20,
-          unit: '%',
-        },
-        {
-          id: 3,
-          value: 90,
-          prevValue: 60,
-          unit: '%',
-        },
-        {
-          id: 4,
-          value: 78,
-          prevValue: 90,
-          unit: '%',
-        },
-      ]);
-    }, 0);
-  });
+export const getStatistics = async (): Promise<Statistic[]> => {
+  const response = await axiosInstance.get<Statistic[]>('platform/homework_types/stat/');
+  return response.data;
 };

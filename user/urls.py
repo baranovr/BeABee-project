@@ -7,7 +7,6 @@ from user.views import (
     MyProfileView,
     UserSearchListView,
     UserSearchDetailView,
-    CurrentUserView,
     TwoFactorAuthView,
     VerifyCodeView,
     CheckSessionView,
@@ -27,7 +26,6 @@ urlpatterns = [
 
     path("users/", UserSearchListView.as_view(), name="users"),
     path("users/<int:pk>/", UserSearchDetailView.as_view(), name="profile"),
-    path("current_user/", CurrentUserView.as_view(), name="current-user"),
 ]
 
 app_name = "user"

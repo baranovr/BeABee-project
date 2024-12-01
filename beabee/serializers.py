@@ -9,7 +9,9 @@ from beabee.models import (
     ImportantInfo,
     Ban,
     Exam,
-    StudentInTable
+    StudentInTable,
+    SystemNotifications,
+    SystemNotificationView
 )
 from beabee_project import settings
 
@@ -82,7 +84,7 @@ class TeacherSerializer(serializers.ModelSerializer):
             "surname",
             "subjects",
             "degree",
-            "email"
+            "email",
         )
 
 
@@ -169,6 +171,9 @@ class HomeworkSerializer(serializers.ModelSerializer):
 
 class HomeworkListSerializer(HomeworkSerializer):
     teacher = serializers.CharField(source='teacher.full_name_sur', read_only=True)
+    teacher_first_name = serializers.CharField(source='teacher.first_name', read_only=True)
+    teacher_last_name = serializers.CharField(source='teacher.last_name', read_only=True)
+    teacher_surname = serializers.CharField(source='teacher.surname', read_only=True)
     teacher_avatar = serializers.ImageField(source='teacher.teacher_avatar', read_only=True)
     subject = serializers.CharField(source='subject.name')
 
@@ -182,6 +187,9 @@ class HomeworkListSerializer(HomeworkSerializer):
             "type",
             "teacher_avatar",
             "teacher",
+            "teacher_first_name",
+            "teacher_last_name",
+            "teacher_surname",
             "created_at",
             "deadline",
             "for_group",
@@ -310,3 +318,28 @@ class StudentInTableSerializer(serializers.ModelSerializer):
             'last_first_sur', 'group', 'subgroup', 'full_group',
             'email', 'role', 'location', 'role_and_location'
         ]
+
+
+class SystemNotificationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SystemNotifications
+        fields = (
+            "id",
+            "type",
+            "description",
+            "is_read",
+            "created_at",
+            "show_once",
+        )
+
+    def get_viewed(self, obj):
+        user = self.context['request'].user
+        return SystemNotificationView.objects.filter(
+            user=user,
+            notification=obj
+        ).exists()
+
+class SystemNotificationsListSerializer(SystemNotificationsSerializer):
+    class Meta:
+        model = SystemNotifications
+        fields = SystemNotificationsSerializer.Meta.fields

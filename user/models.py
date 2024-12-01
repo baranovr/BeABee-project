@@ -72,46 +72,39 @@ class GroupChoices(models.TextChoices):
 
 class User(AbstractUser):
     avatar = models.ImageField(_("avatar"), upload_to=avatar_path)
-    nickname = models.CharField(_("nickname"), max_length=50, unique=True)
-    first_name = models.CharField(_("first name"), max_length=50, unique=True)
-    last_name = models.CharField(_("last name"), max_length=50, unique=True)
+    nickname = models.CharField(_("nickname"), max_length=20, unique=True)
+    first_name = models.CharField(_("first name"), max_length=20, unique=True)
+    last_name = models.CharField(_("last name"), max_length=20, unique=True)
     email = models.EmailField(_("email address"), unique=True)
     sex = models.CharField(
         _("sex"),
-        max_length=10,
+        max_length=6,
         choices=SexTextChoices.choices
     )
     birth_date = models.DateField(_("birth date"))
-    phone_number = models.CharField(_("phone number"), max_length=50, null=True, blank=True)
-    country = models.CharField(_("country"), max_length=155, null=True, blank=True)
-    city = models.CharField(_("city"), max_length=155, null=True, blank=True)
-    linkedin = models.URLField(_("linkedin url"), max_length=250, null=True, blank=True)
-    facebook = models.URLField(_("facebook url"), max_length=250, null=True, blank=True)
-    instagram = models.URLField(_("instagram url"), max_length=250, null=True, blank=True)
-    github = models.URLField(_("github url"), max_length=250, null=True, blank=True)
+    phone_number = models.CharField(_("phone number"), max_length=20, null=True, blank=True)
+    country = models.CharField(_("country"), max_length=30, null=True, blank=True)
+    city = models.CharField(_("city"), max_length=30, null=True, blank=True)
+    linkedin = models.URLField(_("linkedin url"), max_length=100, null=True, blank=True)
+    facebook = models.URLField(_("facebook url"), max_length=100, null=True, blank=True)
+    instagram = models.URLField(_("instagram url"), max_length=100, null=True, blank=True)
+    github = models.URLField(_("github url"), max_length=100, null=True, blank=True)
     group = models.CharField(
         _("group"),
-        max_length=50,
+        max_length=5,
         choices=GroupChoices.choices,
         default=GroupChoices.CS_32
     )
     status_in_service = models.CharField(
         _("status_in_service"),
-        max_length=50,
+        max_length=7,
         choices=ServiceStatusChoices.choices,
         default=ServiceStatusChoices.USER
     )
-    posts = models.ForeignKey(
-        Post,
-        blank=True,
-        null=True,
-        related_name="user_posts",
-        on_delete=models.CASCADE
-    )
-    password = models.CharField(_("password"), max_length=255)
+    password = models.CharField(_("password"), max_length=24)
     date_joined = models.DateField(_("date joined"), auto_now_add=True)
     is_banned = models.BooleanField(default=False)
-    ban_reason = models.CharField(max_length=255, null=True, blank=True)
+    ban_reason = models.CharField(max_length=30, null=True, blank=True)
 
     @property
     def full_name(self):

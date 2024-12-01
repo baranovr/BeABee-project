@@ -31,3 +31,33 @@ export const categoriesList: Category[] = [
     title: 'common.maps',
   },
 ];
+
+export type CategoryToFilterType = 'news' | 'im_info' | 'teachers' | 'homeworks' | 'users';
+
+interface CategoryToFilter {
+  name: CategoryToFilterType;
+  title: string;
+}
+
+export const categoriesToFilterList: CategoryToFilter[] = [
+  {
+    name: 'news',
+    title: 'common.news',
+  },
+  {
+    name: 'im_info',
+    title: 'common.im_info',
+  },
+  {
+    name: 'teachers',
+    title: 'common.teachers',
+  },
+  {
+    name: 'homeworks',
+    title: 'common.homeworks',
+  },
+  {
+    name: 'users',
+    title: 'common.users',
+  },
+];

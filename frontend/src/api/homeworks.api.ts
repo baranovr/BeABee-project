@@ -10,6 +10,9 @@ export interface Homework {
   type: string;
   teacher_avatar: string;
   teacher: string;
+  teacher_first_name: string;
+  teacher_last_name: string;
+  teacher_surname: string;
   created_at: string;
   deadline: string;
   for_group: string;

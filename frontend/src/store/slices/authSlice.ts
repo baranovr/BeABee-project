@@ -70,7 +70,7 @@ const fetchConfig = {
   headers: {
     'Content-Type': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
-  }
+  },
 };
 
 export const send2FACode = createAsyncThunk(
@@ -80,7 +80,7 @@ export const send2FACode = createAsyncThunk(
       const response = await fetch(`${API_BASE_URL}/user/login/2fa/`, {
         ...fetchConfig,
         method: 'POST',
-        body: JSON.stringify(credentials)
+        body: JSON.stringify(credentials),
       });
 
       if (!response.ok) {
@@ -97,7 +97,7 @@ export const send2FACode = createAsyncThunk(
       console.error('Error:', error);
       return rejectWithValue('Network error occurred');
     }
-  }
+  },
 );
 
 export const verify2FACode = createAsyncThunk(
@@ -108,7 +108,7 @@ export const verify2FACode = createAsyncThunk(
       const response = await fetch(`${API_BASE_URL}/user/login/2fa/verify/`, {
         ...fetchConfig,
         method: 'POST',
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -136,7 +136,7 @@ export const verify2FACode = createAsyncThunk(
       }
       return rejectWithValue('An unexpected error occurred');
     }
-  }
+  },
 );
 
 // Вспомогательная функция для проверки статуса сессии

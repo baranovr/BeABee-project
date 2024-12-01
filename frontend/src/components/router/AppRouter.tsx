@@ -19,6 +19,7 @@ const ServerErrorPage = React.lazy(() => import('@app/pages/ServerErrorPage'));
 const DataTableStudentsPage = React.lazy(() => import('@app/pages/DataTableStudentsPage'));
 const DataTableTeachersPage = React.lazy(() => import('@app/pages/DataTableTeachersPage'));
 const DataSubjectsTablePage = React.lazy(() => import('@app/pages/DataTableSubjectsPage'));
+const DataHomeworksTablePage = React.lazy(() => import('@app/pages/DataTableHomeworksPage'));
 const Error404Page = React.lazy(() => import('@app/pages/Error404Page'));
 const PersonalInfoPage = React.lazy(() => import('@app/pages/PersonalInfoPage'));
 const NotificationsPage = React.lazy(() => import('@app/pages/NotificationsPage'));
@@ -53,6 +54,7 @@ const LogoutFallback = withLoading(Logout);
 const DataTableStudents = withLoading(DataTableStudentsPage);
 const DataTableTeachers = withLoading(DataTableTeachersPage);
 const DataSubjectsTable = withLoading(DataSubjectsTablePage);
+const DataHomeworksTable = withLoading(DataHomeworksTablePage);
 
 export const AppRouter: React.FC = () => {
   const protectedLayout = (
@@ -80,6 +82,7 @@ export const AppRouter: React.FC = () => {
             <Route path="students" element={<DataTableStudents />} />
             <Route path="teachers" element={<DataTableTeachers />} />
             <Route path="subjects" element={<DataSubjectsTable />} />
+            <Route path="homeworks" element={<DataHomeworksTable />} />
           </Route>
           <Route path="in-future">
             <Route path="upload" element={<Uploads />} />

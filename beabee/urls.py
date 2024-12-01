@@ -10,7 +10,10 @@ from beabee.views import (
     NewsViewSet,
     ImportantInfoViewSet,
     BanViewSet,
-    StudentInTableViewSet, invite_student
+    StudentInTableViewSet,
+    invite_student,
+    HomeworkTypeDistributionView,
+    SystemNotificationsViewSet,
 )
 from user.views import GPSViewSet
 
@@ -25,6 +28,7 @@ router.register(r'news', NewsViewSet, basename='news')
 router.register(r'importantinfo', ImportantInfoViewSet, basename='importantinfo')
 router.register(r'bans', BanViewSet, basename='bans')
 router.register(r"map", GPSViewSet, basename="gps")
+router.register(r'system_notifications', SystemNotificationsViewSet, basename='system_notifications')
 
 # Data tables
 router.register(r'students_table', StudentInTableViewSet, basename='students_table')
@@ -33,7 +37,10 @@ urlpatterns = [
     path("", include(router.urls)),
 
     # Invite
-    path('students/<int:student_id>/invite/', invite_student, name='invite-student')
+    path('students/<int:student_id>/invite/', invite_student, name='invite-student'),
+
+    # Homework types statistics
+    path('homework_types/stat/', HomeworkTypeDistributionView.as_view(), name='homework-types-stat')
 ]
 
 app_name = 'beabee'

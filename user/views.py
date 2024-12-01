@@ -1,4 +1,5 @@
 import random
+from functools import partial
 
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
@@ -15,13 +16,9 @@ from rest_framework.views import APIView
 from user.serializers import (
     UserSerializer,
     MyProfileSerializer,
-    CurrentUserSerializer,
     UserSearchListSerializer,
-    UserSearchDetailSerializer,
     GPSSerializer,
     GPSDetailSerializer,
-    TwoFactorAuthSerializer,
-    VerifyCodeSerializer
 )
 from user.models import GPS, User
 
@@ -40,16 +37,9 @@ class MyProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
-class CurrentUserView(generics.RetrieveUpdateAPIView):
-    serializer_class = CurrentUserSerializer
-    permission_classes = [IsNotBanned]
-
-    def get_object(self):
-        return self.request.user
-
 class UserSearchListView(generics.ListAPIView):
     serializer_class = UserSearchListSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsNotBanned)
+    permission_classes = (IsNotBanned,)
 
     def get_queryset(self):
         user = get_user_model()
@@ -69,7 +59,7 @@ class UserSearchListView(generics.ListAPIView):
 
 
 class UserSearchDetailView(generics.RetrieveAPIView):
-    serializer_class = UserSearchDetailSerializer
+    serializer_class = UserSearchListSerializer
     permission_classes = (permissions.IsAuthenticated, IsNotBanned)
 
     def get_queryset(self):
@@ -172,7 +162,7 @@ class TwoFactorAuthView(APIView):
             return response
 
         return Response({
-            'error': 'Неверные учетные данные'
+            'error': 'Invalid credentials!'
         }, status=400)
 
 

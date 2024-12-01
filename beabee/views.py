@@ -2,13 +2,18 @@ from datetime import datetime
 
 from django.core.mail import send_mail
 from django.db import transaction
+from django.db.models import Count
+
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from rest_framework import viewsets, status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from beabee.models import (
     Post,
@@ -20,6 +25,8 @@ from beabee.models import (
     Ban,
     Exam,
     StudentInTable,
+    SystemNotifications,
+    SystemNotificationView,
 )
 from beabee.serializers import (
     PostSerializer, PostListSerializer, PostDetailSerializer,
@@ -27,7 +34,9 @@ from beabee.serializers import (
     HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer,
     NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer, ExamSerializer,
     ExamListSerializer, ExamDetailSerializer, BanListSerializer, BanDetailSerializer, StudentInTableSerializer,
+    SystemNotificationsSerializer, SystemNotificationsListSerializer,
 )
+from beabee.telegram_utils import send_telegram_notification
 from beabee.сustom_permissions.is_not_banned_permission import IsNotBanned
 from beabee_project import settings
 from user.models import User
@@ -187,14 +196,14 @@ class SubjectViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(subject, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
 
-            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+            if request.user.status_in_service in ["Admin", "Creator"]:
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             return Response(status=status.HTTP_403_FORBIDDEN)
 
     def destroy(self, request, *args, **kwargs):
-        if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+        if request.user.status_in_service in ["Admin", "Creator"]:
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -264,7 +273,7 @@ class TeacherViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+            if request.user.status_in_service in ["Admin", "Creator"]:
                 serializer.save()
                 headers = self.get_success_headers(serializer.data)
                 return Response(
@@ -279,14 +288,14 @@ class TeacherViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(teacher, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
 
-            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+            if request.user.status_in_service in ["Admin", "Creator"]:
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             return Response(status=status.HTTP_403_FORBIDDEN)
 
     def destroy(self, request, *args, **kwargs):
-        if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+        if request.user.status_in_service in ["Admin", "Creator"]:
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -365,9 +374,24 @@ class ExamViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
-                serializer.save()
+            if request.user.status_in_service in ["Admin", "Creator"]:
+                exam = serializer.save()
                 headers = self.get_success_headers(serializer.data)
+
+                formatted_date_time = exam.date_time.strftime('%A, %B %d, %Y at %I:%M %p')
+                message = (
+                    f"📝 <b>New Exam Scheduled!</b>\n\n\n"
+                    f"📄 <b>Details:</b>\n"
+                    f"{exam.details}\n\n"
+                    f"📘 <b>→ Subject:</b> {exam.subject}\n"
+                    f"👨‍🏫 <b>→ Teacher:</b> {exam.teacher.last_name} {exam.teacher.first_name} {exam.teacher.surname}\n"
+                    f"📅 <b>→ Date and Time:</b> {formatted_date_time}\n"
+                    f"👥 <b>→ Group:</b> {exam.group}\n"
+                    f"📑 <b>→ Type:</b> {exam.type}\n\n"
+                    f"📣 Make sure to prepare well and be on time!"
+                )
+                send_telegram_notification(message)
+
                 return Response(
                     serializer.data, status=status.HTTP_201_CREATED, headers=headers
                 )
@@ -375,7 +399,7 @@ class ExamViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
     def destroy(self, request, *args, **kwargs):
-        if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
+        if request.user.status_in_service in ["Admin", "Creator"]:
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -402,7 +426,7 @@ class ExamViewSet(viewsets.ModelViewSet):
 
 
 class HomeworkViewSet(viewsets.ModelViewSet):
-    queryset = Homework.objects.all()
+    queryset = Homework.objects.all().order_by("-created_at")
     serializer_class = HomeworkSerializer
     permission_classes = [IsNotBanned]
 
@@ -448,9 +472,23 @@ class HomeworkViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            if request.user.status_in_service == "Admin" or request.user.status_in_service == "Creator":
-                serializer.save(added_by=request.user)
+            if request.user.status_in_service in ["Admin", "Creator"]:
+                homework = serializer.save(added_by=request.user)
                 headers = self.get_success_headers(serializer.data)
+
+                formatted_deadline = homework.deadline.strftime('%A, %B %d, %Y at %I:%M %p')
+                message = (
+                    f"📚 <b>New Homework Assigned!</b>\n\n\n"
+                    f"🎓 <b>Title:</b> {homework.title}\n\n"
+                    f"📝 <b>Description:</b>\n{homework.description}\n\n"
+                    f"📘 <b>→ Subject:</b> {homework.subject}\n"
+                    f"👨‍🏫 <b>→ Teacher:</b> {homework.teacher.last_name} {homework.teacher.first_name} {homework.teacher.surname}\n"
+                    f"👥 <b>→ Assigned to Group:</b> {homework.for_group}\n"
+                    f"⏰ <b>→ Deadline:</b> {formatted_deadline}\n\n"
+                    f"Don't forget to complete it on time!"
+                )
+                send_telegram_notification(message)
+
                 return Response(
                     serializer.data, status=status.HTTP_201_CREATED, headers=headers
                 )
@@ -462,21 +500,17 @@ class HomeworkViewSet(viewsets.ModelViewSet):
             homework = get_object_or_404(
                 Homework, pk=kwargs["pk"], added_by=request.user
             )
-            serializer = self.get_serializer(homework, data=request.data)
+            serializer = self.get_serializer(homework, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
-            author = homework.added_by
 
-            if author == request.user:
+            if request.user.status_in_service in ["Admin", "Creator"]:
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             return Response(status=status.HTTP_403_FORBIDDEN)
 
     def destroy(self, request, *args, **kwargs):
-        homework = get_object_or_404(Homework, pk=kwargs["pk"])
-        author = homework.added_by
-
-        if author == request.user or request.user.status_in_service == "Creator":
+        if request.user.status_in_service in ["Admin", "Creator"]:
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -515,6 +549,67 @@ class HomeworkViewSet(viewsets.ModelViewSet):
         :return:
         """
         return super().list(request, *args, **kwargs)
+
+
+class HomeworkTypeDistributionView(APIView):
+    permission_classes = [IsNotBanned]
+
+    def get(self, request):
+        # Получаем текущую дату
+        now = timezone.now()
+
+        # Определяем даты для текущего и прошлого месяцев
+        current_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        prev_month_start = (current_month_start - timezone.timedelta(days=1)).replace(day=1)
+        current_month_end = current_month_start + timezone.timedelta(days=32)
+        prev_month_end = current_month_start
+
+        # Подсчет количества домашек по типам для текущего месяца
+        current_month_counts = Homework.objects.filter(
+            created_at__gte=current_month_start,
+            created_at__lt=current_month_end
+        ).values('type').annotate(count=Count('id'))
+
+        # Подсчет количества домашек по типам для прошлого месяца
+        prev_month_counts = Homework.objects.filter(
+            created_at__gte=prev_month_start,
+            created_at__lt=prev_month_end
+        ).values('type').annotate(count=Count('id'))
+
+        # Общее количество домашек в текущем месяце
+        total_current_month = sum(item['count'] for item in current_month_counts)
+
+        # Общее количество домашек в прошлом месяце
+        total_prev_month = sum(item['count'] for item in prev_month_counts)
+
+        # Преобразуем результаты в требуемый формат
+        result = []
+        type_mapping = {
+            'Math/Physics': 1,
+            'Prog/Networks': 2,
+            'Lang/Culture': 3,
+
+            # Fake Lang/Culture
+            'Lang/Culture_dub': 4
+        }
+
+        for type_name, type_id in type_mapping.items():
+            # Находим количество для текущего месяца
+            current_count = next((item['count'] for item in current_month_counts if item['type'] == type_name), 0)
+            current_percent = (current_count / total_current_month * 100) if total_current_month > 0 else 0
+
+            # Находим количество для прошлого месяца
+            prev_count = next((item['count'] for item in prev_month_counts if item['type'] == type_name), 0)
+            prev_percent = (prev_count / total_prev_month * 100) if total_prev_month > 0 else 0
+
+            result.append({
+                'id': type_id,
+                'value': round(current_percent),
+                'prevValue': round(prev_percent),
+                'unit': '%'
+            })
+
+        return Response(result, status=status.HTTP_200_OK)
 
 
 class FilterByTitleAndDateMixin:
@@ -757,14 +852,85 @@ class StudentInTableViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
 
+class SystemNotificationsViewSet(viewsets.ModelViewSet):
+    queryset = SystemNotifications.objects.all().order_by("-created_at")
+    serializer_class = SystemNotificationsSerializer
+    permission_classes = [IsNotBanned]
+
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return SystemNotificationsListSerializer
+
+        return SystemNotificationsSerializer
+
+    @action(detail=False, methods=["POST"])
+    def mark_all_as_read(self, request):
+        notifications = self.get_queryset().filter(is_read=False, show_once=True)
+        if not notifications:
+            return Response(
+                {
+                    "message": "All notification are already marked as read"
+                },
+                status=status.HTTP_200_OK
+            )
+
+        read_count = notifications.update(is_read=True, show_once=False)
+        return Response(
+            status=status.HTTP_200_OK,
+            data={
+                "message": "All notification marked as read",
+                "read_count": read_count
+            }
+        )
+
+    def get_queryset(self):
+        user = self.request.user
+        viewed_notifications = SystemNotificationView.objects.filter(
+            user=user
+        ).values_list('notification_id', flat=True)
+
+        return SystemNotifications.objects.exclude(
+            id__in=viewed_notifications
+        )
+
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            if request.user.status_in_service == "Creator":
+                serializer.save()
+                headers = self.get_success_headers(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=False, methods=['DELETE'])
+    def delete_all(self, request, pk=None):
+        notifications = self.get_queryset()
+        if not notifications:
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                data={"message": "No notification found"}
+            )
+
+        deleted_count, _ = notifications.delete()
+        return Response(
+            status=status.HTTP_204_NO_CONTENT,
+            data={
+                "message": "All notification deleted",
+                "deleted_count": deleted_count
+            }
+        )
+
+
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsNotBanned])
 def invite_student(request, student_id):
     try:
-        # Получаем студента из таблицы студентов
         student = StudentInTable.objects.get(id=student_id)
 
-        # Проверяем, существует ли пользователь с таким же first_name
         existing_user = User.objects.filter(first_name=student.first_name).exists()
 
         if existing_user:
@@ -773,7 +939,6 @@ def invite_student(request, student_id):
                 status=400
             )
 
-        # Отправляем инвайт на почту
         send_mail(
             subject='Invitation to Join Platform',
             message=f"""

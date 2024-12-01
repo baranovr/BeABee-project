@@ -1,53 +1,40 @@
-import React, { useMemo, ReactNode } from 'react';
-import { Trans } from 'react-i18next';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { BaseNotification } from '@app/components/common/BaseNotification/BaseNotification';
 import { capitalize } from '@app/utils/utils';
-import { Mention, Notification as NotificationType } from 'api/notifications.api';
-import { notificationsSeverities } from 'constants/notificationsSeverities';
+import { SystemNotification } from 'api/sys_notifications.api';
+import { typeMapping } from 'api/sys_notifications.api';
 import * as S from './NotificationsOverlay.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 interface NotificationsOverlayProps {
-  notifications: NotificationType[];
-  setNotifications: (state: NotificationType[]) => void;
+  notifications: SystemNotification[];
+  setNotifications: (state: SystemNotification[]) => void;
+  onMarkAllRead?: () => void;
+  onDeleteAll?: () => void;
 }
 
 export const NotificationsOverlay: React.FC<NotificationsOverlayProps> = ({
   notifications,
   setNotifications,
+  onMarkAllRead,
+  onDeleteAll,
   ...props
 }) => {
   const { t } = useTranslation();
+  const { user } = useAppSelector((state) => state.user);
 
   const noticesList = useMemo(
     () =>
       notifications.map((notification, index) => {
-        const type = notificationsSeverities.find((dbSeverity) => dbSeverity.id === notification.id)?.name;
+        const type = typeMapping[notification.type] || 'warning';
 
         return (
-          <BaseNotification
-            key={index}
-            type={type || 'warning'}
-            title={capitalize(type || 'warning')}
-            description={t(notification.description)}
-            {...(type === 'mention' && {
-              mentionIconSrc: (notification as Mention).userIcon,
-              title: (notification as Mention).userName,
-              description: (
-                <Trans i18nKey={(notification as Mention).description}>
-                  <S.LinkBtn type="link" href={(notification as Mention).href}>
-                    {
-                      { place: t((notification as Mention).place) } as unknown as ReactNode // todo: remove casting
-                    }
-                  </S.LinkBtn>
-                </Trans>
-              ),
-            })}
-          />
+          <BaseNotification key={index} type={type} title={capitalize(type)} description={notification.description} />
         );
       }),
     [notifications, t],
@@ -69,16 +56,28 @@ export const NotificationsOverlay: React.FC<NotificationsOverlayProps> = ({
           <BaseRow gutter={[10, 10]}>
             {notifications.length > 0 && (
               <BaseCol span={24}>
-                <S.Btn type="ghost" onClick={() => setNotifications([])}>
+                <S.Btn
+                  type="ghost"
+                  onClick={() => {
+                    onMarkAllRead?.();
+                  }}
+                >
                   {t('header.notifications.readAll')}
                 </S.Btn>
               </BaseCol>
             )}
-            <BaseCol span={24}>
-              <S.Btn type="link">
-                <Link to="/">{t('header.notifications.viewAll')}</Link>
-              </S.Btn>
-            </BaseCol>
+            {user && user.statusInService === 'Creator' && (
+              <BaseCol span={24}>
+                <S.Btn
+                  type="ghost"
+                  onClick={() => {
+                    onDeleteAll?.();
+                  }}
+                >
+                  {'Delete All'}
+                </S.Btn>
+              </BaseCol>
+            )}
           </BaseRow>
         </BaseCol>
       </BaseRow>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Input, Button, Upload, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import axiosInstance from "@app/api/axiosInstance";
+import axiosInstance from '@app/api/axiosInstance';
 import { RcFile } from 'antd/lib/upload';
 
 export const CreatePostForm: React.FC = () => {
@@ -40,23 +40,24 @@ export const CreatePostForm: React.FC = () => {
 
     const token = localStorage.getItem('access');
 
-    axiosInstance.post('platform/posts/', formData, {
-      headers: {
-      'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-    .then(() => {
-      setTitle('');
-      setDescription('');
-      setPhoto(null);
-      setIsModalVisible(false);
-      message.success(t('common.postCreated'));
-    })
-    .catch((error) => {
-      console.error('Error creating post:', error);
-      message.error(t('common.creatingError'));
-    });
+    axiosInstance
+      .post('platform/posts/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        setTitle('');
+        setDescription('');
+        setPhoto(null);
+        setIsModalVisible(false);
+        message.success(t('common.postCreated'));
+      })
+      .catch((error) => {
+        console.error('Error creating post:', error);
+        message.error(t('common.creatingError'));
+      });
   };
 
   const handleCancel = () => {
@@ -92,11 +93,12 @@ export const CreatePostForm: React.FC = () => {
           maxLength={50}
         />
         <Input.TextArea
-          placeholder={t('common.description')}
+          placeholder={t('common.description') + ' (max 1000 chars)'}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
           style={{ marginBottom: '1rem' }}
+          maxLength={1000}
         />
         <Upload
           listType="picture-card"
@@ -112,7 +114,7 @@ export const CreatePostForm: React.FC = () => {
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover'
+                objectFit: 'cover',
               }}
             />
           ) : (
@@ -122,9 +124,7 @@ export const CreatePostForm: React.FC = () => {
             </div>
           )}
         </Upload>
-        <div style={{ marginTop: '8px', color: '#666' }}>
-          Supported formats: JPG, PNG, WEBP (max: 2MB)
-        </div>
+        <div style={{ marginTop: '8px', color: '#666' }}>Supported formats: JPG, PNG, WEBP (max: 2MB)</div>
       </Modal>
     </>
   );

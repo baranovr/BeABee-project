@@ -43,6 +43,7 @@ export const CreateExamForm: React.FC = () => {
   ];
 
   const examTypeOptions = [
+    { value: ExamTypeChoices.SPECIFIC_TYPE, label: ExamTypeChoices.SPECIFIC_TYPE },
     { value: ExamTypeChoices.ANNUAL_EXAM, label: ExamTypeChoices.ANNUAL_EXAM },
     { value: ExamTypeChoices.ANNUAL_EXAM_RET, label: ExamTypeChoices.ANNUAL_EXAM_RET },
     { value: ExamTypeChoices.YEAR_SESSION, label: ExamTypeChoices.YEAR_SESSION },
@@ -53,7 +54,6 @@ export const CreateExamForm: React.FC = () => {
     { value: ExamTypeChoices.MODULAR_CONTROL_WORK_RET, label: ExamTypeChoices.MODULAR_CONTROL_WORK_RET },
     { value: ExamTypeChoices.CONTROL_WORK, label: ExamTypeChoices.CONTROL_WORK },
     { value: ExamTypeChoices.CONTROL_WORK_RET, label: ExamTypeChoices.CONTROL_WORK_RET },
-    { value: ExamTypeChoices.SPECIFIC_TYPE, label: ExamTypeChoices.SPECIFIC_TYPE },
   ];
 
   useEffect(() => {

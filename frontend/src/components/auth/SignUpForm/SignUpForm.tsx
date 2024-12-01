@@ -160,15 +160,15 @@ export const SignUpForm: React.FC = () => {
         </Auth.FormItem>
 
         <Auth.FormItem name="nickName" label={t('common.nickname')} rules={[{ required: true }]}>
-          <Auth.FormInput placeholder={t('common.nickname')} />
+          <Auth.FormInput placeholder={t('common.nickname') + ' (max 20 chars)'} />
         </Auth.FormItem>
 
         <Auth.FormItem name="firstName" label={t('common.firstName')} rules={[{ required: true }]}>
-          <Auth.FormInput placeholder={t('common.firstName')} />
+          <Auth.FormInput placeholder={t('common.firstName') + ' (max 20 chars)'} />
         </Auth.FormItem>
 
         <Auth.FormItem name="lastName" label={t('common.lastName')} rules={[{ required: true }]}>
-          <Auth.FormInput placeholder={t('common.lastName')} />
+          <Auth.FormInput placeholder={t('common.lastName') + ' (max 20 chars)'} />
         </Auth.FormItem>
 
         <Auth.FormItem name="email" label={t('common.email')} rules={[{ required: true, type: 'email' }]}>
@@ -189,15 +189,15 @@ export const SignUpForm: React.FC = () => {
         </Auth.FormItem>
 
         <Auth.FormItem name="phoneNumber" label={t('Phone Number')}>
-          <Auth.FormInput placeholder={t('Phone Number')} />
+          <Auth.FormInput placeholder={t('Phone Number') + ' (max 20 chars)'} />
         </Auth.FormItem>
 
         <Auth.FormItem name="country" label={t('common.country')}>
-          <Auth.FormInput placeholder={t('common.country')} />
+          <Auth.FormInput placeholder={t('common.country') + ' (max 30 chars)'} />
         </Auth.FormItem>
 
         <Auth.FormItem name="city" label={t('common.city')}>
-          <Auth.FormInput placeholder={t('common.city')} />
+          <Auth.FormInput placeholder={t('common.city') + ' (max 30 chars)'} />
         </Auth.FormItem>
 
         <Auth.FormItem name="linkedin" label="LinkedIn">

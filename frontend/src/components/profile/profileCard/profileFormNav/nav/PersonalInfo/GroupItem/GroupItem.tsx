@@ -16,12 +16,16 @@ const GROUP_OPTIONS = [
   { value: 'CS-44', label: 'CS-44' },
 ];
 
-export const GroupItem: React.FC = () => {
+interface GroupItemProps {
+  initialValue?: string;
+}
+
+export const GroupItem: React.FC<GroupItemProps> = ({ initialValue }) => {
   const { t } = useTranslation();
 
   return (
-    <BaseButtonsForm.Item name="group" label={t('Group')}>
-      <BaseSelect placeholder={t('common.select.placeholder')}>
+    <BaseButtonsForm.Item name="group" label={t('Group')} initialValue={initialValue}>
+      <BaseSelect defaultValue={initialValue}>
         {GROUP_OPTIONS.map((option) => (
           <Option key={option.value} value={option.value}>
             <BaseSpace align="center">

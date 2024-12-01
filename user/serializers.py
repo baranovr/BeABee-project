@@ -61,12 +61,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class MyProfileSerializer(UserSerializer):
-    posts = serializers.SerializerMethodField()
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
 
-    @staticmethod
-    def get_posts(obj):
-        posts = Post.objects.filter(user=obj)
-        return PostListSerializer(posts, many=True).data
+        instance.save()
+        return instance
 
     class Meta:
         model = User
@@ -74,15 +74,9 @@ class MyProfileSerializer(UserSerializer):
             'id', 'avatar', 'nickname', 'first_name', 'last_name', 'full_name', 'email',
             'sex', 'birth_date', 'phone_number', 'country', 'city',
             'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service',
-            'date_joined', 'posts', 'is_banned', 'ban_reason'
+            'date_joined', 'is_banned', 'ban_reason'
         ]
         read_only_fields = ['is_banned', 'ban_reason', 'full_name', 'date_joined']
-
-
-class CurrentUserSerializer(UserSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "nickname", "status_in_service"]
 
 
 class UserSearchListSerializer(serializers.ModelSerializer):
@@ -102,21 +96,6 @@ class UserSearchListSerializer(serializers.ModelSerializer):
             "ban_reason",
         )
 
-
-class UserSearchDetailSerializer(UserSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = (
-            "id",
-            "avatar",
-            "nickname",
-            "full_name",
-            "status_in_service",
-            "date_joined",
-            "group",
-            "is_banned",
-            "ban_reason",
-        )
 
 
 class GPSUserBasicSerializer(serializers.ModelSerializer):

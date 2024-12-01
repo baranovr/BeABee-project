@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Input, Button, Select, DatePicker, message } from 'antd';
+import { Modal, Input, Button, Select, DatePicker, message, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
 import axiosInstance from '@app/api/axiosInstance';
 import { Moment } from 'moment';
@@ -161,11 +161,11 @@ export const CreateHomeworkForm: React.FC = () => {
           maxLength={50}
         />
         <Input.TextArea
-          placeholder={t('common.description') + ' (max 3000 chars)'}
+          placeholder={t('common.description') + ' (max 2000 chars)'}
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           rows={4}
-          maxLength={3000}
+          maxLength={2000}
           style={{ marginBottom: '1rem' }}
         />
         <Select

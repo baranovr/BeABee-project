@@ -34,7 +34,7 @@ interface PersonalInfoFormValues {
   country?: string;
   city?: string;
   nickName: string;
-  sex?: string;
+  sex: string;
   facebook: string;
   linkedin: string;
   firstName: string;
@@ -50,7 +50,7 @@ const initialPersonalInfoValues: PersonalInfoFormValues = {
   firstName: '',
   lastName: '',
   nickName: '',
-  sex: undefined,
+  sex: '',
   birthday: undefined,
   phone: '',
   email: '',
@@ -81,18 +81,18 @@ export const PersonalInfo: React.FC = () => {
         ? {
             firstName: user.firstName,
             lastName: user.lastName,
+            nickName: user.nickName,
             email: user.email,
             phone: user.phone,
-            nickName: user.nickName,
-            sex: user.sex,
             birthday: Dates.getDate(user.birthday),
             country: user.country,
             city: user.city,
-            instagram: user?.instagram,
-            linkedin: user?.linkedin,
-            facebook: user?.facebook,
-            github: user?.github,
             group: user?.group,
+            sex: user.sex,
+            instagram: user?.instagram,
+            facebook: user?.facebook,
+            linkedin: user?.linkedin,
+            github: user?.github,
             statusInService: user.statusInService,
           }
         : initialPersonalInfoValues,

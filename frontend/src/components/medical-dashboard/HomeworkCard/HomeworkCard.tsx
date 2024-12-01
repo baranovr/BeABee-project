@@ -31,7 +31,7 @@ const SpinnerWrapper = styled.div`
   height: 24px;
 `;
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const HomeworkCard: React.FC = () => {
   const { t } = useTranslation();
@@ -42,7 +42,7 @@ export const HomeworkCard: React.FC = () => {
   const loadHomeworks = async () => {
     try {
       setIsLoading(true);
-      await sleep(2000);
+      await sleep(500);
       const data = await getHomeworksList();
       setHomeworks(data);
       setIsVisible(true);

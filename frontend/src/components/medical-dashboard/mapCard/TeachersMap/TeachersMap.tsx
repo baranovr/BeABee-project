@@ -26,6 +26,12 @@ const defineIconSize = (isDesktop: boolean): PointExpression => {
 class MarkerTeacher extends L.Icon {
   constructor(props: IconOptions, isDesktop: boolean) {
     const iconSize = defineIconSize(isDesktop);
+
+    // Проверка наличия iconUrl
+    if (!props.iconUrl) {
+      props.iconUrl = '/default-avatar.png'; // Путь к дефолтной аватарке
+    }
+
     super({
       popupAnchor: iconSize,
       iconSize,

@@ -61,6 +61,11 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
         key: 'subjects',
         url: '/data-tables/subjects',
       },
+      {
+        title: 'Homeworks',
+        key: 'homeworks',
+        url: '/data-tables/homeworks',
+      },
     ],
   },
   {

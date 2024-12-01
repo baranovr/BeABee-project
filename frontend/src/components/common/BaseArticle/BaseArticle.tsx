@@ -84,6 +84,7 @@ export const BaseArticle: React.FC<BaseArticleProps> = ({ post, onDeleteSuccess,
         okText="Delete"
         cancelText="Cancel"
       >
+        {/* eslint-disable-next-line react/no-unescaped-entities */}
         <p>Are you sure you want to delete the post "{post.title}"?</p>
       </Modal>
     </S.Wrapper>
