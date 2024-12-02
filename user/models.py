@@ -48,38 +48,37 @@ def avatar_path(instance, filename):
     filename = f"{slugify(instance.nickname)}-{uuid.uuid4()}{extension}"
     return os.path.join("uploads/avatars/", filename)
 
-class SexTextChoices(models.TextChoices):
-    MALE = "Male"
-    FEMALE = "Female"
+class SexTextChoices(models.IntegerChoices):
+    MALE = 1, _("Male")
+    FEMALE = 2, _("Female")
 
 
-class ServiceStatusChoices(models.TextChoices):
-    CREATOR = "Creator"
-    ADMIN = "Admin"
-    USER = "User"
+class ServiceStatusChoices(models.IntegerChoices):
+    CREATOR = 1, _("Creator")
+    ADMIN = 2, _("Admin")
+    USER = 3, _("User")
 
 
-class GroupChoices(models.TextChoices):
-    CS_31 = "CS-31"
-    CS_32 = "CS-32"
-    CS_33 = "CS-33"
-    CS_34 = "CS-34"
-    CS_41 = "CS-41"
-    CS_42 = "CS-42"
-    CS_43 = "CS-43"
-    CS_44 = "CS-44"
+class GroupChoices(models.IntegerChoices):
+    CS_31 = 1, _("CS-31")
+    CS_32 = 2, _("CS-32")
+    CS_33 = 3, _("CS-33")
+    CS_34 = 4, _("CS-34")
+    CS_41 = 5, _("CS-41")
+    CS_42 = 6, _("CS-42")
+    CS_43 = 7, _("CS-43")
+    CS_44 = 8, _("CS-44")
 
 
 class User(AbstractUser):
     avatar = models.ImageField(_("avatar"), upload_to=avatar_path)
-    nickname = models.CharField(_("nickname"), max_length=20, unique=True)
+    nickname = models.CharField(_("nickname"), max_length=20, unique=True, db_index=True)
     first_name = models.CharField(_("first name"), max_length=20, unique=True)
     last_name = models.CharField(_("last name"), max_length=20, unique=True)
     email = models.EmailField(_("email address"), unique=True)
-    sex = models.CharField(
-        _("sex"),
-        max_length=6,
-        choices=SexTextChoices.choices
+    sex = models.PositiveSmallIntegerField(
+        choices=SexTextChoices.choices,
+        db_index=True,
     )
     birth_date = models.DateField(_("birth date"))
     phone_number = models.CharField(_("phone number"), max_length=20, null=True, blank=True)
@@ -89,17 +88,14 @@ class User(AbstractUser):
     facebook = models.URLField(_("facebook url"), max_length=100, null=True, blank=True)
     instagram = models.URLField(_("instagram url"), max_length=100, null=True, blank=True)
     github = models.URLField(_("github url"), max_length=100, null=True, blank=True)
-    group = models.CharField(
-        _("group"),
-        max_length=5,
+    group = models.PositiveSmallIntegerField(
         choices=GroupChoices.choices,
         default=GroupChoices.CS_32
     )
-    status_in_service = models.CharField(
-        _("status_in_service"),
-        max_length=7,
+    status_in_service = models.PositiveSmallIntegerField(
         choices=ServiceStatusChoices.choices,
-        default=ServiceStatusChoices.USER
+        default=ServiceStatusChoices.USER,
+        db_index=True,
     )
     password = models.CharField(_("password"), max_length=24)
     date_joined = models.DateField(_("date joined"), auto_now_add=True)
