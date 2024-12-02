@@ -11,7 +11,8 @@ from beabee.models import (
     Exam,
     StudentInTable,
     SystemNotifications,
-    SystemNotificationView
+    SystemNotificationView,
+    LatestActivity
 )
 from beabee_project import settings
 
@@ -276,6 +277,15 @@ class ImportantInfoDetailDetailSerializer(ImportantInfoSerializer):
         model = ImportantInfo
         fields = ("description",)
 
+
+class LatestActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LatestActivity
+        fields = (
+            "id",
+            "title",
+            "status",
+        )
 
 class BanSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
