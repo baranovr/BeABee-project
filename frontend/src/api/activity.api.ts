@@ -49,7 +49,7 @@ export const getUserActivities = async (): Promise<UserActivity[]> => {
   }));
 };
 
-export const getTrendingActivities = async (): Promise<ImportantInfo[]> => {
+export const getImportantInfo = async (): Promise<ImportantInfo[]> => {
   try {
     const importantInfos = await getImportantInfoList();
 

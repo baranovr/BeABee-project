@@ -48,26 +48,26 @@ def avatar_path(instance, filename):
     filename = f"{slugify(instance.nickname)}-{uuid.uuid4()}{extension}"
     return os.path.join("uploads/avatars/", filename)
 
-class SexTextChoices(models.IntegerChoices):
-    MALE = 1, _("Male")
-    FEMALE = 2, _("Female")
+class SexChoices(models.TextChoices):
+    MALE = "Male", _("Male")
+    FEMALE = "Female", _("Female")
 
 
-class ServiceStatusChoices(models.IntegerChoices):
-    CREATOR = 1, _("Creator")
-    ADMIN = 2, _("Admin")
-    USER = 3, _("User")
+class ServiceStatusChoices(models.TextChoices):
+    CREATOR = "Creator", _("Creator")
+    ADMIN = "Admin", _("Admin")
+    USER = "User", _("User")
 
 
-class GroupChoices(models.IntegerChoices):
-    CS_31 = 1, _("CS-31")
-    CS_32 = 2, _("CS-32")
-    CS_33 = 3, _("CS-33")
-    CS_34 = 4, _("CS-34")
-    CS_41 = 5, _("CS-41")
-    CS_42 = 6, _("CS-42")
-    CS_43 = 7, _("CS-43")
-    CS_44 = 8, _("CS-44")
+class GroupChoices(models.TextChoices):
+    CS_31 = "CS-31", _("CS-31")
+    CS_32 = "CS-32", _("CS-32")
+    CS_33 = "CS-33", _("CS-33")
+    CS_34 = "CS-34", _("CS-34")
+    CS_41 = "CS-41", _("CS-41")
+    CS_42 = "CS-42", _("CS-42")
+    CS_43 = "CS-43", _("CS-43")
+    CS_44 = "CS-44", _("CS-44")
 
 
 class User(AbstractUser):
@@ -76,8 +76,10 @@ class User(AbstractUser):
     first_name = models.CharField(_("first name"), max_length=20, unique=True)
     last_name = models.CharField(_("last name"), max_length=20, unique=True)
     email = models.EmailField(_("email address"), unique=True)
-    sex = models.PositiveSmallIntegerField(
-        choices=SexTextChoices.choices,
+    sex = models.CharField(
+        _("sex"),
+        max_length=7,
+        choices=SexChoices.choices,
         db_index=True,
     )
     birth_date = models.DateField(_("birth date"))
@@ -88,11 +90,15 @@ class User(AbstractUser):
     facebook = models.URLField(_("facebook url"), max_length=100, null=True, blank=True)
     instagram = models.URLField(_("instagram url"), max_length=100, null=True, blank=True)
     github = models.URLField(_("github url"), max_length=100, null=True, blank=True)
-    group = models.PositiveSmallIntegerField(
+    group = models.CharField(
+        _("group"),
+        max_length=10,
         choices=GroupChoices.choices,
         default=GroupChoices.CS_32
     )
-    status_in_service = models.PositiveSmallIntegerField(
+    status_in_service = models.CharField(
+        _("status in service"),
+        max_length=10,
         choices=ServiceStatusChoices.choices,
         default=ServiceStatusChoices.USER,
         db_index=True,

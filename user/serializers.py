@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from beabee.models import Post
-from beabee.serializers import PostListSerializer
 from beabee_project import settings
 from user.models import User, GPS
 
@@ -96,6 +94,16 @@ class UserSearchListSerializer(serializers.ModelSerializer):
             "ban_reason",
         )
 
+
+class UserInListProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id', 'avatar', 'nickname', 'first_name', 'last_name', 'full_name', 'email',
+            'sex', 'birth_date', 'phone_number', 'country', 'city',
+            'linkedin', 'facebook', 'instagram', 'github', 'group', 'status_in_service',
+            'date_joined', 'is_banned', 'ban_reason'
+        ]
 
 
 class GPSUserBasicSerializer(serializers.ModelSerializer):

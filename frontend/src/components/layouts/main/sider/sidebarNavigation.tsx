@@ -19,14 +19,13 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
   {
     title: 'common.nft-dashboard',
     key: 'nft-dashboard',
-    // TODO use path variable
     url: '/',
     icon: <HomeOutlined />,
   },
   {
     title: 'common.medical-dashboard',
     key: 'medical-dashboard',
-    url: '/medical-dashboard',
+    url: '/teachers-page',
     icon: <FormOutlined />,
   },
   {
@@ -69,14 +68,14 @@ export const sidebarNavigation: SidebarNavigationItem[] = [
     ],
   },
   {
-    title: 'common.future',
-    key: 'future',
+    title: 'How to use?',
+    key: 'how-to-use',
     icon: <BlockOutlined />,
     children: [
       {
-        title: 'Plans',
-        key: 'plans',
-        url: '/in-future/plans',
+        title: 'Tutorials',
+        key: 'tutorial',
+        url: '/how-to-use/tutorial',
       },
     ],
   },

@@ -3,7 +3,7 @@ import { BaseTable } from '@app/components/common/BaseTable/BaseTable';
 import { Homework, getHomeworks } from '@app/api/homeworks.api';
 import { useTranslation } from 'react-i18next';
 import { useMounted } from '@app/hooks/useMounted';
-import { Button, message, DatePicker } from 'antd';
+import { Button, message, DatePicker, Card } from 'antd';
 import { Key } from 'rc-table/lib/interface';
 import { useSearchParams } from 'react-router-dom';
 import axiosInstance from '@app/api/axiosInstance';
@@ -24,26 +24,25 @@ export const HomeworksTable: React.FC = () => {
   const { isMounted } = useMounted();
   const { RangePicker } = DatePicker;
 
-  // Состояние для хранения выбранного диапазона
+  // State for deadline range filtering
   const [deadlineRange, setDeadlineRange] = useState<[moment.Moment | null, moment.Moment | null]>([null, null]);
 
-  // Обработчик изменения диапазона
+  // Handle deadline range change
   const handleDeadlineFilter = (dates: RangeValue<moment.Moment>) => {
-    // Если диапазон не выбран, сбрасываем состояние
     if (!dates || !dates[0] || !dates[1]) {
       setDeadlineRange([null, null]);
       return;
     }
-    // Обновляем диапазон, если даты выбраны
     setDeadlineRange([dates[0], dates[1]]);
   };
-  // Фильтрация данных на основе диапазона
+
+  // Filter data based on deadline range
   const filteredData = tableData.data.filter((item) => {
     if (!deadlineRange || !deadlineRange[0] || !deadlineRange[1]) {
-      return true; // Если диапазон не выбран или отсутствует, отображаем все записи
+      return true;
     }
     const itemDate = moment(item.created_at);
-    return itemDate.isBetween(deadlineRange[0], deadlineRange[1], 'day', '[]'); // Проверяем, попадает ли дата в диапазон
+    return itemDate.isBetween(deadlineRange[0], deadlineRange[1], 'day', '[]');
   });
 
   const itemsOnPage = searchParams.get('perPage') || '5';
@@ -103,6 +102,7 @@ export const HomeworksTable: React.FC = () => {
     });
   };
 
+  // Memoized filter options
   const groupFilters = useMemo(() => {
     return tableData.data
       .map((item) => ({ text: item.for_group, value: item.for_group }))
@@ -123,6 +123,26 @@ export const HomeworksTable: React.FC = () => {
       }))
       .filter((value, index, self) => self.findIndex((t) => t.value === value.value) === index);
   }, [tableData.data]);
+
+  // Expandable row render function
+  const expandedRowRender = (record: Homework) => {
+    const columns = [
+      {
+        title: 'Description',
+        dataIndex: 'description',
+        key: 'description',
+      },
+    ];
+
+    const data = [
+      {
+        key: record.id,
+        description: record.description || 'No description available',
+      },
+    ];
+
+    return <BaseTable columns={columns} dataSource={data} pagination={false} showHeader={false} />;
+  };
 
   const columns = [
     {
@@ -200,6 +220,11 @@ export const HomeworksTable: React.FC = () => {
         onChange={handleTableChange}
         loading={tableData.loading}
         scroll={{ x: 800 }}
+        expandable={{
+          expandedRowRender,
+          rowExpandable: () => true,
+          expandRowByClick: true,
+        }}
       />
     </>
   );

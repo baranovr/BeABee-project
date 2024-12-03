@@ -23,22 +23,18 @@ const DataHomeworksTablePage = React.lazy(() => import('@app/pages/DataTableHome
 const Error404Page = React.lazy(() => import('@app/pages/Error404Page'));
 const PersonalInfoPage = React.lazy(() => import('@app/pages/PersonalInfoPage'));
 const NotificationsPage = React.lazy(() => import('@app/pages/NotificationsPage'));
-const ResultsPage = React.lazy(() => import('@app/pages/inFuturePages/ResultsPage'));
-const PlansPage = React.lazy(() => import('@app/pages/inFuturePages/PlansPage'));
-const UploadsPage = React.lazy(() => import('@app/pages/inFuturePages/UploadsPage'));
+const TutorialPage = React.lazy(() => import('@app/pages/howToUsePage/TutorialPage'));
 const Logout = React.lazy(() => import('./Logout'));
 
 export const NFT_DASHBOARD_PATH = '/';
-export const MEDICAL_DASHBOARD_PATH = '/medical-dashboard';
+export const MEDICAL_DASHBOARD_PATH = '/teachers-page';
 
 const MedicalDashboard = withLoading(TeachersPage);
 const NftDashboard = withLoading(NftDashboardPage);
 const NewsFeed = withLoading(NewsFeedPage);
 
 // UI Components
-const Uploads = withLoading(UploadsPage);
-const Results = withLoading(ResultsPage);
-const Plans = withLoading(PlansPage);
+const Tutorial = withLoading(TutorialPage);
 
 const ServerError = withLoading(ServerErrorPage);
 const Error404 = withLoading(Error404Page);
@@ -84,10 +80,8 @@ export const AppRouter: React.FC = () => {
             <Route path="subjects" element={<DataSubjectsTable />} />
             <Route path="homeworks" element={<DataHomeworksTable />} />
           </Route>
-          <Route path="in-future">
-            <Route path="upload" element={<Uploads />} />
-            <Route path="result" element={<Results />} />
-            <Route path="plans" element={<Plans />} />
+          <Route path="how-to-use">
+            <Route path="tutorial" element={<Tutorial />} />
           </Route>
         </Route>
         <Route path="/auth" element={<AuthLayoutFallback />}>

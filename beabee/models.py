@@ -1,6 +1,5 @@
 import os
 import uuid
-from ast import Index
 
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -8,28 +7,28 @@ from django.utils.text import slugify
 from beabee_project import settings
 from django.utils.translation import gettext_lazy as _
 
-class GroupChoices(models.IntegerChoices):
-    CS_31 = 1, _("CS-31")
-    CS_32 = 2, _("CS-32")
-    CS_33 = 3, _("CS-33")
-    CS_34 = 4, _("CS-34")
-    CS_41 = 5, _("CS-41")
-    CS_42 = 6, _("CS-42")
-    CS_43 = 7, _("CS-43")
-    CS_44 = 8, _("CS-44")
-    NO_GROUP = 9, _("No group")
+class GroupChoices(models.TextChoices):
+    CS_31 = "CS-31", _("CS-31")
+    CS_32 = "CS-32", _("CS-32")
+    CS_33 = "CS-33", _("CS-33")
+    CS_34 = "CS-34", _("CS-34")
+    CS_41 = "CS-41", _("CS-41")
+    CS_42 = "CS-42", _("CS-42")
+    CS_43 = "CS-43", _("CS-43")
+    CS_44 = "CS-44", _("CS-44")
+    NO_GROUP = "No group", _("No group")
 
 
-class SubGroupChoices(models.IntegerChoices):
-    FIRST = 1, _("1")
-    SECOND = 2, _("2")
+class SubGroupChoices(models.TextChoices):
+    FIRST = "1", _("1")
+    SECOND = "2", _("2")
 
 
-class TeacherDegreeChoice(models.IntegerChoices):
-    BACHELOR = 1, _("Bachelor's Degree")
-    MASTER = 2, _("Master's Degree")
-    CANDIDATE = 3, _("Candidate of Sciences")
-    DOCTOR = 4, _("Doctor of Sciences")
+class TeacherDegreeChoice(models.TextChoices):
+    BACHELOR = "Bachelor's Degree", _("Bachelor's Degree")
+    MASTER = "Master's Degree", _("Master's Degree")
+    CANDIDATE = "Candidate of Sciences", _("Candidate of Sciences")
+    DOCTOR = "Doctor of Sciences", _("Doctor of Sciences")
 
 
 def photo_path(instance, filename):
@@ -54,7 +53,8 @@ class Post(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length=30, unique=True)
-    group = models.PositiveIntegerField(
+    group = models.CharField(
+        max_length=10,
         choices=GroupChoices.choices,
         verbose_name=_("Group"),
         default="NO_GROUP"
@@ -80,7 +80,8 @@ class Teacher(models.Model):
     last_name = models.CharField(max_length=20)
     surname = models.CharField(max_length=20)
     subjects = models.ManyToManyField(Subject)
-    degree = models.PositiveSmallIntegerField(
+    degree = models.CharField(
+        max_length=30,
         choices=TeacherDegreeChoice.choices,
         verbose_name=_("Degree"),
         default=TeacherDegreeChoice.BACHELOR
@@ -96,29 +97,29 @@ class Teacher(models.Model):
 
     class Meta:
         ordering = ["last_name", "first_name"]
-        indexes = [models.Index(fields=["degree"])]
+        indexes = [models.Index(fields=["last_name", "degree"])]
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} {self.surname}"
 
 
-class ExamTypeChoices(models.IntegerChoices):
-    ANNUAL_EXAM = 1, _("Annual exam")
-    ANNUAL_EXAM_RET = 2, _("Annual exam (retake)")
+class ExamTypeChoices(models.TextChoices):
+    ANNUAL_EXAM = "Annual exam", _("Annual exam")
+    ANNUAL_EXAM_RET = "Annual exam (retake)", _("Annual exam (retake)")
 
-    YEAR_SESSION = 3, _("Year session")
-    YEAR_SESSION_RET = 4, _("Year session (retake)")
+    YEAR_SESSION = "Year session", _("Year session")
+    YEAR_SESSION_RET = "Year session (retake)", _("Year session (retake)")
 
-    SEM_SESSION = 5, _("Semester session")
-    SEM_SESSION_RET = 6, _("Semester session (retake)")
+    SEM_SESSION = "Semester session", _("Semester session")
+    SEM_SESSION_RET = "Semester session (retake)", _("Semester session (retake)")
 
-    MODULAR_CONTROL_WORK = 7, _("Module control work")
-    MODULAR_CONTROL_WORK_RET = 8, _("Module control work (retake)")
+    MODULAR_CONTROL_WORK = "Module control work", _("Module control work")
+    MODULAR_CONTROL_WORK_RET = "Module control work (retake)", _("Module control work (retake)")
 
-    CONTROL_WORK = 9, _("Control work")
-    CONTROL_WORK_RET = 10, _("Control work (retake)")
+    CONTROL_WORK = "Control work", _("Control work")
+    CONTROL_WORK_RET = "Control work (retake)", _("Control work (retake)")
 
-    SPECIFIC_TYPE = 11, _("Specific type")
+    SPECIFIC_TYPE = "Specific type", _("Specific type")
 
 
 class Exam(models.Model):
@@ -126,11 +127,13 @@ class Exam(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     date_time = models.DateTimeField()
     details = models.CharField(max_length=50, default="No Details")
-    group = models.PositiveSmallIntegerField(
+    group = models.CharField(
+        max_length=10,
         choices=GroupChoices.choices,
         verbose_name=_("Group"),
     )
-    type = models.PositiveSmallIntegerField(
+    type = models.CharField(
+        max_length=30,
         choices=ExamTypeChoices.choices,
         verbose_name=_("Type"),
         default=ExamTypeChoices.SPECIFIC_TYPE
@@ -150,24 +153,27 @@ def homework_file_path(instance, filename):
     return os.path.join("uploads/homeworks_files/", filename)
 
 
-class HomeworkTypeChoice(models.IntegerChoices):
-    MATH_PHYSICS = 1, _("Math/Physics")
-    PROG_NETWORKS = 2, _("Prog/Networks")
-    LANG_CULTURE = 3, _("Lang/Culture")
+class HomeworkTypeChoice(models.TextChoices):
+    MATH_PHYSICS = "Math/Physics", _("Math/Physics")
+    PROG_NETWORKS = "Prog/Networks", _("Prog/Networks")
+    LANG_CULTURE = "Lang/Culture", _("Lang/Culture")
 
 
 class Homework(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name="subject_homeworks")
-    type = models.PositiveSmallIntegerField(
+    type = models.CharField(
+        max_length=20,
         choices=HomeworkTypeChoice.choices,
         verbose_name=_("Type"),
+        db_index=True,
     )
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="teacher_homeworks")
     created_at = models.DateTimeField(auto_now_add=True)
-    deadline = models.DateTimeField(null=True, blank=True)
-    for_group = models.PositiveSmallIntegerField(
+    deadline = models.DateTimeField(null=True, blank=True, db_index=True)
+    for_group = models.CharField(
+        max_length=10,
         choices=GroupChoices.choices,
         verbose_name=_("For group"),
         default=GroupChoices.NO_GROUP
@@ -177,7 +183,7 @@ class Homework(models.Model):
     class Meta:
         ordering = ["created_at"]
         indexes = [
-            models.Index(fields=["deadline"]),
+            models.Index(fields=["title"]),
             models.Index(fields=["type"]),
         ]
 
@@ -226,17 +232,13 @@ def news_media_path(instance, filename):
 
 class News(models.Model):
     file = models.FileField(upload_to=news_media_path)
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=30, db_index=True)
     description = models.CharField(max_length=1200, default="No description")
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="news_posters")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["created_at"]
-        indexes = [
-            models.Index(fields=["title"]),
-            models.Index(fields=["posted_by"]),
-        ]
 
     def __str__(self):
         return self.title
@@ -248,7 +250,7 @@ def info_media_path(instance, filename):
 
 
 class ImportantInfo(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=50, db_index=True)
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="info_posters")
     image = models.ImageField(upload_to=info_media_path)
     description = models.CharField(max_length=1200, default="No Description")
@@ -256,19 +258,16 @@ class ImportantInfo(models.Model):
 
     class Meta:
         ordering = ["created_at"]
-        indexes = [
-            models.Index(fields=["title"]),
-            models.Index(fields=["posted_by"]),
-        ]
+        indexes = [models.Index(fields=["posted_by"])]
 
     def __str__(self):
         return self.title
 
 
-class ActivityStatusChoice(models.IntegerChoices):
-    CREATED = 1, _("Created")
-    JOINED = 2, _("Joined")
-    BANNED = 3, _("Banned")
+class ActivityStatusChoice(models.TextChoices):
+    CREATED = "Created", _("Created")
+    JOINED = "Joined", _("Joined")
+    BANNED = "Banned", _("Banned")
 
 class LatestActivity(models.Model):
     user = models.ForeignKey(
@@ -279,7 +278,8 @@ class LatestActivity(models.Model):
     )
     title = models.CharField(max_length=50, verbose_name=_("Title"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"))
-    status = models.PositiveSmallIntegerField(
+    status = models.CharField(
+        max_length=10,
         choices=ActivityStatusChoice.choices,
         default=ActivityStatusChoice.CREATED,
         verbose_name=_("Status")
@@ -288,6 +288,7 @@ class LatestActivity(models.Model):
     class Meta:
         ordering = ["-created_at"]
         indexes = [
+            models.Index(fields=["created_at"]),
             models.Index(fields=["status"]),
         ]
 
@@ -295,10 +296,10 @@ class LatestActivity(models.Model):
         return f"{self.user} - {self.get_status_display()}"
 
 
-class BanReasonsChoices(models.IntegerChoices):
-    INSULTING = 1, _("Insulting community members")
-    OBSCENE_CONTENT = 2, _("Publishing obscene content")
-    SPAM = 3, _("Spam")
+class BanReasonsChoices(models.TextChoices):
+    INSULTING = "Insulting community members", _("Insulting community members")
+    OBSCENE_CONTENT = "Publishing obscene content", _("Publishing obscene content")
+    SPAM = "Spam", _("Spam")
 
 
 class Ban(models.Model):
@@ -307,7 +308,7 @@ class Ban(models.Model):
         on_delete=models.CASCADE,
         related_name="banned_users",
     )
-    reason = models.PositiveSmallIntegerField(choices=BanReasonsChoices.choices)
+    reason = models.CharField(max_length=30, choices=BanReasonsChoices.choices)
     created_at = models.DateTimeField(auto_now_add=True)
     banned_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="banners")
 
@@ -336,30 +337,32 @@ class Ban(models.Model):
         return f"Ban for {self.user.email} - {self.reason}"
 
 
-class RoleChoices(models.IntegerChoices):
-    HEADMAN = 1, _("Headman")
-    D_HEADMAN = 2, _("Deputy headman")
-    STUDENT = 3, _("Student")
+class RoleChoices(models.TextChoices):
+    HEADMAN = "Headman", _("Headman")
+    D_HEADMAN = "Deputy headman", _("Deputy headman")
+    STUDENT = "Student", _("Student")
 
 
-class LocationChoices(models.IntegerChoices):
-    IN_UKR = 1, _("In Ukraine")
-    ABOARD = 2, _("Lives aboard")
+class LocationChoices(models.TextChoices):
+    IN_UKR = "In Ukraine", _("In Ukraine")
+    ABOARD = "Lives aboard", _("Lives aboard")
 
 
 class StudentInTable(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     surname = models.CharField(max_length=20)
-    group = models.PositiveSmallIntegerField(choices=GroupChoices.choices)
-    subgroup = models.PositiveSmallIntegerField(choices=GroupChoices.choices)
+    group = models.CharField(max_length=10, choices=GroupChoices.choices)
+    subgroup = models.CharField(max_length=1, choices=SubGroupChoices.choices)
     email = models.EmailField(default="noemail@example.com")
-    role = models.PositiveSmallIntegerField(choices=RoleChoices.choices)
-    location = models.PositiveSmallIntegerField(choices=LocationChoices.choices)
+    role = models.CharField(max_length=20, choices=RoleChoices.choices)
+    location = models.CharField(max_length=15, choices=LocationChoices.choices)
 
     class Meta:
         ordering = ["-last_name"]
         indexes = [
+            models.Index(fields=["last_name"]),
+            models.Index(fields=["surname"]),
             models.Index(fields=["role"]),
         ]
 
@@ -379,14 +382,14 @@ class StudentInTable(models.Model):
         return f"{self.last_name}, {self.group}"
 
 
-class SystemTypesChoices(models.IntegerChoices):
-    SUCCESS = 1, _("Success")
-    WARNING = 2, _("Warning")
-    ERROR = 3, _("Error")
+class SystemTypesChoices(models.TextChoices):
+    SUCCESS = "Success", _("Success")
+    WARNING = "Warning", _("Warning")
+    ERROR = "Error", _("Error")
 
 
 class SystemNotifications(models.Model):
-    type = models.PositiveSmallIntegerField(choices=SystemTypesChoices.choices)
+    type = models.CharField(max_length=10, choices=SystemTypesChoices.choices)
     description = models.CharField(max_length=150)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

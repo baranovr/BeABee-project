@@ -33,7 +33,7 @@ from beabee.serializers import (
     SubjectListSerializer, SubjectSerializer, TeacherSerializer, TeacherListSerializer,
     HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer,
     NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer, ExamSerializer,
-    ExamListSerializer, ExamDetailSerializer, BanListSerializer, BanDetailSerializer, StudentInTableSerializer,
+    ExamListSerializer, BanListSerializer, BanDetailSerializer, StudentInTableSerializer,
     SystemNotificationsSerializer, SystemNotificationsListSerializer,
 )
 from beabee.telegram_utils import send_telegram_notification
@@ -361,11 +361,8 @@ class ExamViewSet(viewsets.ModelViewSet):
         return queryset.distinct()
 
     def get_serializer_class(self):
-        if self.action == "list":
+        if self.action in ["list", "retrieve"]:
             return ExamListSerializer
-
-        if self.action == "retrieve":
-            return ExamDetailSerializer
 
         return ExamSerializer
 

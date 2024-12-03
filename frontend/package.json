@@ -13,6 +13,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@craco/craco": "^6.1.2",
+    "@emotion/react": "^11.13.5",
     "@lit-labs/react": "^1.0.2",
     "@react-google-maps/api": "^2.18.1",
     "@reduxjs/toolkit": "^1.7.1",

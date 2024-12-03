@@ -7,12 +7,13 @@ import { Dates } from '@app/constants/Dates';
 import * as S from './ActivityStoryItem.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import axiosInstance from "@app/api/axiosInstance";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
-import styled from "styled-components";
-import { getBansList } from "@app/api/bans.api";
-import { notificationController } from "@app/controllers/notificationController";
-import { useAppSelector } from "@app/hooks/reduxHooks";
+import axiosInstance from '@app/api/axiosInstance';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
+import { getBansList } from '@app/api/bans.api';
+import { notificationController } from '@app/controllers/notificationController';
+import { useAppSelector } from '@app/hooks/reduxHooks';
+import { UserProfileModal } from '@app/components/nft-dashboard/activityStory/ActivityStoryItem/UserProfileModal';
 
 const BanReasons = [
   { value: 'Insulting community members', label: 'Insulting community members' },
@@ -53,7 +54,7 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
   onDeleteSuccess,
 }) => {
   const { t } = useTranslation();
-  const { user } = useAppSelector(state => state.user)
+  const { user } = useAppSelector((state) => state.user);
 
   // Permission check function
   const canBanOrUnban = () => {
@@ -95,10 +96,10 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
         reason: selectedReason,
       });
 
-      notificationController.success({ message: `User ${full_name} has been banned.`});
+      notificationController.success({ message: `User ${full_name} has been banned.` });
     } catch (error) {
       console.error(error);
-      notificationController.error({ message: 'Failed to ban the user. Please try again later.'});
+      notificationController.error({ message: 'Failed to ban the user. Please try again later.' });
     } finally {
       setLoading(false);
       setIsModalVisible(false);
@@ -110,23 +111,19 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
 
     try {
       // Assuming you want to unban based on the ban's ID
-      const banToRemove = await getBansList().then(bans =>
-        bans.find(ban => ban.user === id)
-      );
+      const banToRemove = await getBansList().then((bans) => bans.find((ban) => ban.user === id));
 
       if (banToRemove) {
         await axiosInstance.delete(`platform/bans/${banToRemove.id}/`);
-        notificationController.success({ message: `User ${full_name} has been unbanned.`});
+        notificationController.success({ message: `User ${full_name} has been unbanned.` });
 
-        if (onDeleteSuccess) (
-            onDeleteSuccess()
-        )
+        if (onDeleteSuccess) onDeleteSuccess();
       } else {
         message.error('No active ban found for this user.');
       }
     } catch (error) {
       console.error(error);
-      notificationController.error({ message: 'Failed to unban the user. Please try again later.'});
+      notificationController.error({ message: 'Failed to unban the user. Please try again later.' });
     } finally {
       setLoading(false);
       setIsModalVisible(false);
@@ -137,7 +134,7 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
     // Проверяем права перед выполнением действия
     if (!canBanOrUnban()) {
       notificationController.error({
-        message: 'You do not have permissions to ban or unban this user!'
+        message: 'You do not have permissions to ban or unban this user!',
       });
       return;
     }
@@ -150,7 +147,7 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
         content: `Are you sure you want to unban ${full_name}?`,
         okText: 'Confirm Unban',
         okButtonProps: { danger: true },
-        onOk: handleUnban
+        onOk: handleUnban,
       });
     } else {
       // If user is not banned, show original ban modal
@@ -160,6 +157,16 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
 
   const handleCancel = () => {
     setIsModalVisible(false);
+  };
+
+  const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
+
+  const handleFullNameClick = () => {
+    setIsProfileModalVisible(true);
+  };
+
+  const handleProfileModalClose = () => {
+    setIsProfileModalVisible(false);
   };
 
   return (
@@ -182,7 +189,7 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
           <BaseCol>
             <BaseRow gutter={[16, 16]}>
               <BaseCol span={24}>
-                <S.Title>
+                <S.Title onClick={handleFullNameClick} style={{ cursor: 'pointer' }}>
                   {full_name}
                   {is_banned && (
                     <Text
@@ -197,6 +204,8 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
                     </Text>
                   )}
                 </S.Title>
+
+                <UserProfileModal userId={id} isVisible={isProfileModalVisible} onClose={handleProfileModalClose} />
               </BaseCol>
               <BaseCol span={24}>
                 <S.Status
@@ -224,33 +233,31 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
       </BaseCol>
 
       <Modal
-      title={
-        <CustomModalTitle>
-          <ExclamationCircleOutlined />
-          <span>Ban User</span>
-        </CustomModalTitle>
-      }
-      visible={isModalVisible}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      confirmLoading={loading}
-      okText="Confirm Ban"
-      cancelText="Cancel"
-      okButtonProps={{ danger: true }}
-      cancelButtonProps={{ type: 'default' }}
-    >
-      <Title level={5}>Are you sure you want to ban this user?</Title>
-      <Text type="warning">
-        Please select the reason for banning the user. This action can be undone.
-      </Text>
-      <StyledSelect
-        style={{ width: '100%' }}
-        placeholder="Select reason"
-        options={BanReasons}
-        onChange={(value: any) => setSelectedReason(value)}
-        value={selectedReason}
-      />
-    </Modal>
+        title={
+          <CustomModalTitle>
+            <ExclamationCircleOutlined />
+            <span>Ban User</span>
+          </CustomModalTitle>
+        }
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        confirmLoading={loading}
+        okText="Confirm Ban"
+        cancelText="Cancel"
+        okButtonProps={{ danger: true }}
+        cancelButtonProps={{ type: 'default' }}
+      >
+        <Title level={5}>Are you sure you want to ban this user?</Title>
+        <Text type="warning">Please select the reason for banning the user. This action can be undone.</Text>
+        <StyledSelect
+          style={{ width: '100%' }}
+          placeholder="Select reason"
+          options={BanReasons}
+          onChange={(value: any) => setSelectedReason(value)}
+          value={selectedReason}
+        />
+      </Modal>
     </BaseRow>
   );
 };

@@ -143,12 +143,6 @@ class ExamListSerializer(ExamSerializer):
         )
 
 
-class ExamDetailSerializer(ExamListSerializer):
-    class Meta:
-        model = Exam
-        fields = ExamListSerializer.Meta.fields
-
-
 class HomeworkSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
     deadline = serializers.DateTimeField(format='%Y-%m-%d %H:%M')

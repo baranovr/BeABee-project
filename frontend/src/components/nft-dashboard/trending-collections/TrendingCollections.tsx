@@ -9,13 +9,12 @@ import { ViewAll } from '@app/components/nft-dashboard/common/ViewAll/ViewAll';
 import { NFTCardHeader } from '@app/components/nft-dashboard/common/NFTCardHeader/NFTCardHeader';
 import { TrendingCollection } from '@app/components/nft-dashboard/trending-collections/collection/TrendingCollection';
 import { useResponsive } from '@app/hooks/useResponsive';
-import { getTrendingActivities, ImportantInfo } from '@app/api/activity.api';
+import { getImportantInfo, ImportantInfo } from '@app/api/activity.api';
 import * as S from './TrendingCollections.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import {getImportantInfoList} from "@app/api/importantinfo.api";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
+import { getImportantInfoList } from '@app/api/importantinfo.api';
+import { Simulate } from 'react-dom/test-utils';
 
 export const TrendingCollections: React.FC = () => {
   const [trending, setTrending] = useState<ImportantInfo[]>([]);
@@ -24,20 +23,20 @@ export const TrendingCollections: React.FC = () => {
   const { mobileOnly, isTablet: isTabletOrHigher } = useResponsive();
 
   useEffect(() => {
-    getTrendingActivities().then((res) => setTrending(res));
+    getImportantInfo().then((res) => setTrending(res));
   }, []);
 
   const refreshInfo = () => {
-      getImportantInfoList()
-          .then(setTrending)
-          .catch((error) => {
-              console.error('Failed to load important info:', error);
-          });
+    getImportantInfoList()
+      .then(setTrending)
+      .catch((error) => {
+        console.error('Failed to load important info:', error);
+      });
   };
 
-    useEffect(() => {
-        refreshInfo()
-    }, []);
+  useEffect(() => {
+    refreshInfo();
+  }, []);
 
   const { t } = useTranslation();
 
@@ -47,14 +46,14 @@ export const TrendingCollections: React.FC = () => {
       tablet: trending.map((item, index) => (
         <div key={index}>
           <S.CardWrapper>
-            <TrendingCollection {...item} onDeleteSuccess={refreshInfo}/>
+            <TrendingCollection {...item} onDeleteSuccess={refreshInfo} />
           </S.CardWrapper>
         </div>
       )),
       grid: trending.map((item, index) => (
         <BaseCol key={index} xs={24} sm={12} md={8}>
           <S.CardWrapper>
-            <TrendingCollection {...item} onDeleteSuccess={refreshInfo}/>
+            <TrendingCollection {...item} onDeleteSuccess={refreshInfo} />
           </S.CardWrapper>
         </BaseCol>
       )),

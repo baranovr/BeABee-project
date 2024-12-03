@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { MapCard } from '@app/components/medical-dashboard/mapCard/MapCard';
@@ -23,6 +22,19 @@ const MedicalDashboardPage: React.FC = () => {
   const desktopLayout = (
     <BaseRow>
       <S.LeftSideCol xl={16} xxl={17} id="desktop-content">
+        <BaseRow>
+          <BaseCol span={24}>
+            <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Welcome to BeABee service 🐝</h1>
+            <p style={{ textAlign: 'center' }}>
+              This service is made for FIT students of Taras Shevchenko National University of Kyiv.
+            </p>
+            <p style={{ textAlign: 'center', marginBottom: '20px' }}>
+              With its help you can easily view information about students, teachers and works. You will no longer ask
+              questions like "Sho po domashke?"
+            </p>
+          </BaseCol>
+        </BaseRow>
+
         <BaseRow gutter={[60, 60]}>
           <BaseCol span={24}>
             <RecentlyAddedNews />

@@ -304,7 +304,7 @@
     "news": "Homeworks",
     "patientResults": {
       "patientAdmission": {
-        "description": "The project is completely done. It is based on Django REST Framework, the base and server parts are on different servers, loading and unloading of media files works through Amazon S3, the client part, that based on React, works on the yarn engine. Huge functionality, thought out details, there is the possibility of scaling.",
+        "description": "The project is completely done. It is based on Django REST framework, the base and server parts are on different servers, loading and unloading of media files works through Amazon S3, the client part, that based on React, works on the yarn engine. Huge functionality, thought out details, there is the possibility of scaling.",
         "title": "BeABee has been deployed"
       },
       "patientDischarge": {
@@ -879,6 +879,7 @@
     "activityStory": "All Users In Service",
     "by": "by",
     "recentActivity": "Recent Activity",
+    "latestActivity": "Latest Activity",
     "recentlyAddedNews": "Recent News",
     "read_news": "Read news",
     "viewAll": "View all",

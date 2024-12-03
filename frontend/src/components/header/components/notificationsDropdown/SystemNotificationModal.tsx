@@ -62,9 +62,7 @@ export const SystemNotificationModal: React.FC<SystemNotificationModalProps> = (
   return (
     <>
       {user && user.statusInService === 'Creator' && (
-        <Button type="primary" icon={<PlusOutlined />} onClick={showModal} style={{ marginLeft: 8 }}>
-          Create
-        </Button>
+        <Button type="primary" icon={<PlusOutlined />} onClick={showModal} style={{ marginLeft: 3 }}></Button>
       )}
 
       <Modal

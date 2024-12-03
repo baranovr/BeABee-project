@@ -1,5 +1,4 @@
 import random
-from functools import partial
 
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
@@ -10,6 +9,7 @@ from django.utils.html import strip_tags
 
 from rest_framework import generics, status, viewsets
 from rest_framework import permissions
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -19,6 +19,7 @@ from user.serializers import (
     UserSearchListSerializer,
     GPSSerializer,
     GPSDetailSerializer,
+    UserInListProfileSerializer
 )
 from user.models import GPS, User
 
@@ -50,7 +51,7 @@ class UserSearchListView(generics.ListAPIView):
 
         if nickname:
             queryset = queryset.filter(nickname__icontains=nickname)
-            return queryset.distinc()
+            return queryset.distinct()
 
         if user_id:
             queryset = queryset.filter(id=user_id)
@@ -58,8 +59,8 @@ class UserSearchListView(generics.ListAPIView):
         return queryset
 
 
-class UserSearchDetailView(generics.RetrieveAPIView):
-    serializer_class = UserSearchListSerializer
+class UserSearchDetailView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserInListProfileSerializer
     permission_classes = (permissions.IsAuthenticated, IsNotBanned)
 
     def get_queryset(self):
@@ -191,7 +192,7 @@ class VerifyCodeView(APIView):
             return Response(token)
 
         return Response({
-            'error': 'Неверный код'
+            'error': 'Invalid code!'
         }, status=400)
 
 

@@ -4,9 +4,9 @@ import { RecentActivityHeader } from '@app/components/nft-dashboard/recentActivi
 import { RecentActivityFeed } from '@app/components/nft-dashboard/recentActivity/recentActivityFeed/RecentActivityFeed';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
-import { Button } from "antd";
+import { Button } from 'antd';
 import styled from 'styled-components';
-import {Loading} from "@app/components/common/Loading/Loading";
+import { Loading } from '@app/components/common/Loading/Loading';
 
 export interface RecentActivityFilterState {
   status: string[];
@@ -26,7 +26,7 @@ const SpinnerWrapper = styled.div`
   align-items: center;
   width: 48px;
   height: 48px;
-  
+
   img {
     width: 100%;
     height: 100%;
@@ -61,18 +61,16 @@ export const RecentActivity: React.FC = () => {
   const next = async () => {
     try {
       const newActivities = await getActivities();
-      setActivity(prev => [...prev, ...newActivities]);
+      setActivity((prev) => [...prev, ...newActivities]);
 
       // Обновляем отфильтрованные активности
       if (filters.status.length > 0) {
-        setFilteredActivity(prev => [
+        setFilteredActivity((prev) => [
           ...prev,
-          ...newActivities.filter(item =>
-            filters.status.some(filter => filter === item.status)
-          )
+          ...newActivities.filter((item) => filters.status.some((filter) => filter === item.status)),
         ]);
       } else {
-        setFilteredActivity(prev => [...prev, ...newActivities]);
+        setFilteredActivity((prev) => [...prev, ...newActivities]);
       }
     } catch (error) {
       console.error('Failed to load more activities:', error);
@@ -83,11 +81,7 @@ export const RecentActivity: React.FC = () => {
   React.useEffect(() => {
     if (activity.length > 0) {
       if (filters.status.length > 0) {
-        setFilteredActivity(
-          activity.filter(item =>
-            filters.status.some(filter => filter === item.status)
-          )
-        );
+        setFilteredActivity(activity.filter((item) => filters.status.some((filter) => filter === item.status)));
       } else {
         setFilteredActivity(activity);
       }
@@ -101,11 +95,7 @@ export const RecentActivity: React.FC = () => {
   );
 
   const renderLoadButton = () => (
-    <Button
-      onClick={loadActivities}
-      disabled={isLoading}
-      className="w-full max-w-md"
-    >
+    <Button onClick={loadActivities} disabled={isLoading} className="w-full max-w-md">
       Load Latest Activities
     </Button>
   );
@@ -114,27 +104,18 @@ export const RecentActivity: React.FC = () => {
     <BaseRow gutter={[30, 0]}>
       {!isVisible && (
         <BaseCol span={24}>
-          <LoadButtonWrapper>
-            {isLoading ? renderLoadingState() : renderLoadButton()}
-          </LoadButtonWrapper>
+          <LoadButtonWrapper>{isLoading ? renderLoadingState() : renderLoadButton()}</LoadButtonWrapper>
         </BaseCol>
       )}
 
       {isVisible && (
         <>
           <BaseCol span={24}>
-            <RecentActivityHeader
-              filters={filters}
-              setFilters={setFilters}
-            />
+            <RecentActivityHeader filters={filters} setFilters={setFilters} />
           </BaseCol>
 
           <BaseCol xs={24} sm={24} md={24} xl={16}>
-            <RecentActivityFeed
-              activity={filteredActivity}
-              hasMore={hasMore}
-              next={next}
-            />
+            <RecentActivityFeed activity={filteredActivity} hasMore={hasMore} next={next} />
           </BaseCol>
         </>
       )}

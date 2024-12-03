@@ -1,11 +1,6 @@
 import { NumericLiteral } from 'typescript';
 
 export type Dimension = number | string;
-
-export type ChartData = number[];
-
-export type xData = number[] | string[];
-
 export type LanguageType = 'ua' | 'en';
 
 export type ThemeType = 'light' | 'dark';

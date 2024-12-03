@@ -3,6 +3,7 @@ import { TeamOutlined, CrownOutlined, UserOutlined } from '@ant-design/icons';
 import { BaseButtonsForm } from '@app/components/common/forms/BaseButtonsForm/BaseButtonsForm';
 import { BaseSelect, Option } from '@app/components/common/selects/BaseSelect/BaseSelect';
 import { BaseSpace } from '@app/components/common/BaseSpace/BaseSpace';
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 const STATUS_IN_SERVICE_OPTIONS = [
   { value: 'Creator', label: 'Creator', icon: <CrownOutlined /> },
@@ -15,10 +16,13 @@ interface StatusItemProps {
 }
 
 export const StatusInServiceItem: React.FC<StatusItemProps> = ({ initialValue }) => {
+  const { user } = useAppSelector((state) => state.user);
+  const availableOptions = STATUS_IN_SERVICE_OPTIONS.filter((option) => user && option.value === user.statusInService);
+
   return (
-    <BaseButtonsForm.Item name="status_in_service" label={'Status in service'} initialValue={initialValue}>
+    <BaseButtonsForm.Item name="statusInService" label={'Status in service'} initialValue={initialValue}>
       <BaseSelect defaultValue={initialValue}>
-        {STATUS_IN_SERVICE_OPTIONS.map((option) => (
+        {availableOptions.map((option) => (
           <Option key={option.value} value={option.value}>
             <BaseSpace align="center">
               {option.icon}

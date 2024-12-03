@@ -33,7 +33,7 @@ export const ActivityStory: React.FC = () => {
     () =>
       story.map((item, index) => (
         <BaseCol key={index} span={24}>
-          <ActivityStoryItem {...item} onDeleteSuccess={refreshActivities}/>
+          <ActivityStoryItem {...item} onDeleteSuccess={refreshActivities} />
         </BaseCol>
       )),
     [story],

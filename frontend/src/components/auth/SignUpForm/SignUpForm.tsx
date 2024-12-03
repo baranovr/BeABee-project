@@ -69,8 +69,6 @@ const GROUP_CHOICES = {
 } as const;
 
 const SERVICE_STATUS_CHOICES = {
-  Creator: 'Creator',
-  Admin: 'Admin',
   User: 'User',
 } as const;
 
@@ -234,11 +232,7 @@ export const SignUpForm: React.FC = () => {
 
         <Auth.FormItem name="statusInService" label={t('common.statusInService')} rules={[{ required: true }]}>
           <Auth.FormSelect
-            options={[
-              { value: SERVICE_STATUS_CHOICES.User, label: 'User' },
-              { value: SERVICE_STATUS_CHOICES.Admin, label: 'Admin' },
-              { value: SERVICE_STATUS_CHOICES.Creator, label: 'Creator' },
-            ]}
+            options={[{ value: SERVICE_STATUS_CHOICES.User, label: 'User' }]}
             placeholder={t('common.statusInService')}
           />
         </Auth.FormItem>

@@ -17,7 +17,7 @@ export const RecentActivityHeader: React.FC<RecentActivityHeaderProps> = ({}) =>
 
   return (
     <>
-      <NFTCardHeader title={t('nft.recentActivity')}>
+      <NFTCardHeader title={t('nft.latestActivity')}>
         {!isDesktop && <BaseButton size="large" noStyle type="text" icon={<FilterIcon />} />}
       </NFTCardHeader>
     </>
