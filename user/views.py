@@ -2,6 +2,8 @@ import random
 
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -9,7 +11,6 @@ from django.utils.html import strip_tags
 
 from rest_framework import generics, status, viewsets
 from rest_framework import permissions
-from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -19,7 +20,8 @@ from user.serializers import (
     UserSearchListSerializer,
     GPSSerializer,
     GPSDetailSerializer,
-    UserInListProfileSerializer
+    UserInListProfileSerializer,
+    MyNewsSerializer, MyInfosSerializer, MyPostsSerializer
 )
 from user.models import GPS, User
 
@@ -37,6 +39,58 @@ class MyProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsNotBanned]
+
+    def post(self, request):
+        user = request.user
+        current_password = request.data.get('current_password')
+        new_password = request.data.get('new_password')
+        confirm_password = request.data.get('confirm_password')
+
+        if not user.check_password(current_password):
+            return Response({'error': 'Current password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if new_password != confirm_password:
+            return Response({'error': 'New passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            validate_password(new_password, user=user)
+        except ValidationError as e:
+            return Response({'error': e.messages}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response({'message': 'Password updated successfully'}, status=status.HTTP_200_OK)
+
+
+
+class MyNewsView(APIView):
+    permission_classes = (IsNotBanned,)
+
+    def get(self, request, *args, **kwargs):
+        serializer = MyNewsSerializer(request.user)
+        return Response(serializer.data)
+
+
+class MyInfosView(APIView):
+    permission_classes = (IsNotBanned,)
+
+    def get(self, request, *args, **kwargs):
+        serializer = MyInfosSerializer(request.user)
+        return Response(serializer.data)
+
+
+class MyPostsView(APIView):
+    permission_classes = (IsNotBanned,)
+
+    def get(self, request, *args, **kwargs):
+        serializer = MyPostsSerializer(request.user)
+        return Response(serializer.data)
+
 
 class UserSearchListView(generics.ListAPIView):
     serializer_class = UserSearchListSerializer

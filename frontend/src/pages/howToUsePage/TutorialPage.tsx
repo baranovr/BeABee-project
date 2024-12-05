@@ -41,7 +41,7 @@ const TutorialPage: React.FC = () => {
               <S.SectionYouCannot>
                 ❌ You are not able to change your status in service (only other admins and creators can increase it).
               </S.SectionYouCannot>
-              <S.SectionYouCannot>❌ You cannot change your password.</S.SectionYouCannot>
+              <S.SectionYouCannot>❌ You will not be able to recover your password if you forget it.</S.SectionYouCannot>
             </S.SectionText>
 
             <S.Pass>/</S.Pass>

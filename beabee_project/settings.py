@@ -244,6 +244,7 @@ CORS_ALLOW_HEADERS = [
 ]
 
 BASE_URL = 'http://localhost:8000'
+BASE_URL_127 = 'http://127.0.0.1:8000'
 
 # # Для тестирования (письма будут выводиться в консоль)
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

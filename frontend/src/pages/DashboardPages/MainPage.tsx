@@ -5,6 +5,8 @@ import { References } from '@app/components/common/References/References';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { RecentlyAddedNews } from '@app/components/nft-dashboard/recently-added/RecentlyAddedNews';
 import { TrendingCollections } from '@app/components/nft-dashboard/trending-collections/TrendingCollections';
+import { Balance } from '@app/components/nft-dashboard/Balance/Balance';
+import { TotalEarning } from '@app/components/nft-dashboard/totalEarning/TotalEarning';
 import { ActivityStory } from '@app/components/nft-dashboard/activityStory/ActivityStory';
 import { RecentActivity } from '@app/components/nft-dashboard/recentActivity/RecentActivity';
 import * as S from './DashboardPage.styles';
@@ -56,6 +58,14 @@ const MedicalDashboardPage: React.FC = () => {
       </S.LeftSideCol>
 
       <S.RightSideCol xl={8} xxl={7}>
+        <div id="balance">
+          <Balance />
+        </div>
+        <S.Space />
+        <div id="total-earning">
+          <TotalEarning />
+        </div>
+        <S.Space />
         <S.ScrollWrapper id="activity-story">
           <ActivityStory />
         </S.ScrollWrapper>

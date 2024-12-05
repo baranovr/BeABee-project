@@ -1,6 +1,9 @@
 import { NumericLiteral } from 'typescript';
 
 export type Dimension = number | string;
+
+export type ChartData = number[];
+
 export type LanguageType = 'ua' | 'en';
 
 export type ThemeType = 'light' | 'dark';
@@ -25,6 +28,7 @@ export enum CurrencyTypeEnum {
   USD = 'USD',
   ETH = 'ETH',
   BTC = 'BTC',
+  UAN = 'UAN',
 }
 
 export interface PaymentCard {

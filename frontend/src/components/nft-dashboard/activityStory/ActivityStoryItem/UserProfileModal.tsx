@@ -141,22 +141,18 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({ userId, isVi
     const currentUserStatus = user.statusInService;
     const targetUserStatus = userDetails.status_in_service;
 
-    // Создатель может редактировать всех
     if (currentUserStatus === 'Creator') {
       return true;
     }
 
-    // Юзер не может редактировать никого
     if (currentUserStatus === 'User') {
       return false;
     }
 
-    // Админ не может редактировать других админов или создателей
     if (currentUserStatus === 'Admin') {
       if (targetUserStatus === 'Admin' || targetUserStatus === 'Creator') {
         return false;
       }
-      // Админ может повысить юзера до админа
       if (targetUserStatus === 'User') {
         return true;
       }
@@ -272,11 +268,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({ userId, isVi
                       {t('Creator')}
                     </Option>
                     <Option value="Admin">
-                      <TeamOutlined style={{ marginRight: '8px', color: 'blue' }} />
+                      <TeamOutlined style={{ marginRight: '8px', color: 'red' }} />
                       {t('Admin')}
                     </Option>
                     <Option value="User">
-                      <UserOutlined style={{ marginRight: '8px', color: 'green' }} />
+                      <UserOutlined style={{ marginRight: '8px', color: 'blue' }} />
                       {t('User')}
                     </Option>
                   </>

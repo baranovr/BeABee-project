@@ -10,11 +10,19 @@ from user.views import (
     TwoFactorAuthView,
     VerifyCodeView,
     CheckSessionView,
+    MyNewsView,
+    MyInfosView,
+    MyPostsView,
+    ChangePasswordView,
 )
 
 urlpatterns = [
     path("register/", CreateUserViewSet.as_view(), name="register"),
     path("my_profile/", MyProfileView.as_view(), name="my-profile"),
+    path('my_profile/change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path("my_profile/news/", MyNewsView.as_view(), name="my-news"),
+    path("my_profile/infos/", MyInfosView.as_view(), name="my-infos"),
+    path("my_profile/posts/", MyPostsView.as_view(), name="my-posts"),
 
     path("token/", CustomTokenObtainPairView.as_view(), name="create-token"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),

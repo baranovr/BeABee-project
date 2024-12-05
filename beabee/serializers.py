@@ -26,10 +26,15 @@ class BaseTagSubjectRelatedSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    photo = serializers.ImageField()
     author = serializers.CharField(source='user.nickname', read_only=True)
     status_in_service = serializers.CharField(source='user.status_in_service', read_only=True)
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
+    photo = serializers.SerializerMethodField()
+
+    def get_photo(self, obj):
+        if obj.photo:
+            return f"{settings.BASE_URL}{obj.photo.url}"
+        return None
 
     class Meta:
         model = Post
@@ -39,6 +44,25 @@ class PostSerializer(serializers.ModelSerializer):
             "title",
             "author",
             "status_in_service",
+            "description",
+            "created_at",
+        )
+
+
+class PostInProfileSerializer(serializers.ModelSerializer):
+    photo = serializers.SerializerMethodField()
+
+    def get_photo(self, obj):
+        if obj.photo:
+            return f"{settings.BASE_URL}{obj.photo.url}"
+        return None
+
+    class Meta:
+        model = Post
+        fields = (
+            "id",
+            "photo",
+            "title",
             "description",
             "created_at",
         )
@@ -204,7 +228,18 @@ class NewsSerializer(serializers.ModelSerializer):
     posted_by = serializers.CharField(source='posted_by.nickname', read_only=True)
     posted_by_id = serializers.CharField(source='posted_by.id', read_only=True)
     status_in_service = serializers.CharField(source='posted_by.status_in_service', read_only=True)
-    avatar = serializers.ImageField(source='posted_by.avatar', read_only=True)
+    avatar = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
+
+    def get_avatar(self, obj):
+        if obj.posted_by.avatar:
+            return f"{settings.BASE_URL}{obj.posted_by.avatar.url}"
+        return None
+
+    def get_file(self, obj):
+        if obj.file:
+            return f"{settings.BASE_URL}{obj.file.url}"
+        return None
 
     class Meta:
         model = News
@@ -217,6 +252,18 @@ class NewsSerializer(serializers.ModelSerializer):
             "posted_by",
             "status_in_service",
             "avatar"
+        )
+
+
+class NewsInProfileSerializer(NewsSerializer):
+    class Meta:
+        model = News
+        fields = (
+            "id",
+            "file",
+            "title",
+            "description",
+            'created_at',
         )
 
 
@@ -257,6 +304,25 @@ class ImportantInfoSerializer(serializers.ModelSerializer):
             "description",
             "created_at",
             "avatar"
+        )
+
+
+class ImportantInfoInProfileSerializer(ImportantInfoSerializer):
+    image = serializers.SerializerMethodField()
+
+    def get_image(self, obj):
+        if obj.image:
+            return f"{settings.BASE_URL}{obj.image.url}"
+        return None
+
+    class Meta:
+        model = ImportantInfo
+        fields = (
+            "id",
+            "title",
+            "image",
+            "description",
+            "created_at",
         )
 
 

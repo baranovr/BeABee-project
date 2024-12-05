@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from beabee.models import Post, News, ImportantInfo
+from beabee.serializers import NewsInProfileSerializer, ImportantInfoInProfileSerializer, PostInProfileSerializer
 from beabee_project import settings
 from user.models import User, GPS
 
@@ -56,6 +58,42 @@ class UserSerializer(serializers.ModelSerializer):
                 "min_length": 8,
             }
         }
+
+
+class MyNewsSerializer(serializers.ModelSerializer):
+    news = serializers.SerializerMethodField()
+
+    def get_news(self, obj):
+        user_news = News.objects.filter(posted_by=obj)
+        return NewsInProfileSerializer(user_news, many=True).data
+
+    class Meta:
+        model = User
+        fields = ['id', 'news']
+
+
+class MyInfosSerializer(serializers.ModelSerializer):
+    infos = serializers.SerializerMethodField()
+
+    def get_infos(self, obj):
+        user_infos = ImportantInfo.objects.filter(posted_by=obj)
+        return ImportantInfoInProfileSerializer(user_infos, many=True).data
+
+    class Meta:
+        model = User
+        fields = ['id', 'infos']
+
+
+class MyPostsSerializer(serializers.ModelSerializer):
+    posts = serializers.SerializerMethodField()
+
+    def get_posts(self, obj):
+        user_posts = Post.objects.filter(user=obj)
+        return PostInProfileSerializer(user_posts, many=True).data
+
+    class Meta:
+        model = User
+        fields = ['id', 'posts']
 
 
 class MyProfileSerializer(UserSerializer):

@@ -22,7 +22,9 @@ const DataSubjectsTablePage = React.lazy(() => import('@app/pages/DataTableSubje
 const DataHomeworksTablePage = React.lazy(() => import('@app/pages/DataTableHomeworksPage'));
 const Error404Page = React.lazy(() => import('@app/pages/Error404Page'));
 const PersonalInfoPage = React.lazy(() => import('@app/pages/PersonalInfoPage'));
-const NotificationsPage = React.lazy(() => import('@app/pages/NotificationsPage'));
+const SecuritySettingsPage = React.lazy(() => import('@app/pages/SecuritySettingsPage'));
+const PaymentsPage = React.lazy(() => import('@app/pages/PaymentsPage'));
+const MyContentPage = React.lazy(() => import('@app/pages/MyContentPage'));
 const TutorialPage = React.lazy(() => import('@app/pages/howToUsePage/TutorialPage'));
 const Logout = React.lazy(() => import('./Logout'));
 
@@ -41,7 +43,9 @@ const Error404 = withLoading(Error404Page);
 
 // Profile
 const PersonalInfo = withLoading(PersonalInfoPage);
-const Notifications = withLoading(NotificationsPage);
+const MyContent = withLoading(MyContentPage);
+const SecuritySettings = withLoading(SecuritySettingsPage);
+const Payments = withLoading(PaymentsPage);
 
 const AuthLayoutFallback = withLoading(AuthLayout);
 const LogoutFallback = withLoading(Logout);
@@ -72,7 +76,9 @@ export const AppRouter: React.FC = () => {
           <Route path="404" element={<Error404 />} />
           <Route path="profile" element={<ProfileLayout />}>
             <Route path="personal-info" element={<PersonalInfo />} />
-            <Route path="notifications" element={<Notifications />} />
+            <Route path="my-content" element={<MyContent />} />
+            <Route path="security-settings" element={<SecuritySettings />} />
+            <Route path="payments" element={<Payments />} />
           </Route>
           <Route path="data-tables">
             <Route path="students" element={<DataTableStudents />} />

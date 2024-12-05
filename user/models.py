@@ -1,4 +1,5 @@
 import os
+import random
 import uuid
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -153,3 +154,34 @@ class GPS(models.Model):
 
     def __str__(self):
         return f"{self.user.nickname} at ({self.latitude}, {self.longitude})"
+
+
+# class PaymentCard(models.Model):
+#     class CardThemes(models.TextChoices):
+#         RED_PINK_BLUE = "red_pink_blue", "Red Pink Blue"
+#         VIVID_COLORFUL = "vivid_colorful", "Vivid Colorful"
+#         GRADIENT_BLUE = "gradient_blue", "Gradient Blue"
+#         LUXURY_DARK_BLUE = "luxury_dark_blue", "Luxury Dark Blue"
+#         MASK_GROUP = "mask_group", "Mask Group"
+#         RECTANGLE = "rectangle", "Rectangle"
+#
+#     name = models.CharField(max_length=255)
+#     cvc = models.CharField(max_length=3)
+#     expiry = models.CharField(max_length=5)
+#     number = models.CharField(max_length=16)
+#     focused = models.CharField(max_length=255, blank=True, default="")
+#     theme = models.CharField(
+#         max_length=20,
+#         choices=CardThemes.choices,
+#         default=CardThemes.RED_PINK_BLUE
+#     )
+#     is_edit = models.BooleanField(default=False)
+#
+#     def save(self, *args, **kwargs):
+#         if self.number:
+#             self.number = " ".join([self.number[i:i + 4] for i in range(0, len(self.number), 4)])
+#
+#         if self.expiry and len(self.expiry) == 4:
+#             self.expiry = f"{self.expiry[:2]}/{self.expiry[2:]}"
+#
+#         super().save(*args, **kwargs)

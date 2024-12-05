@@ -1,4 +1,4 @@
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, DollarOutlined, SecurityScanOutlined, BookOutlined } from '@ant-design/icons';
 import React from 'react';
 
 interface ProfileNavItem {
@@ -16,5 +16,26 @@ export const profileNavData: ProfileNavItem[] = [
     icon: <UserOutlined />,
     color: 'primary',
     href: 'personal-info',
+  },
+  {
+    id: 2,
+    name: 'My Content',
+    icon: <BookOutlined />,
+    color: 'warning',
+    href: 'my-content',
+  },
+  {
+    id: 3,
+    name: 'profile.nav.securitySettings.title',
+    icon: <SecurityScanOutlined />,
+    color: 'success',
+    href: 'security-settings',
+  },
+  {
+    id: 4,
+    name: 'profile.nav.payments.title',
+    icon: <DollarOutlined />,
+    color: 'error',
+    href: 'payments',
   },
 ];

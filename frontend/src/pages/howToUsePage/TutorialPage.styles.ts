@@ -4,7 +4,7 @@ export const TutorialBox = styled.div`
   background-color: rgba(0, 0, 122, 0.07);
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.58);
   margin-top: 20px;
   width: 90%;
 `;

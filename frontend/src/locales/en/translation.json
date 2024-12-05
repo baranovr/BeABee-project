@@ -666,7 +666,7 @@
           "scheduled": "Scheduled",
           "title": "Status"
         },
-        "title": "Payments",
+        "title": "Payments (under development)",
         "totalAmount": "Total Amount",
         "yourCardNumber": "Your card number",
         "yourName": "Your name"
@@ -867,6 +867,7 @@
   },
   "nft": {
     "yourBalance": "Your Balance",
+    "beabeeBalance": "BeABee balance",
     "topUpBalance": "Top Up Balance",
     "amount": "Amount",
     "selectCard": "Select card",

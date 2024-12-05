@@ -6,10 +6,10 @@ import * as S from './ExamTeacher.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseAvatar } from '@app/components/common/BaseAvatar/BaseAvatar';
 import { Trash2, AlertTriangle } from 'lucide-react';
-import { Modal} from "antd";
-import axiosInstance from "@app/api/axiosInstance";
+import { Modal } from 'antd';
+import axiosInstance from '@app/api/axiosInstance';
 import { notificationController } from '@app/controllers/notificationController';
-import { useAppSelector } from "@app/hooks/reduxHooks";
+import { useAppSelector } from '@app/hooks/reduxHooks';
 
 interface ExamTeacherProps {
   exam: Exam;
@@ -19,7 +19,7 @@ interface ExamTeacherProps {
 export const ExamTeacher: React.FC<ExamTeacherProps> = ({ exam, onDeleteSuccess }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAppSelector(state => state.user)
+  const { user } = useAppSelector((state) => state.user);
 
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleString('ru-RU', {
@@ -82,13 +82,10 @@ export const ExamTeacher: React.FC<ExamTeacherProps> = ({ exam, onDeleteSuccess 
           </S.TeacherCardBody>
         </S.TeacherCard>
 
-        {user && (
-            user.statusInService === "Creator" ||
-            user.statusInService === "Admin"
-        ) && (
-        <S.DeleteButton onClick={handleDeleteClick}>
-          <Trash2 size={20} />
-        </S.DeleteButton>
+        {user && (user.statusInService === 'Creator' || user.statusInService === 'Admin') && (
+          <S.DeleteButton onClick={handleDeleteClick}>
+            <Trash2 size={20} />
+          </S.DeleteButton>
         )}
       </S.TeacherCardWrapper>
 
