@@ -8,19 +8,13 @@ import { TrendingCollections } from '@app/components/nft-dashboard/trending-coll
 import { Balance } from '@app/components/nft-dashboard/Balance/Balance';
 import { TotalEarning } from '@app/components/nft-dashboard/totalEarning/TotalEarning';
 import { ActivityStory } from '@app/components/nft-dashboard/activityStory/ActivityStory';
-import { RecentActivity } from '@app/components/nft-dashboard/recentActivity/RecentActivity';
+import { UserGenderCard } from '@app/components/nft-dashboard/covidCard/CovidCard';
 import * as S from './DashboardPage.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 
 const MedicalDashboardPage: React.FC = () => {
   const { isDesktop } = useResponsive();
-  const [refreshNews, setRefreshNews] = useState(0);
-
-  const handleNewsUpdate = () => {
-    setRefreshNews((prev) => prev + 1);
-  };
-
   const desktopLayout = (
     <BaseRow>
       <S.LeftSideCol xl={16} xxl={17} id="desktop-content">
@@ -50,8 +44,8 @@ const MedicalDashboardPage: React.FC = () => {
             <MapCard />
           </BaseCol>
 
-          <BaseCol span={24}>
-            <RecentActivity />
+          <BaseCol id="map" span={24}>
+            <UserGenderCard />
           </BaseCol>
         </BaseRow>
         <References />
@@ -65,7 +59,6 @@ const MedicalDashboardPage: React.FC = () => {
         <div id="total-earning">
           <TotalEarning />
         </div>
-        <S.Space />
         <S.ScrollWrapper id="activity-story">
           <ActivityStory />
         </S.ScrollWrapper>
@@ -85,10 +78,6 @@ const MedicalDashboardPage: React.FC = () => {
 
       <BaseCol id="map" md={24} order={4}>
         <MapCard />
-      </BaseCol>
-
-      <BaseCol span={24}>
-        <RecentActivity />
       </BaseCol>
     </BaseRow>
   );

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 export const Title = styled(BaseTypography.Title)`
   &.ant-typography {
+    margin-top: 8%;
     margin-bottom: 0;
 
     font-weight: ${FONT_WEIGHT.semibold};

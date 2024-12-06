@@ -21,7 +21,10 @@ from user.serializers import (
     GPSSerializer,
     GPSDetailSerializer,
     UserInListProfileSerializer,
-    MyNewsSerializer, MyInfosSerializer, MyPostsSerializer
+    MyNewsSerializer,
+    MyInfosSerializer,
+    MyPostsSerializer,
+    UserGenderStatsListSerializer
 )
 from user.models import GPS, User
 
@@ -110,6 +113,15 @@ class UserSearchListView(generics.ListAPIView):
         if user_id:
             queryset = queryset.filter(id=user_id)
 
+        return queryset
+
+class UserGenderStatsView(generics.ListAPIView):
+    serializer_class = UserGenderStatsListSerializer
+    permission_classes = (IsNotBanned,)
+
+    def get_queryset(self):
+        user = get_user_model()
+        queryset = user.objects.all().order_by("-date_joined")
         return queryset
 
 

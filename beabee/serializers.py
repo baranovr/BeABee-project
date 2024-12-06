@@ -12,7 +12,6 @@ from beabee.models import (
     StudentInTable,
     SystemNotifications,
     SystemNotificationView,
-    LatestActivity
 )
 from beabee_project import settings
 
@@ -29,12 +28,6 @@ class PostSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='user.nickname', read_only=True)
     status_in_service = serializers.CharField(source='user.status_in_service', read_only=True)
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
-    photo = serializers.SerializerMethodField()
-
-    def get_photo(self, obj):
-        if obj.photo:
-            return f"{settings.BASE_URL}{obj.photo.url}"
-        return None
 
     class Meta:
         model = Post
@@ -70,6 +63,12 @@ class PostInProfileSerializer(serializers.ModelSerializer):
 
 class PostListSerializer(PostSerializer):
     avatar = serializers.ImageField(source='user.avatar')
+    photo = serializers.SerializerMethodField()
+
+    def get_photo(self, obj):
+        if obj.photo:
+            return f"{settings.BASE_URL}{obj.photo.url}"
+        return None
 
     class Meta:
         model = Post
@@ -168,7 +167,7 @@ class ExamListSerializer(ExamSerializer):
 
 
 class HomeworkSerializer(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     deadline = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     added_by = serializers.CharField(source='added_by.nickname', read_only=True)
 
@@ -229,16 +228,10 @@ class NewsSerializer(serializers.ModelSerializer):
     posted_by_id = serializers.CharField(source='posted_by.id', read_only=True)
     status_in_service = serializers.CharField(source='posted_by.status_in_service', read_only=True)
     avatar = serializers.SerializerMethodField()
-    file = serializers.SerializerMethodField()
 
     def get_avatar(self, obj):
         if obj.posted_by.avatar:
             return f"{settings.BASE_URL}{obj.posted_by.avatar.url}"
-        return None
-
-    def get_file(self, obj):
-        if obj.file:
-            return f"{settings.BASE_URL}{obj.file.url}"
         return None
 
     class Meta:
@@ -256,6 +249,13 @@ class NewsSerializer(serializers.ModelSerializer):
 
 
 class NewsInProfileSerializer(NewsSerializer):
+    file = serializers.SerializerMethodField()
+
+    def get_file(self, obj):
+        if obj.file:
+            return f"{settings.BASE_URL}{obj.file.url}"
+        return None
+
     class Meta:
         model = News
         fields = (
@@ -337,15 +337,6 @@ class ImportantInfoDetailDetailSerializer(ImportantInfoSerializer):
         model = ImportantInfo
         fields = ("description",)
 
-
-class LatestActivitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = LatestActivity
-        fields = (
-            "id",
-            "title",
-            "status",
-        )
 
 class BanSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)

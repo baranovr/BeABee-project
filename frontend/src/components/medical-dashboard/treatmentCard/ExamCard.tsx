@@ -52,16 +52,16 @@ export const ExamCard: React.FC = () => {
   const refreshExams = () => {
     getExams()
       .then(setExams)
-        .catch((error) => {
-          console.error('Failed to load exams:', error)
-    });
+      .catch((error) => {
+        console.error('Failed to load exams:', error);
+      });
   };
 
   useEffect(() => {
-    refreshExams()
+    refreshExams();
   }, []);
 
-  const examsByDate = exams.filter(exam => Dates.getDate(exam.date_time).isSame(selectedDate, 'date'));
+  const examsByDate = exams.filter((exam) => Dates.getDate(exam.date_time).isSame(selectedDate, 'date'));
 
   const calendarItem = (
     <ExamCalendar
@@ -76,20 +76,23 @@ export const ExamCard: React.FC = () => {
   );
 
   const ExamContainer = styled.div`
-    margin-bottom: 1rem;  // Adjust spacing as needed
+    margin-bottom: 1rem; // Adjust spacing as needed
     padding: 1rem;
-    background-color: var(--card-bg-color);  // Use a background color to make each card stand out
+    background-color: var(--card-bg-color); // Use a background color to make each card stand out
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   `;
 
-  const panelItem = examsByDate.length > 0
-  ? examsByDate.map(exam => (
-      <ExamContainer key={exam.id}>
-        <ExamTeacher exam={exam} onDeleteSuccess={refreshExams}/>
-      </ExamContainer>
-    ))
-  : <ExamNotFound />;
+  const panelItem =
+    examsByDate.length > 0 ? (
+      examsByDate.map((exam) => (
+        <ExamContainer key={exam.id}>
+          <ExamTeacher exam={exam} onDeleteSuccess={refreshExams} />
+        </ExamContainer>
+      ))
+    ) : (
+      <ExamNotFound />
+    );
 
   return (
     <DashboardCard title={t('medical-dashboard.examPlan.title')}>

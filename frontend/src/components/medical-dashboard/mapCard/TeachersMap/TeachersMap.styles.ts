@@ -4,7 +4,7 @@ import { CountryMap } from '../../../common/CountryMap/CountryMap';
 
 export const TeachersMap = styled(CountryMap)`
   isolation: isolate;
-  height: 500px; // Устанавливаем фиксированную высоту
+  height: 350px; // Устанавливаем фиксированную высоту
   aspect-ratio: 1; // Делаем контейнер квадратным
   width: 100%;
   max-width: 1800px; // Ограничиваем максимальную ширину

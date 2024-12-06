@@ -22,7 +22,7 @@ interface ScreeningsChartProps {
   secondUser?: UserStatistics;
 }
 
-const xAxisData = Array.from({ length: 16 }, (_, i) => i + 1);
+const xAxisData = Array.from({ length: 31 }, (_, i) => i + 1);
 
 export const ScreeningsChart: React.FC<ScreeningsChartProps> = ({ firstUser, secondUser }) => {
   const theme = useAppSelector((state) => state.theme.theme);
@@ -41,8 +41,8 @@ export const ScreeningsChart: React.FC<ScreeningsChartProps> = ({ firstUser, sec
         const firstUserData = firstUser.data;
         const secondUserData = secondUser.data;
 
-        return `${firstUser.seriesName}: ${firstUserData.value}%  - ${t('common.day')} ${firstUserData.day} <br/>
-                ${secondUser.seriesName}: ${secondUserData.value}% - ${t('common.day')} ${secondUserData.day}
+        return `${firstUser.seriesName}: ${firstUserData.value}pcs  - ${t('common.day')} ${firstUserData.day} <br/>
+                ${secondUser.seriesName}: ${secondUserData.value}pcs - ${t('common.day')} ${secondUserData.day}
         `;
       },
     },
@@ -65,7 +65,7 @@ export const ScreeningsChart: React.FC<ScreeningsChartProps> = ({ firstUser, sec
         show: false,
         type: 'value',
         min: 0,
-        max: 100,
+        max: 25,
       },
     ],
     series: [

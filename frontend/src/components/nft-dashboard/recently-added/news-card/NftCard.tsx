@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { useTranslation } from 'react-i18next';
-import { News } from '@app/api/mainpageDashboard.api';
 import axiosInstance from '@app/api/axiosInstance';
 import * as S from './NftCard.styles';
 import { message } from 'antd';
 import { useAppSelector } from '@app/hooks/reduxHooks';
+import { getNewsList, News } from '@app/api/recentlynews.api';
 
 interface NftCardProps {
   newsItem: News;
-  onDelete?: (id: number) => void; // Функция обратного вызова для удаления новости из списка
+  onDelete?: (id: number) => void;
   onDeleteSuccess?: () => void;
 }
 
@@ -20,6 +20,7 @@ const truncateText = (text: string, maxLength = 24) => {
 export const NftCard: React.FC<NftCardProps> = ({ newsItem, onDelete, onDeleteSuccess }) => {
   const { isTablet } = useResponsive();
   const { t } = useTranslation();
+  const [news, setNews] = useState<News[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -40,6 +41,18 @@ export const NftCard: React.FC<NftCardProps> = ({ newsItem, onDelete, onDeleteSu
   const handleDeleteCancel = () => {
     setIsDeleteConfirmVisible(false);
   };
+
+  const refreshNews = () => {
+    getNewsList()
+      .then(setNews)
+      .catch((error) => {
+        console.error('Failed to load exams:', error);
+      });
+  };
+
+  useEffect(() => {
+    refreshNews();
+  }, []);
 
   const handleDeleteConfirm = async () => {
     setIsDeleting(true);

@@ -14,6 +14,9 @@ from beabee.views import (
     invite_student,
     HomeworkTypeDistributionView,
     SystemNotificationsViewSet,
+    TopTeachersAPIView,
+    TopTeachersDetailedAPIView,
+    TopTeachersHomeworkByDayAPIView,
 )
 from user.views import GPSViewSet
 
@@ -35,6 +38,9 @@ router.register(r'students_table', StudentInTableViewSet, basename='students_tab
 
 urlpatterns = [
     path("", include(router.urls)),
+    path('top-teachers-values/', TopTeachersAPIView.as_view(), name='top-teachers'),
+    path('top-teachers-names/', TopTeachersDetailedAPIView.as_view(), name='top-teachers'),
+    path('top-teachers-homework-by-day/', TopTeachersHomeworkByDayAPIView.as_view(), name='top-teachers'),
 
     # Invite
     path('students/<int:student_id>/invite/', invite_student, name='invite-student'),

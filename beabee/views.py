@@ -1,10 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.core.mail import send_mail
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Q, F
 
 from django.utils import timezone
+from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
@@ -26,7 +27,7 @@ from beabee.models import (
     Exam,
     StudentInTable,
     SystemNotifications,
-    SystemNotificationView,
+    SystemNotificationView
 )
 from beabee.serializers import (
     PostSerializer, PostListSerializer, PostDetailSerializer,
@@ -34,11 +35,12 @@ from beabee.serializers import (
     HomeworkSerializer, HomeworkListSerializer, HomeworkDetailSerializer,
     NewsSerializer, NewsListSerializer, NewsDetailSerializer, ImportantInfoSerializer, BanSerializer, ExamSerializer,
     ExamListSerializer, BanListSerializer, BanDetailSerializer, StudentInTableSerializer,
-    SystemNotificationsSerializer, SystemNotificationsListSerializer,
+    SystemNotificationsSerializer, SystemNotificationsListSerializer
 )
 from beabee.telegram_utils import send_telegram_notification
 from beabee.сustom_permissions.is_not_banned_permission import IsNotBanned
 from beabee_project import settings
+from beabee_project.settings import BASE_URL
 from user.models import User
 
 
@@ -607,6 +609,132 @@ class HomeworkTypeDistributionView(APIView):
             })
 
         return Response(result, status=status.HTTP_200_OK)
+
+
+class TopTeachersAPIView(APIView):
+    """
+    API для отображения топ-6 учителей по количеству домашних заданий
+    за текущий и предыдущий месяц.
+    """
+    def get(self, request, *args, **kwargs):
+        # Текущий месяц и предыдущий месяц
+        current_date = now()
+        start_of_current_month = current_date.replace(day=1)
+        start_of_previous_month = (start_of_current_month - timedelta(days=1)).replace(day=1)
+
+        # Агрегация домашних заданий
+        teachers_stats = Teacher.objects.annotate(
+            current_month_count=Count(
+                'teacher_homeworks',
+                filter=Q(
+                    teacher_homeworks__created_at__gte=start_of_current_month
+                )
+            ),
+            previous_month_count=Count(
+                'teacher_homeworks',
+                filter=Q(
+                    teacher_homeworks__created_at__gte=start_of_previous_month,
+                    teacher_homeworks__created_at__lt=start_of_current_month
+                )
+            ),
+        ).order_by('-current_month_count')[:6]  # Топ-6 учителей
+
+        # Формирование ответа
+        data = [
+            {
+                "id": teacher.id,
+                "value": teacher.current_month_count,
+                "prevValue": teacher.previous_month_count,
+            }
+            for teacher in teachers_stats
+        ]
+
+        return Response(data)
+
+
+class TopTeachersDetailedAPIView(APIView):
+    """
+    API для отображения топ-6 учителей по количеству домашних заданий
+    с дополнительными полями.
+    """
+    def get(self, request, *args, **kwargs):
+        # Текущий месяц и предыдущий месяц
+        current_date = now()
+        start_of_current_month = current_date.replace(day=1)
+        start_of_previous_month = (start_of_current_month - timedelta(days=1)).replace(day=1)
+
+        # Агрегация домашних заданий
+        teachers_stats = Teacher.objects.annotate(
+            current_month_count=Count(
+                'teacher_homeworks',
+                filter=Q(
+                    teacher_homeworks__created_at__gte=start_of_current_month
+                )
+            ),
+        ).order_by('-current_month_count')[:6]  # Топ-6 учителей
+
+        # Формирование ответа
+        data = [
+            {
+                "id": teacher.id,
+                "name": teacher.last_name + " " + teacher.first_name + " " + teacher.surname,
+                "teacher_avatar": f"{BASE_URL}{teacher.teacher_avatar.url}" if teacher.teacher_avatar else None,
+            }
+            for teacher in teachers_stats
+        ]
+
+        return Response(data)
+
+
+class TopTeachersHomeworkByDayAPIView(APIView):
+    """
+    API для отображения количества домашних заданий по дням
+    для топ-6 учителей.
+    """
+    def get(self, request, *args, **kwargs):
+        # Определяем текущий месяц
+        current_date = now()
+        start_of_month = current_date.replace(day=1)
+
+        # Получаем топ-6 учителей
+        top_teachers = (
+            Teacher.objects.annotate(
+                homework_count=Count(
+                    'teacher_homeworks',
+                    filter=Q(teacher_homeworks__created_at__gte=start_of_month)
+                )
+            )
+            .order_by('-homework_count')[:6]
+        )
+
+        # Получаем домашки по дням для этих учителей
+        homework_data = (
+            Homework.objects.filter(
+                teacher__in=top_teachers,
+                created_at__month=current_date.month,
+            )
+            .annotate(
+                day=F('created_at__day'),
+                homework_type=F('type')  # Изменяем имя аннотации
+            )
+            .values('teacher', 'day', 'homework_type')
+            .annotate(count=Count('id'))
+            .order_by('day')
+        )
+
+        # Формируем ответ
+        response_data = []
+        for teacher in top_teachers:
+            teacher_homework = [entry for entry in homework_data if entry['teacher'] == teacher.id]
+            for entry in teacher_homework:
+                response_data.append({
+                    'teacher_id': teacher.id,
+                    'day': entry['day'],
+                    'count': entry['count'],
+                    'type': entry['homework_type'],  # Используем новое имя
+                })
+
+        return Response(response_data)
 
 
 class FilterByTitleAndDateMixin:

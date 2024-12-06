@@ -1,6 +1,6 @@
 // doctors.api.ts
 
-export interface Teacher {
+export interface Doctor {
   id: number;
   name: string;
   specifity: number;
@@ -9,7 +9,7 @@ export interface Teacher {
   address: string;
 }
 
-export const getTeachersData = (): Promise<Teacher[]> => {
+export const getDoctorsData = (): Promise<Doctor[]> => {
   return new Promise((res) => {
     setTimeout(() => {
       res([

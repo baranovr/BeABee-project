@@ -9,6 +9,7 @@ import { StatisticsCards } from '@app/components/medical-dashboard/statisticsCar
 import { HomeworkCard } from '@app/components/medical-dashboard/HomeworkCard/HomeworkCard';
 import { References } from '@app/components/common/References/References';
 import { useResponsive } from '@app/hooks/useResponsive';
+
 import * as S from './DashboardPage.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';

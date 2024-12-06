@@ -1,20 +1,20 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { ScreeningsFriend } from '../ScreeningsFriend/ScreeningsFriend';
-import { CurrentStatisticsState, ScreeningWithDoctors } from '../../ScreeningsCard/ScreeningsCard';
+import { CurrentStatisticsState, ScreeningWithTeachers } from '../../ScreeningsCard/ScreeningsCard';
 import { MobileScreenings } from '../MobileScreenings/MobileScreenings';
 import { DesktopScreenings } from '../DesktopScreenings/DesktopScreenings';
 import { useResponsive } from '@app/hooks/useResponsive';
-import * as S from './HomeworkTypesTeachers.styles';
+import * as S from './ScreeningsFriends.styles';
 
-interface ScreeningsTeachersProps {
-  screenings: ScreeningWithDoctors[];
+interface ScreeningsFriendsProps {
+  screenings: ScreeningWithTeachers[];
   currentStatistics: CurrentStatisticsState;
   setCurrentStatistics: (func: (state: CurrentStatisticsState) => CurrentStatisticsState) => void;
   isFirstClick: boolean;
   setFirstClick: (state: boolean) => void;
 }
 
-export const HomeworkTypesTeachers: React.FC<ScreeningsTeachersProps> = ({
+export const ScreeningsFriends: React.FC<ScreeningsFriendsProps> = ({
   screenings,
   currentStatistics,
   setCurrentStatistics,
@@ -60,7 +60,7 @@ export const HomeworkTypesTeachers: React.FC<ScreeningsTeachersProps> = ({
           name={screening.name}
           value={screening.value}
           prevValue={screening.prevValue}
-          src={screening.imgUrl}
+          src={screening.teacher_avatar}
           isPrimary={index === currentStatistics.firstUser}
           isSecondary={index === currentStatistics.secondUser}
           onClick={handleClickItem(index)}

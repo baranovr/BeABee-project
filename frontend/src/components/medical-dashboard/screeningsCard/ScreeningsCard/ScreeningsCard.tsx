@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ScreeningsHeader } from '../ScreeningsHeader/ScreeningsHeader';
-import { HomeworkTypesTeachers } from '@app/components/medical-dashboard/screeningsCard/screeningsFriends/HomeworkTypesTeachers/HomeworkTypesTeachers';
+import { ScreeningsFriends } from '../screeningsFriends/ScreeningsFriends/ScreeningsFriends';
 import { ScreeningsChart } from '../ScreeningsChart/ScreeningsChart';
-import { getScreenings, Screening } from '@app/api/screenings.api';
+import { getTeacherValuesList, TeacherValues } from '@app/api/top.teacher.val.prevval.api';
 import { Dates } from '@app/constants/Dates';
 import { getStatistics, Statistic } from '@app/api/statistics.api';
 import { getSmoothRandom } from '@app/utils/utils';
-import { Teacher, getTeachersData } from '@app/api/doctors.api';
+import { getTopTeachersList, TopTeacher } from '@app/api/top.teachers.names.list.api';
 import * as S from './ScreeningsCard.styles';
 
 export interface CurrentStatisticsState {
@@ -16,12 +16,12 @@ export interface CurrentStatisticsState {
   statistic: number;
 }
 
-export type ScreeningWithDoctors = Screening & { name: string; imgUrl: string };
+export type ScreeningWithTeachers = TeacherValues & { name: string; teacher_avatar: string };
 
 export const ScreeningsCard: React.FC = () => {
-  const [doctors, setDoctors] = useState<Teacher[]>([]);
+  const [top_teachers, setTopTeachers] = useState<TopTeacher[]>([]);
   const [statistics, setStatistics] = useState<Statistic[]>([]);
-  const [screenings, setScreenings] = useState<Screening[]>([]);
+  const [teacher_values, setTeacherValues] = useState<TeacherValues[]>([]);
   const [currentStatistics, setCurrentStatistics] = useState<CurrentStatisticsState>({
     firstUser: 1,
     secondUser: 3,
@@ -31,7 +31,7 @@ export const ScreeningsCard: React.FC = () => {
   const [isFirstClick, setFirstClick] = useState(true);
 
   useEffect(() => {
-    getScreenings().then((res) => setScreenings(res));
+    getTeacherValuesList().then((res) => setTeacherValues(res));
   }, []);
 
   useEffect(() => {
@@ -39,25 +39,25 @@ export const ScreeningsCard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    getTeachersData().then((res) => setDoctors(res));
+    getTopTeachersList().then((res) => setTopTeachers(res));
   }, []);
 
   const months = useMemo(() => Array.from({ length: 12 }, (_, i) => i), []);
 
-  const screeningsWithDoctors = useMemo((): ScreeningWithDoctors[] => {
-    return screenings.map((screening) => {
-      const currentDoctor = doctors.find((doctor) => doctor.id === screening.id);
+  const screeningsWithTeachers = useMemo((): ScreeningWithTeachers[] => {
+    return teacher_values.map((teacher_value) => {
+      const currentTeacher = top_teachers.find((top_teacher) => top_teacher.id === teacher_value.id);
 
       return {
-        ...screening,
-        name: currentDoctor?.name || '',
-        imgUrl: currentDoctor?.imgUrl || '',
+        ...teacher_value,
+        name: currentTeacher?.name || '',
+        teacher_avatar: currentTeacher?.teacher_avatar || '',
       };
     });
-  }, [doctors, screenings]);
+  }, [top_teachers, teacher_values]);
 
   const generateScreeningValue = () => {
-    const randomValue = getSmoothRandom(3, 0.7) * 100;
+    const randomValue = getSmoothRandom(3, 0.7) * 25;
     return (randomValue * Math.abs(Math.sin(randomValue))).toFixed();
   };
 
@@ -67,16 +67,16 @@ export const ScreeningsCard: React.FC = () => {
         monthId: month,
         data: statistics.map((statistic) => ({
           statisticId: statistic.id,
-          data: screenings.map((screening) => ({
-            id: screening.id,
-            data: Array.from({ length: 16 }, (_, index) => ({
-              day: index * 2,
+          data: teacher_values.map((teacher_value) => ({
+            id: teacher_value.id,
+            data: Array.from({ length: 31 }, (_, index) => ({
+              day: index,
               value: generateScreeningValue(),
             })),
           })),
         })),
       })),
-    [months, screenings, statistics],
+    [months, teacher_values, statistics],
   );
 
   const currentValues = useMemo(
@@ -93,12 +93,12 @@ export const ScreeningsCard: React.FC = () => {
 
       return (
         currentValues && {
-          name: screeningsWithDoctors[currentStatistics[user]].name,
+          name: screeningsWithTeachers[currentStatistics[user]].name,
           data: currentValues[currentStatistics[user]].data,
         }
       );
     },
-    [currentStatistics, currentValues, screeningsWithDoctors],
+    [currentStatistics, currentValues, screeningsWithTeachers],
   );
 
   return (
@@ -106,8 +106,8 @@ export const ScreeningsCard: React.FC = () => {
       title={<ScreeningsHeader currentStatistics={currentStatistics} setCurrentStatistics={setCurrentStatistics} />}
       padding={0}
     >
-      <HomeworkTypesTeachers
-        screenings={screeningsWithDoctors}
+      <ScreeningsFriends
+        screenings={screeningsWithTeachers}
         currentStatistics={currentStatistics}
         setCurrentStatistics={setCurrentStatistics}
         isFirstClick={isFirstClick}

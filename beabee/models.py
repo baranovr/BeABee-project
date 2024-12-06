@@ -187,6 +187,7 @@ class Homework(models.Model):
             models.Index(fields=["type"]),
         ]
 
+
     def save(self, *args, **kwargs):
         if self.pk:
             original = Homework.objects.get(pk=self.pk)
@@ -262,38 +263,6 @@ class ImportantInfo(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class ActivityStatusChoice(models.TextChoices):
-    CREATED = "Created", _("Created")
-    JOINED = "Joined", _("Joined")
-    BANNED = "Banned", _("Banned")
-
-class LatestActivity(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="latest_activity",
-        verbose_name=_("User")
-    )
-    title = models.CharField(max_length=50, verbose_name=_("Title"))
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"))
-    status = models.CharField(
-        max_length=10,
-        choices=ActivityStatusChoice.choices,
-        default=ActivityStatusChoice.CREATED,
-        verbose_name=_("Status")
-    )
-
-    class Meta:
-        ordering = ["-created_at"]
-        indexes = [
-            models.Index(fields=["created_at"]),
-            models.Index(fields=["status"]),
-        ]
-
-    def __str__(self):
-        return f"{self.user} - {self.get_status_display()}"
 
 
 class BanReasonsChoices(models.TextChoices):

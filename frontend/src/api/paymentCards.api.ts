@@ -20,7 +20,7 @@ export const getPaymentCards = (id: number): Promise<PaymentCard[]> =>
             name: 'Example Card',
             cvc: '345',
             expiry: '12/22',
-            number: '4255 1000 2046 8006',
+            number: '5205 0024 2535 5235',
             focused: '',
             background: cardThemes[5].background,
             isEdit: false,

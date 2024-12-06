@@ -10,6 +10,8 @@ import { BaseAvatar } from '@app/components/common/BaseAvatar/BaseAvatar';
 import { Modal, Button } from 'antd';
 import axiosInstance from '@app/api/axiosInstance';
 
+import { ReactComponent as MapBackgroundIcon } from 'assets/icons/map-background.svg';
+
 const LARGE_MARKER_SIZE: PointExpression = [50, 50];
 const MARKER_SIZE: PointExpression = [30, 30];
 
@@ -23,7 +25,7 @@ const defineIconSize = (isDesktop: boolean): PointExpression => {
   return isDesktop ? LARGE_MARKER_SIZE : MARKER_SIZE;
 };
 
-class MarkerTeacher extends L.Icon {
+class MarkerStudent extends L.Icon {
   constructor(props: IconOptions, isDesktop: boolean) {
     const iconSize = defineIconSize(isDesktop);
 
@@ -77,7 +79,7 @@ const TeachersMapContent: React.FC<{
             <Marker
               key={location.id}
               icon={
-                new MarkerTeacher(
+                new MarkerStudent(
                   {
                     iconUrl: location.user.avatar,
                     iconRetinaUrl: location.user.avatar,
@@ -150,28 +152,14 @@ export const TeachersMap: React.FC<{ currentUserId: number }> = ({ currentUserId
 
   return (
     <S.TeachersMap>
-      <MapContainer
-        center={[45, 9]}
-        zoom={3}
-        style={{ height: '100%', width: '100%' }}
-        maxBounds={MAX_BOUNDS}
-        maxBoundsViscosity={1.0} // Предотвращает выход за пределы границ
-        minZoom={2}
-        maxZoom={18}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-          noWrap={true} // Предотвращает повторение тайлов по горизонтали
-        />
-        <TeachersMapContent
-          userLocations={userLocations}
-          isDesktop={isDesktop}
-          onMapClick={handleMapClick}
-          tempLocation={tempLocation}
-          currentUserId={currentUserId}
-        />
-      </MapContainer>
+      <MapBackgroundIcon />
+      <TeachersMapContent
+        userLocations={userLocations}
+        isDesktop={isDesktop}
+        onMapClick={handleMapClick}
+        tempLocation={tempLocation}
+        currentUserId={currentUserId}
+      />
 
       <Modal
         title="Are you here?"

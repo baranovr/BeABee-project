@@ -14,6 +14,7 @@ from user.views import (
     MyInfosView,
     MyPostsView,
     ChangePasswordView,
+    UserGenderStatsView,
 )
 
 urlpatterns = [
@@ -34,6 +35,7 @@ urlpatterns = [
 
     path("users/", UserSearchListView.as_view(), name="users"),
     path("users/<int:pk>/", UserSearchDetailView.as_view(), name="profile"),
+    path('users/gender-stats/', UserGenderStatsView.as_view(), name='user-gender-stats'),
 ]
 
 app_name = "user"

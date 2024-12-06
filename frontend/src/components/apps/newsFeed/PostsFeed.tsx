@@ -36,15 +36,11 @@ export const PostsFeed: React.FC = () => {
         filteredNews?.length || !loaded ? (
           <BaseFeed next={next} hasMore={hasMore}>
             {filteredNews.map((post) => (
-              <BaseArticle
-                key={post.id}
-                post={post}
-                onDeleteSuccess={refreshPosts}
-              />
+              <BaseArticle key={post.id} post={post} onDeleteSuccess={refreshPosts} />
             ))}
           </BaseFeed>
         ) : (
-          <BaseEmpty /> // Пустое состояние
+          <BaseEmpty />
         )
       }
     </PostsFilter>

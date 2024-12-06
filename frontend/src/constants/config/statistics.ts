@@ -3,7 +3,7 @@ import { ReactComponent as LangCultureIcon } from '@app/assets/icons/lang_cultur
 import { ReactComponent as ProgNetworksIcon } from '@app/assets/icons/prog_networks.svg';
 import { ReactComponent as MathPhysicsIcon } from '@app/assets/icons/math_physics.svg';
 
-export type StatisticColor = 'primary' | 'error' | 'secondary' | 'success';
+export type StatisticColor = 'primary' | 'error' | 'success';
 
 interface ConfigStatistic {
   id: number;
