@@ -92,9 +92,7 @@ class PostViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save(user=request.user)
             headers = self.get_success_headers(serializer.data)
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED, headers=headers
-            )
+            return Response(serializer.data, headers=headers, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         with transaction.atomic():
@@ -111,7 +109,10 @@ class PostViewSet(viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to update this post!"},
+            )
 
     def destroy(self, request, *args, **kwargs):
         post = get_object_or_404(Post, pk=kwargs["pk"])
@@ -121,7 +122,10 @@ class PostViewSet(viewsets.ModelViewSet):
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "You are not allowed to delete this post!"},
+        )
 
     @extend_schema(
         parameters=[
@@ -202,14 +206,20 @@ class SubjectViewSet(viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to update this subject!"},
+            )
 
     def destroy(self, request, *args, **kwargs):
         if request.user.status_in_service in ["Admin", "Creator"]:
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "You are not allowed to delete this subject!"},
+        )
 
 
     @extend_schema(
@@ -294,14 +304,20 @@ class TeacherViewSet(viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to update information about this teacher!"},
+            )
 
     def destroy(self, request, *args, **kwargs):
         if request.user.status_in_service in ["Admin", "Creator"]:
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "You are not allowed to delete this teacher!"},
+        )
 
 
     @extend_schema(
@@ -402,7 +418,10 @@ class ExamViewSet(viewsets.ModelViewSet):
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "You are not allowed to delete this exam!"},
+        )
 
     @extend_schema(
         parameters=[
@@ -492,7 +511,10 @@ class HomeworkViewSet(viewsets.ModelViewSet):
                     serializer.data, status=status.HTTP_201_CREATED, headers=headers
                 )
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to create homeworks!"},
+            )
 
     def update(self, request, *args, **kwargs):
         with transaction.atomic():
@@ -506,14 +528,20 @@ class HomeworkViewSet(viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to this homework!"},
+            )
 
     def destroy(self, request, *args, **kwargs):
         if request.user.status_in_service in ["Admin", "Creator"]:
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "You are not allowed to delete this homework!"},
+        )
 
     @extend_schema(
         parameters=[
@@ -795,7 +823,10 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to update news!"}
+            )
 
     def destroy(self, request, *args, **kwargs):
         news = get_object_or_404(News, pk=kwargs["pk"])
@@ -808,7 +839,10 @@ class NewsViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "You are not allowed to delete news!"}
+        )
 
 
     @extend_schema(
@@ -860,7 +894,10 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to update this important info!"}
+            )
 
     def destroy(self, request, *args, **kwargs):
         imp_info = get_object_or_404(ImportantInfo, pk=kwargs["pk"])
@@ -873,7 +910,10 @@ class ImportantInfoViewSet(FilterByTitleAndDateMixin, viewsets.ModelViewSet):
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "You are not allowed to delete this important info!"}
+        )
 
     @extend_schema(
         parameters=[
@@ -923,7 +963,10 @@ class BanViewSet(viewsets.ModelViewSet):
                 headers = self.get_success_headers(serializer.data)
                 return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to create ban!"}
+            )
 
     def destroy(self, request, *args, **kwargs):
         ban = get_object_or_404(Ban, pk=kwargs["pk"])
@@ -937,7 +980,10 @@ class BanViewSet(viewsets.ModelViewSet):
             super().destroy(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "You are not allowed to delete this ban!"}
+        )
 
 
 class StudentInTableViewSet(viewsets.ModelViewSet):
@@ -954,7 +1000,10 @@ class StudentInTableViewSet(viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to create student for table!"}
+            )
 
     def update(self, request, *args, **kwargs):
         with transaction.atomic():
@@ -966,7 +1015,10 @@ class StudentInTableViewSet(viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to update student for table!"}
+            )
 
     def destroy(self, request, *args, **kwargs):
         with transaction.atomic():
@@ -974,7 +1026,10 @@ class StudentInTableViewSet(viewsets.ModelViewSet):
                 super().destroy(request, *args, **kwargs)
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to delete this student from table!"}
+            )
 
 
 class SystemNotificationsViewSet(viewsets.ModelViewSet):
@@ -1028,7 +1083,10 @@ class SystemNotificationsViewSet(viewsets.ModelViewSet):
                 headers = self.get_success_headers(serializer.data)
                 return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"message": "You are not allowed to create system notifications!"}
+            )
 
     @action(detail=False, methods=['DELETE'])
     def delete_all(self, request, pk=None):

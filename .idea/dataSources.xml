@@ -19,5 +19,12 @@
       <jdbc-url>jdbc:sqlite:C:\Users\user\PycharmProjects\BeABee-project\db.sqlite3</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="defaultdb" uuid="bf055d08-5949-480d-8d3c-f9012d1d2d90">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://pg-3c3df5c3-rusipbox-e0df.d.aivencloud.com:23858/postgres?sslmode=require</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

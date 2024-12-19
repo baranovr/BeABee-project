@@ -167,7 +167,7 @@ class ExamListSerializer(ExamSerializer):
 
 
 class HomeworkSerializer(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
     deadline = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
     added_by = serializers.CharField(source='added_by.nickname', read_only=True)
 
@@ -208,7 +208,6 @@ class HomeworkListSerializer(HomeworkSerializer):
             "teacher_first_name",
             "teacher_last_name",
             "teacher_surname",
-            "created_at",
             "deadline",
             "for_group",
             "added_by"
@@ -268,7 +267,7 @@ class NewsInProfileSerializer(NewsSerializer):
 
 
 class NewsListSerializer(NewsSerializer):
-    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
 
     class Meta:
         model = News

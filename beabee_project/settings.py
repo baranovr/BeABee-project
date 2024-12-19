@@ -13,6 +13,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+import dj_database_url
 from corsheaders.defaults import default_headers
 from dotenv import load_dotenv
 
@@ -32,7 +33,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://beabee-service.onrender.com',]
 
 
 # Application definition
@@ -44,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cachalot',
     'channels',
+    'redis',
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
@@ -99,18 +102,57 @@ CHANNEL_LAYERS = {
     },
 }
 
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/1',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         },
+#     }
+# }
+#
+# CACHALOT_ONLY_CACHABLE_TABLES = {
+#     'user.User', 'beabee.Homework', 'beabee.Subject', 'beabee.Teacher', 'beabee.StudentInTable'
+# }
+#
+# CACHALOT_TIMEOUT = 60 * 15
+#
+# CACHALOT_ENABLED = True
+#
+# LOGGING = {
+#     'version': 1,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django_cachalot': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
 
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+DATABASES = {
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -172,15 +214,16 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle"
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "100000/day",
-        "user": "3000000/day",
+        "anon": "100/day",
+        "user": "30000/day",
         "try_login": "3/day",
+        "try_register": "3/month",
     }
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Wander Wave Project",
-    "DESCRIPTION": "Web service for tourists",
+    "TITLE": "BeABeeProject",
+    "DESCRIPTION": "Web service for students",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_SETTINGS": {
@@ -192,7 +235,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=28),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -223,7 +266,6 @@ CSRF_COOKIE_SAMESITE = 'None'
 CSRF_COOKIE_SECURE = True  # Changed to True for security
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
-# Дополнительные настройки CORS
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',

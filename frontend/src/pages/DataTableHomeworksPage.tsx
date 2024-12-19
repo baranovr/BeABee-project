@@ -8,7 +8,7 @@ export const HomeworksTablePage: React.FC = () => {
   return (
     <>
       <S.TablesWrapper>
-        <S.Card id="basic-table" title={t('tables.existStudentsTable')} padding="1.25rem 1.25rem 0">
+        <S.Card id="basic-table" title={'Existing homeworks table'} padding="1.25rem 1.25rem 0">
           <HomeworksTable />
         </S.Card>
       </S.TablesWrapper>

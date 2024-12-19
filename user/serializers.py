@@ -1,13 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.db.models import Count
 from rest_framework import serializers
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from beabee.models import Post, News, ImportantInfo
 from beabee.serializers import NewsInProfileSerializer, ImportantInfoInProfileSerializer, PostInProfileSerializer
-from beabee.сustom_permissions.is_not_banned_permission import IsNotBanned
 from beabee_project import settings
 from user.models import User, GPS
 
