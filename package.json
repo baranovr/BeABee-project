@@ -124,7 +124,7 @@
     "*/**/*.{js,ts,tsx}": "yarn lint"
   },
   "engines": {
-    "node": ">=18 <21"
+    "node": "16.x"
   },
   "resolutions": {
     "@types/react": "^18.0.28",
