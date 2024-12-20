@@ -11,6 +11,7 @@ from django.utils.html import strip_tags
 
 from rest_framework import generics, status, viewsets
 from rest_framework import permissions
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 

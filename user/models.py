@@ -104,7 +104,7 @@ class User(AbstractUser):
         default=ServiceStatusChoices.USER,
         db_index=True,
     )
-    password = models.CharField(_("password"), max_length=255)
+    password = models.CharField(_("password"), max_length=100)
     date_joined = models.DateField(_("date joined"), auto_now_add=True)
     is_banned = models.BooleanField(default=False)
     ban_reason = models.CharField(max_length=30, null=True, blank=True)
