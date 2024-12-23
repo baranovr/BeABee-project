@@ -11,6 +11,7 @@ import { notificationController } from '@app/controllers/notificationController'
 import moment from 'moment';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { RangeValue } from 'rc-picker/lib/interface';
+import { ColumnType } from 'antd/lib/table';
 
 export const HomeworksTable: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -144,7 +145,7 @@ export const HomeworksTable: React.FC = () => {
     return <BaseTable columns={columns} dataSource={data} pagination={false} showHeader={false} />;
   };
 
-  const columns = [
+  const columns: ColumnType<Homework>[] = [
     {
       title: t('common.title'),
       dataIndex: 'title',
@@ -156,15 +157,16 @@ export const HomeworksTable: React.FC = () => {
       dataIndex: 'subject',
       key: 'subject',
       filters: subjectFilters,
-      onFilter: (value: string | number | boolean, record: Homework) => record.subject === value,
+      onFilter: (value: boolean | Key, record: Homework) => record.subject === String(value),
     },
     {
       title: t('common.teacher'),
       dataIndex: 'teacher',
       key: 'teacher',
       filters: teacherFilters,
-      onFilter: (value: string | number | boolean, record: Homework) =>
-        formatTeacherName(record.teacher_last_name, record.teacher_first_name, record.teacher_surname) === value,
+      onFilter: (value: boolean | Key, record: Homework) =>
+        formatTeacherName(record.teacher_last_name, record.teacher_first_name, record.teacher_surname) ===
+        String(value),
       render: (_: any, record: Homework) =>
         formatTeacherName(record.teacher_last_name, record.teacher_first_name, record.teacher_surname),
     },
@@ -180,7 +182,7 @@ export const HomeworksTable: React.FC = () => {
       dataIndex: 'for_group',
       key: 'for_group',
       filters: groupFilters,
-      onFilter: (value: string | number | boolean, record: Homework) => record.for_group === value,
+      onFilter: (value: boolean | Key, record: Homework) => record.for_group === String(value),
     },
   ];
 

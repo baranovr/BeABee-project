@@ -16,6 +16,7 @@ import { UserInList } from '@app/api/user.types';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { Modal, Button } from 'antd';
 import StudentCreationForm from '@app/components/tables/StudentsTable/StudentCreateForm';
+import {Key} from "rc-table/lib/interface";
 
 interface FloatButtonProps {
   onClick?: () => void;
@@ -212,7 +213,7 @@ export const StudentsTable: React.FC = () => {
       filterMode: 'tree',
       filterSearch: true,
       filters: nameFilters,
-      onFilter: (value: string | number | boolean, record: StudentInTable) => record.last_name === value.toString(),
+      onFilter: (value: boolean | Key, record: StudentInTable) => record.last_name === String(value),
     },
     {
       title: t('common.firstName'),

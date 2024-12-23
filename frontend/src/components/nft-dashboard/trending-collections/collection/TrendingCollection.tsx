@@ -122,7 +122,7 @@ export const TrendingCollection: React.FC<ImportantInfoProps> = ({
           <Button key="cancel" onClick={handleDeleteCancel} disabled={isDeleting}>
             {t('common.cancel')}
           </Button>,
-          <Button key={t('common.login')} type="primary" danger onClick={handleDeleteConfirm} loading={isDeleting}>
+          <Button key="Login" type="primary" danger onClick={handleDeleteConfirm} loading={isDeleting}>
             {t('common.confirm')}
           </Button>,
         ]}

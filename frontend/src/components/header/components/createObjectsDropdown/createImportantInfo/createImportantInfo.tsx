@@ -19,9 +19,9 @@ export const CreateImportantInfoForm: React.FC = () => {
   };
 
   const validateAvatar = (file: RcFile) => {
-    const isLt2M = file.size / 1024 / 1024 < 2;
+    const isLt2M = file.size / 1024 / 1024 < 1;
     if (!isLt2M) {
-      message.error('Image must be smaller than 2MB!');
+      message.error('Image must be smaller than 1MB!');
       return false;
     }
     return true;
@@ -132,7 +132,7 @@ export const CreateImportantInfoForm: React.FC = () => {
             </div>
           )}
         </Upload>
-        <div style={{ marginTop: '8px', color: '#666' }}>Supported formats: JPG, PNG, WEBP (max: 2MB)</div>
+        <div style={{ marginTop: '8px', color: '#666' }}>Supported formats: JPG, PNG, WEBP (max: 1MB)</div>
       </Modal>
     </>
   );

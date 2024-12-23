@@ -47,6 +47,11 @@ class Post(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+    def delete(self, *args, **kwargs):
+        if self.photo:
+            self.photo.delete(save=False)
+        super().delete(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
@@ -98,6 +103,11 @@ class Teacher(models.Model):
     class Meta:
         ordering = ["last_name", "first_name"]
         indexes = [models.Index(fields=["last_name", "degree"])]
+
+    def delete(self, *args, **kwargs):
+        if self.teacher_avatar:
+            self.teacher_avatar.delete(save=False)
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} {self.surname}"
@@ -232,7 +242,7 @@ def news_media_path(instance, filename):
 
 
 class News(models.Model):
-    file = models.FileField(upload_to=news_media_path)
+    file = models.FileField(upload_to=news_media_path, null=True, blank=True)
     title = models.CharField(max_length=30, db_index=True)
     description = models.CharField(max_length=1200, default="No description")
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="news_posters")
@@ -240,6 +250,11 @@ class News(models.Model):
 
     class Meta:
         ordering = ["created_at"]
+
+    def delete(self, *args, **kwargs):
+        if self.file:
+            self.file.delete(save=False)
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -260,6 +275,11 @@ class ImportantInfo(models.Model):
     class Meta:
         ordering = ["created_at"]
         indexes = [models.Index(fields=["posted_by"])]
+
+    def delete(self, *args, **kwargs):
+        if self.image:
+            self.image.delete(save=False)
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return self.title

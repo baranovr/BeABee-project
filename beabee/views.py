@@ -706,7 +706,7 @@ class TopTeachersDetailedAPIView(APIView):
             {
                 "id": teacher.id,
                 "name": teacher.last_name + " " + teacher.first_name + " " + teacher.surname,
-                "teacher_avatar": f"{BASE_URL}{teacher.teacher_avatar.url}" if teacher.teacher_avatar else None,
+                "teacher_avatar": f"{teacher.teacher_avatar.url}" if teacher.teacher_avatar else None,
             }
             for teacher in teachers_stats
         ]

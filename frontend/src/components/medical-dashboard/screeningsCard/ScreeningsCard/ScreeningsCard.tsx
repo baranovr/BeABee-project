@@ -90,13 +90,17 @@ export const ScreeningsCard: React.FC = () => {
   const getUserStatistic = useCallback(
     (isFirstUser: boolean) => {
       const user = isFirstUser ? 'firstUser' : 'secondUser';
+      const teacherIndex = currentStatistics[user];
+      const teacher = screeningsWithTeachers[teacherIndex];
 
-      return (
-        currentValues && {
-          name: screeningsWithTeachers[currentStatistics[user]].name,
-          data: currentValues[currentStatistics[user]].data,
-        }
-      );
+      if (!teacher || !currentValues || !currentValues[teacherIndex]) {
+        console.warn(`Invalid user index or missing data for ${user}`);
+        return null;
+      }
+      return {
+        name: teacher.name,
+        data: currentValues[teacherIndex]?.data,
+      };
     },
     [currentStatistics, currentValues, screeningsWithTeachers],
   );

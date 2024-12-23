@@ -1,4 +1,4 @@
-// ImpInfo.styles.ts
+// TrendingCollection.styles.ts
 
 import styled from 'styled-components';
 import { BaseButton } from '@app/components/common/BaseButton/BaseButton';

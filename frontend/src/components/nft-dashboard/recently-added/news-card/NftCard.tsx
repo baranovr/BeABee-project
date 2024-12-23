@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { useTranslation } from 'react-i18next';
 import axiosInstance from '@app/api/axiosInstance';
@@ -158,7 +158,7 @@ export const NftCard: React.FC<NftCardProps> = ({ newsItem, onDelete, onDeleteSu
           <S.Button key="cancel" onClick={handleDeleteCancel} disabled={isDeleting}>
             {t('common.cancel')}
           </S.Button>,
-          <S.Button key={t('common.login')} type="primary" danger onClick={handleDeleteConfirm} loading={isDeleting}>
+          <S.Button key="Login" type="primary" danger onClick={handleDeleteConfirm} loading={isDeleting}>
             {t('common.confirm')}
           </S.Button>,
         ]}

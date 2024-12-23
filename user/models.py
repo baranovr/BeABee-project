@@ -113,6 +113,15 @@ class User(AbstractUser):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
+    def save(self, *args, **kwargs):
+        # Проверяем, если объект уже существует в базе
+        if self.pk:
+            old_instance = User.objects.get(pk=self.pk)
+            # Если есть старый аватар и он отличается от нового
+            if old_instance.avatar and old_instance.avatar != self.avatar:
+                old_instance.avatar.delete(save=False)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.full_name
 

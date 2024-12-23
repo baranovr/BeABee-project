@@ -14,6 +14,7 @@ from beabee.models import (
     SystemNotificationView,
 )
 from beabee_project import settings
+from beabee_project.settings import BASE_URL_127
 
 
 class BaseTagSubjectRelatedSerializer(serializers.ModelSerializer):
@@ -43,13 +44,6 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class PostInProfileSerializer(serializers.ModelSerializer):
-    photo = serializers.SerializerMethodField()
-
-    def get_photo(self, obj):
-        if obj.photo:
-            return f"{settings.BASE_URL}{obj.photo.url}"
-        return None
-
     class Meta:
         model = Post
         fields = (
@@ -63,12 +57,6 @@ class PostInProfileSerializer(serializers.ModelSerializer):
 
 class PostListSerializer(PostSerializer):
     avatar = serializers.ImageField(source='user.avatar')
-    photo = serializers.SerializerMethodField()
-
-    def get_photo(self, obj):
-        if obj.photo:
-            return f"{settings.BASE_URL}{obj.photo.url}"
-        return None
 
     class Meta:
         model = Post
@@ -226,12 +214,7 @@ class NewsSerializer(serializers.ModelSerializer):
     posted_by = serializers.CharField(source='posted_by.nickname', read_only=True)
     posted_by_id = serializers.CharField(source='posted_by.id', read_only=True)
     status_in_service = serializers.CharField(source='posted_by.status_in_service', read_only=True)
-    avatar = serializers.SerializerMethodField()
-
-    def get_avatar(self, obj):
-        if obj.posted_by.avatar:
-            return f"{settings.BASE_URL}{obj.posted_by.avatar.url}"
-        return None
+    avatar = serializers.ImageField(source='posted_by.avatar', read_only=True)
 
     class Meta:
         model = News
@@ -248,13 +231,6 @@ class NewsSerializer(serializers.ModelSerializer):
 
 
 class NewsInProfileSerializer(NewsSerializer):
-    file = serializers.SerializerMethodField()
-
-    def get_file(self, obj):
-        if obj.file:
-            return f"{settings.BASE_URL}{obj.file.url}"
-        return None
-
     class Meta:
         model = News
         fields = (
@@ -283,14 +259,8 @@ class NewsDetailSerializer(NewsSerializer):
 class ImportantInfoSerializer(serializers.ModelSerializer):
     owner = serializers.CharField(source='posted_by.nickname', read_only=True)
     status_in_service = serializers.CharField(source="posted_by.status_in_service", read_only=True)
-    avatar = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M', read_only=True)
-
-    def get_avatar(self, obj):
-        request = self.context.get('request')
-        if request is not None:
-            return request.build_absolute_uri(obj.posted_by.avatar.url)
-        return f"{settings.BASE_URL}{obj.posted_by.avatar.url}"
+    avatar = serializers.ImageField(source='posted_by.avatar', read_only=True)
 
     class Meta:
         model = ImportantInfo
@@ -307,13 +277,6 @@ class ImportantInfoSerializer(serializers.ModelSerializer):
 
 
 class ImportantInfoInProfileSerializer(ImportantInfoSerializer):
-    image = serializers.SerializerMethodField()
-
-    def get_image(self, obj):
-        if obj.image:
-            return f"{settings.BASE_URL}{obj.image.url}"
-        return None
-
     class Meta:
         model = ImportantInfo
         fields = (

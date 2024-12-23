@@ -18,7 +18,8 @@ from corsheaders.defaults import default_headers
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+env_path = Path('.', '.env')
+load_dotenv(dotenv_path=env_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,7 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cachalot',
-    'channels',
     'redis',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     'user',
 
 ]
+
+INSTALLED_APPS += ['storages']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -91,17 +93,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'beabee_project.wsgi.application'
 
-ASGI_APPLICATION = 'beabee_project.asgi.application'
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
-        },
-    },
-}
-
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django_redis.cache.RedisCache',
@@ -111,12 +102,6 @@ CHANNEL_LAYERS = {
 #         },
 #     }
 # }
-#
-# CACHALOT_ONLY_CACHABLE_TABLES = {
-#     'user.User', 'beabee.Homework', 'beabee.Subject', 'beabee.Teacher', 'beabee.StudentInTable'
-# }
-#
-# CACHALOT_TIMEOUT = 60 * 15
 #
 # CACHALOT_ENABLED = True
 #
@@ -146,22 +131,32 @@ CHANNEL_LAYERS = {
 #     }
 # }
 
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         # Replace this value with your local database's connection string.
-#         default=os.getenv('DATABASE_URL'),
-#         conn_max_age=600
-#     )
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'beabee_test',
-        'USER': 'beabee',
-        'PASSWORD': 'Ruslanaws2005##',
-        'HOST': 'beabee-test.ctaig6oeumro.eu-north-1.rds.amazonaws.com',
+        'NAME': os.getenv('RDS_NAME'),
+        'USER': os.getenv('RDS_USER'),
+        'PASSWORD': 'Beabee2005##',
+        'HOST': os.getenv('RDS_HOST'),
         'PORT': '5432',
+    }
+}
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
+AWS_S3_SIGNATURE_NAME = 's3v4'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_VERITY = True
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3Storage",
     }
 }
 
@@ -225,10 +220,10 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle"
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "100/day",
-        "user": "30000/day",
-        "try_login": "3/day",
-        "try_register": "3/month",
+        "anon": "1000000/day",
+        "user": "300000/day",
+        "try_login": "300000/day",
+        "try_register": "300000/month",
     }
 }
 
@@ -265,12 +260,6 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
 
 # Session settings
 SESSION_COOKIE_NAME = 'sessionid'
