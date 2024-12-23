@@ -1,4 +1,4 @@
-// TrendingCollections.tsx
+// ImpInfo.tsx
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,17 +7,17 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { BaseCarousel } from '@app/components/common/BaseCarousel/Carousel';
 import { ViewAll } from '@app/components/nft-dashboard/common/ViewAll/ViewAll';
 import { NFTCardHeader } from '@app/components/nft-dashboard/common/NFTCardHeader/NFTCardHeader';
-import { TrendingCollection } from '@app/components/nft-dashboard/trending-collections/collection/TrendingCollection';
+import { ImpInfo } from '@app/components/nft-dashboard/trending-collections/collection/ImpInfo';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { getImportantInfo, ImportantInfo } from '@app/api/activity.api';
-import * as S from './TrendingCollections.styles';
+import * as S from './ImpInfo.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { getImportantInfoList } from '@app/api/importantinfo.api';
 import { Simulate } from 'react-dom/test-utils';
 
-export const TrendingCollections: React.FC = () => {
-  const [trending, setTrending] = useState<ImportantInfo[]>([]);
+export const ImpInfo: React.FC = () => {
+  const [trending, setTrending] = useState<ImpInfo[]>([]);
   const [showAll, setShowAll] = useState(false);
 
   const { mobileOnly, isTablet: isTabletOrHigher } = useResponsive();
@@ -42,18 +42,18 @@ export const TrendingCollections: React.FC = () => {
 
   const trendingList = useMemo(() => {
     return {
-      mobile: trending.map((item, index) => <TrendingCollection key={index} {...item} />).slice(0, 3),
+      mobile: trending.map((item, index) => <ImpInfo key={index} {...item} />).slice(0, 3),
       tablet: trending.map((item, index) => (
         <div key={index}>
           <S.CardWrapper>
-            <TrendingCollection {...item} onDeleteSuccess={refreshInfo} />
+            <ImpInfo {...item} onDeleteSuccess={refreshInfo} />
           </S.CardWrapper>
         </div>
       )),
       grid: trending.map((item, index) => (
         <BaseCol key={index} xs={24} sm={12} md={8}>
           <S.CardWrapper>
-            <TrendingCollection {...item} onDeleteSuccess={refreshInfo} />
+            <ImpInfo {...item} onDeleteSuccess={refreshInfo} />
           </S.CardWrapper>
         </BaseCol>
       )),
