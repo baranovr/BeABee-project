@@ -27,9 +27,7 @@
     "echarts-for-react": "^3.0.1",
     "elt-react-credit-cards": "^0.0.1",
     "i18next": "^20.4.0",
-    "jwt-decode": "^4.0.0",
     "leaflet": "^1.7.1",
-    "lucide-react": "^0.469.0",
     "pigeon-maps": "^0.19.7",
     "react": "^18.2.0",
     "react-country-flag": "^3.0.2",
@@ -122,14 +120,13 @@
     "*/**/*.{js,ts,tsx}": "yarn lint"
   },
   "engines": {
-    "node": "16.x",
-    "yarn": "1.22.19"
+    "node": "16.x"
   },
   "resolutions": {
     "@types/react": "^18.0.28",
     "react-error-overlay": "6.0.9"
   },
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "yarn@3.1.1",
   "keywords": [
     "lightence",
     "admin",
