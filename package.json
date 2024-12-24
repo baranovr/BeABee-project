@@ -122,8 +122,7 @@
     "*/**/*.{js,ts,tsx}": "yarn lint"
   },
   "engines": {
-    "node": "18.x",
-    "yarn": "1.22.19"
+    "node": "22.12.0"
   },
   "resolutions": {
     "@types/react": "^18.0.28",
