@@ -1,0 +1,5 @@
+services:
+  - name: frontend
+    env: node
+    buildCommand: corepack enable && corepack prepare yarn@3.1.1 --activate && yarn install
+    startCommand: yarn start
