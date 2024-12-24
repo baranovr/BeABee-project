@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://13.48.24.31:8000/api/',
+  baseURL: 'https://beabee-service.online/api/',
   withCredentials: true,
 });
 
