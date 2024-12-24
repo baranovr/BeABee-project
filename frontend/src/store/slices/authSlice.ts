@@ -63,7 +63,7 @@ export const doLogin = createAsyncThunk(
   },
 );
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = 'http://13.48.24.31:8000/api';
 
 const fetchConfig = {
   credentials: 'include' as RequestCredentials,
