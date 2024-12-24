@@ -122,13 +122,14 @@
     "*/**/*.{js,ts,tsx}": "yarn lint"
   },
   "engines": {
-    "node": "22.12.0"
+    "node": "20.x"
   },
   "resolutions": {
     "@types/react": "^18.0.28",
     "react-error-overlay": "6.0.9"
   },
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "yarn@3.1.1",
+  "workspaces": ["packages/*"],
   "keywords": [
     "lightence",
     "admin",
