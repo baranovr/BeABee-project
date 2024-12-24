@@ -2288,8 +2288,8 @@ __metadata:
   linkType: hard
 
 "@react-google-maps/api@npm:^2.18.1":
-  version: 2.20.4
-  resolution: "@react-google-maps/api@npm:2.20.4"
+  version: 2.20.5
+  resolution: "@react-google-maps/api@npm:2.20.5"
   dependencies:
     "@googlemaps/js-api-loader": 1.16.8
     "@googlemaps/markerclusterer": 2.5.3
@@ -2300,7 +2300,7 @@ __metadata:
   peerDependencies:
     react: ^16.8 || ^17 || ^18 || ^19
     react-dom: ^16.8 || ^17 || ^18 || ^19
-  checksum: 32da284d212da6af5faf0c90ef744bfde40b0a4e3056d0220d6c2338bb7d2e6d38fca0a4a6142300fb0c6e9365d78819c3cda7f29dd5f2e22c2f67358f4b4cf6
+  checksum: 15229b93416c8aa6e2824de84028d2c66cb8cce84ea6c52630b4e398a05456f0eef44cbf171ca89f7db98c025dcc54856d956d1be0fe650feac173b3169a8148
   languageName: node
   linkType: hard
 
