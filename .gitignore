@@ -1,8 +1,0 @@
-../.env
-.env
-.venv/
-.idea
-db.sqlite3
-__pycache__
-uploads/
-frontend/node_modules/
