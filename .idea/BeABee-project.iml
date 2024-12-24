@@ -18,8 +18,8 @@
       <excludeFolder url="file://$MODULE_DIR$/media/uploads" />
       <excludeFolder url="file://$MODULE_DIR$/venv/Lib" />
       <excludeFolder url="file://$MODULE_DIR$/venv/Scripts" />
-      <excludeFolder url="file://$MODULE_DIR$/.yarn/cache" />
-      <excludeFolder url="file://$MODULE_DIR$/public/themes" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/.yarn/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/public/themes" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.12 (BeABee-project)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
