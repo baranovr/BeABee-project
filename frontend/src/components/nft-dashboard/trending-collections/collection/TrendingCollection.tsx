@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ImportantInfo } from '@app/api/activity.api';
 import { BaseAvatar } from '@app/components/common/BaseAvatar/BaseAvatar';
@@ -103,7 +103,7 @@ export const TrendingCollection: React.FC<ImportantInfoProps> = ({
 
         <S.StyledModal
           title={title}
-          open={isModalVisible}
+          visible={isModalVisible}
           onCancel={handleCloseModal}
           footer={[
             <Button key="close" type="primary" onClick={handleCloseModal}>
@@ -116,7 +116,7 @@ export const TrendingCollection: React.FC<ImportantInfoProps> = ({
       </S.Card>
       <StyledModalDelete
         title="Confirm delete"
-        open={isDeleteConfirmVisible}
+        visible={isDeleteConfirmVisible}
         onCancel={handleDeleteCancel}
         footer={[
           <Button key="cancel" onClick={handleDeleteCancel} disabled={isDeleting}>

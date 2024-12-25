@@ -163,7 +163,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({ userId, isVi
 
   if (loading) {
     return (
-      <Modal open={isVisible} onCancel={onClose} footer={null} centered>
+      <Modal visible={isVisible} onCancel={onClose} footer={null} centered>
         <div
           style={{
             display: 'flex',
@@ -186,7 +186,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({ userId, isVi
 
   return (
     <>
-      <Modal title={null} footer={null} open={isVisible} onCancel={onClose} width={400} centered>
+      <Modal title={null} footer={null} visible={isVisible} onCancel={onClose} width={400} centered>
         <S.Wrapper>
           <S.ImgWrapper>
             <BaseAvatar shape="circle" src={`${process.env.REACT_APP_BASE_URL}${userDetails.avatar}`} alt="Profile" />
@@ -207,7 +207,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({ userId, isVi
 
       <Modal
         title={null}
-        open={isFullInfoModalVisible}
+        visible={isFullInfoModalVisible}
         onCancel={closeFullInfoModal}
         footer={null}
         width={600}

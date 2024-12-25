@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  FormOutlined,
-  HomeOutlined,
-  LayoutOutlined,
-  TableOutlined,
-  BlockOutlined,
-} from '@ant-design/icons';
+import { FormOutlined, HomeOutlined, LayoutOutlined, TableOutlined, BlockOutlined } from '@ant-design/icons';
 
 export interface SidebarNavigationItem {
   title: string;

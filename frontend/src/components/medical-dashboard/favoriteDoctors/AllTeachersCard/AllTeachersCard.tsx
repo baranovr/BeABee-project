@@ -8,7 +8,6 @@ import { Teacher, getTeachersData } from '@app/api/teachers.api';
 import * as S from './AllTeachersCard.styles';
 import { BREAKPOINTS } from '@app/styles/themes/constants';
 
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const NextArrow = (props: any) => {
   const { className, style, onClick } = props;

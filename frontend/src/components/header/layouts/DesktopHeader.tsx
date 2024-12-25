@@ -4,7 +4,7 @@ import { ProfileDropdown } from '../components/profileDropdown/ProfileDropdown/P
 import { HeaderSearch } from '../components/HeaderSearch/HeaderSearch';
 import { SettingsDropdown } from '../components/settingsDropdown/SettingsDropdown';
 import { HeaderFullscreen } from '../components/HeaderFullscreen/HeaderFullscreen';
-import { CreateObjectsDropdown } from "@app/components/header/components/createObjectsDropdown/CreateObjectsDropdown";
+import { CreateObjectsDropdown } from '@app/components/header/components/createObjectsDropdown/CreateObjectsDropdown';
 import * as S from '../Header.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';

@@ -57,13 +57,13 @@ export const NewsTitle = styled.h3`
 `;
 
 export const NewsDescription = styled.p`
-    color: rgb(150, 176, 209);
-    margin-bottom: 1rem;
+  color: rgb(150, 176, 209);
+  margin-bottom: 1rem;
 `;
 
 export const NewsCreatedAt = styled.p`
-    color: rgb(55, 250, 255);
-    margin-bottom: 1rem;
+  color: rgb(55, 250, 255);
+  margin-bottom: 1rem;
 `;
 
 export const DeleteButton = styled.button`

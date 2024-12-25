@@ -162,7 +162,6 @@ export const BidButtonDelete = styled(BaseButton)`
   font-size: ${FONT_SIZE.xxs};
 `;
 
-
 export const Card = styled(NFTCard)<CardInternalProps>`
   overflow: hidden;
 

@@ -133,7 +133,7 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
             <span>Delete Teacher</span>
           </S.ModalTitle>
         }
-        open={isModalVisible}
+        visible={isModalVisible}
         onOk={handleDelete}
         onCancel={() => setIsModalVisible(false)}
         confirmLoading={loading}

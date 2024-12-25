@@ -24,7 +24,7 @@ const TabHeader = styled.div`
   border-bottom: 1px solid #e8e8e8;
 `;
 
-const TabHeaderItem = styled.div<{ $active: boolean, $disabled?: boolean }>`
+const TabHeaderItem = styled.div<{ $active: boolean; $disabled?: boolean }>`
   padding: 12px 16px;
   cursor: ${(props) => (props.$disabled ? 'not-allowed' : 'pointer')};
   color: ${(props) => (props.$disabled ? '#00000040' : props.$active ? '#1890ff' : 'rgba(0, 0, 0, 0.85)')};

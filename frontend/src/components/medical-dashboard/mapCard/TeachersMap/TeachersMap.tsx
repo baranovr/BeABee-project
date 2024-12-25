@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import L, { IconOptions, PointExpression, LatLngBounds } from 'leaflet';
-import { Marker, Popup, MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
+import { Marker, Popup, useMapEvents } from 'react-leaflet';
 import * as S from './TeachersMap.styles';
 import { useResponsive } from 'hooks/useResponsive';
 import { getUserLocations, UserLocation } from '@app/api/user.location.api';
@@ -163,7 +163,7 @@ export const TeachersMap: React.FC<{ currentUserId: number }> = ({ currentUserId
 
       <Modal
         title="Are you here?"
-        open={!!selectedLocation}
+        visible={!!selectedLocation}
         onCancel={handleCancelLocation}
         footer={[
           <Button key="no" onClick={handleCancelLocation}>

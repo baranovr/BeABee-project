@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { MapCard } from '@app/components/medical-dashboard/mapCard/MapCard';
 import { References } from '@app/components/common/References/References';
@@ -59,6 +59,7 @@ const MedicalDashboardPage: React.FC = () => {
         <div id="total-earning">
           <TotalEarning />
         </div>
+
         <S.ScrollWrapper id="activity-story">
           <ActivityStory />
         </S.ScrollWrapper>

@@ -14,7 +14,6 @@ import * as S from './TrendingCollections.styles';
 import { BaseRow } from '@app/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@app/components/common/BaseCol/BaseCol';
 import { getImportantInfoList } from '@app/api/importantinfo.api';
-import { Simulate } from 'react-dom/test-utils';
 
 export const TrendingCollections: React.FC = () => {
   const [trending, setTrending] = useState<ImportantInfo[]>([]);
