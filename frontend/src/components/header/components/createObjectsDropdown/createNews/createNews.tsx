@@ -86,7 +86,7 @@ export const CreateNewsForm: React.FC = () => {
       </Button>
       <Modal
         title={t('header.createNews')}
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         okText={t('common.submit')}

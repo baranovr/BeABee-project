@@ -163,7 +163,7 @@ export const TeachersMap: React.FC<{ currentUserId: number }> = ({ currentUserId
 
       <Modal
         title="Are you here?"
-        visible={!!selectedLocation}
+        open={!!selectedLocation}
         onCancel={handleCancelLocation}
         footer={[
           <Button key="no" onClick={handleCancelLocation}>

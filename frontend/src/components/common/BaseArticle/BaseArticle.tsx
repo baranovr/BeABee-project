@@ -77,7 +77,7 @@ export const BaseArticle: React.FC<BaseArticleProps> = ({ post, onDeleteSuccess,
       {/* Модальное окно подтверждения удаления */}
       <Modal
         title="Confirm Delete"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleDelete}
         onCancel={() => setIsModalVisible(false)}
         confirmLoading={loading}

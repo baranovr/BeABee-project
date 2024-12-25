@@ -70,18 +70,10 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
         <BaseCol span={24}>
           <S.ImgWrapper>
             <BaseImage src={teacher_avatar} alt={full_name_sur} preview={false} />
-            {user && (
-                user.statusInService === "Creator" ||
-                user.statusInService === "Admin"
-            ) && (
-            <S.DeleteButton
-              type="primary"
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => setIsModalVisible(true)}
-            >
-              Delete
-            </S.DeleteButton>
+            {user && (user.statusInService === 'Creator' || user.statusInService === 'Admin') && (
+              <S.DeleteButton type="primary" danger icon={<DeleteOutlined />} onClick={() => setIsModalVisible(true)}>
+                Delete
+              </S.DeleteButton>
             )}
           </S.ImgWrapper>
         </BaseCol>
@@ -141,7 +133,7 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({
             <span>Delete Teacher</span>
           </S.ModalTitle>
         }
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleDelete}
         onCancel={() => setIsModalVisible(false)}
         confirmLoading={loading}

@@ -158,7 +158,7 @@ export const CreateTeacherForm: React.FC = () => {
       </Button>
       <Modal
         title="Create Teacher"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         okText="Create"

@@ -16,7 +16,7 @@ import { UserInList } from '@app/api/user.types';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { Modal, Button } from 'antd';
 import StudentCreationForm from '@app/components/tables/StudentsTable/StudentCreateForm';
-import {Key} from "rc-table/lib/interface";
+import { Key } from 'rc-table/lib/interface';
 
 interface FloatButtonProps {
   onClick?: () => void;

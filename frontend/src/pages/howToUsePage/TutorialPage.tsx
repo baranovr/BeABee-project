@@ -41,7 +41,9 @@ const TutorialPage: React.FC = () => {
               <S.SectionYouCannot>
                 ❌ You are not able to change your status in service (only other admins and creators can increase it).
               </S.SectionYouCannot>
-              <S.SectionYouCannot>❌ You will not be able to recover your password if you forget it.</S.SectionYouCannot>
+              <S.SectionYouCannot>
+                ❌ You will not be able to recover your password if you forget it.
+              </S.SectionYouCannot>
             </S.SectionText>
 
             <S.Pass>/</S.Pass>
@@ -262,7 +264,9 @@ const TutorialPage: React.FC = () => {
             <S.SectionSubSubPurListText>🔖 Publishing obscene content</S.SectionSubSubPurListText>
             <S.SectionSubSubPurListText>🔖 Spam</S.SectionSubSubPurListText>
             <S.Pass>/</S.Pass>
-            <S.Note>🚫 All bans are permanent (long story short - immediately, without the possibility of choosing a term)!</S.Note>
+            <S.Note>
+              🚫 All bans are permanent (long story short - immediately, without the possibility of choosing a term)!
+            </S.Note>
             <S.SectionText>
               Once you ban a user, everyone will be able to see who is banned (the user will have a "BANNED" mark). But
               no one will know who banned them 😊.
@@ -286,15 +290,19 @@ const TutorialPage: React.FC = () => {
             <S.Pass>/</S.Pass>
             <S.SectionSubTitle>2. Increasing steps</S.SectionSubTitle>
             <S.SectionText>
-              To increase user status you should go to the Main Page, find list "All Users In Service" and click on the user full
-              name. Next you should click "View Full Info" button and choose new status.
+              To increase user status you should go to the Main Page, find list "All Users In Service" and click on the
+              user full name. Next you should click "View Full Info" button and choose new status.
             </S.SectionText>
             <S.Pass>/</S.Pass>
             <S.SectionListText>📈 Increasing rules:</S.SectionListText>
             <S.SectionSubSubGreenListText>✅ Creators can increase status of everyone.</S.SectionSubSubGreenListText>
             <S.SectionSubSubRedListText>❌ Users can't increase status of anyone.</S.SectionSubSubRedListText>
-            <S.SectionSubSubRedListText>❌ Admins can't increase status of other admins or creators.</S.SectionSubSubRedListText>
-            <S.SectionSubSubGreenListText>✅ Admins can increase status "User" to "Admin".</S.SectionSubSubGreenListText>
+            <S.SectionSubSubRedListText>
+              ❌ Admins can't increase status of other admins or creators.
+            </S.SectionSubSubRedListText>
+            <S.SectionSubSubGreenListText>
+              ✅ Admins can increase status "User" to "Admin".
+            </S.SectionSubSubGreenListText>
             <S.Pass>/</S.Pass>
             <S.Note>🚫 If you upgrade a user's status, you can never downgrade it again!</S.Note>
 
