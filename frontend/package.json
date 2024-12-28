@@ -1,15 +1,9 @@
 {
-  "name": "lightence-admin",
+  "name": "beabee-service",
   "version": "1.0.0",
   "license": "MIT",
-  "description": "Free and easy-to-use admin template based on React 17+",
-  "repository": {
-    "type": "git",
-    "url": "git+github.com:altence/lightence-admin.git"
-  },
-  "bugs": {
-    "url": "https://github.com/altence/lightence-admin/issues"
-  },
+  "description": "This service is made for FIT students of Taras Shevchenko National University of Kyiv.",
+  "homepage": "https://beabee-service.netlify.app",
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@craco/craco": "^6.1.2",
