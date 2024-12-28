@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "license": "MIT",
   "description": "This service is made for FIT students of Taras Shevchenko National University of Kyiv.",
-  "homepage": "https://beabee-service.netlify.app",
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@craco/craco": "^6.1.2",
