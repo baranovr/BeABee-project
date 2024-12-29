@@ -1,8 +1,7 @@
 {
   "name": "beabee-service",
   "version": "1.0.0",
-  "license": "MIT",
-  "description": "This service is made for FIT students of Taras Shevchenko National University of Kyiv.",
+  "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@craco/craco": "^6.1.2",
@@ -11,7 +10,7 @@
     "@reduxjs/toolkit": "^1.7.1",
     "antd": "^4.22.4",
     "antd-mask-input": "^2.0.7",
-    "axios": "^0.24.0",
+    "axios": "1.7.4",
     "axios-mock-adapter": "^1.20.0",
     "country-list": "^2.2.0",
     "credit-card-type": "^9.1.0",
@@ -24,18 +23,18 @@
     "leaflet": "^1.7.1",
     "lucide-react": "^0.469.0",
     "pigeon-maps": "^0.19.7",
-    "react": "^18.2.0",
+    "react": "^17.0.2",
     "react-country-flag": "^3.0.2",
-    "react-dom": "^18.2.0",
+    "react-dom": "^17.0.2",
     "react-helmet-async": "^1.3.0",
     "react-i18next": "^11.11.4",
     "react-infinite-scroll-component": "^6.1.0",
     "react-insta-stories": "^2.3.0",
-    "react-leaflet": "next",
+    "react-leaflet": "^3.2.5",
     "react-phone-number-input": "^3.2.17",
     "react-redux": "^7.2.6",
     "react-responsive": "^9.0.2",
-    "react-router-dom": "^6.0.2",
+    "react-router-dom": "^6.28.1",
     "react-router-hash-link": "^2.4.3",
     "react-scripts": "4.0.3",
     "react-simple-maps": "^2.3.0",
@@ -63,13 +62,12 @@
     "workbox-streams": "^5.1.3"
   },
   "scripts": {
-    "start": "yarn buildThemes && craco start",
-    "build": "yarn buildThemes && craco build",
-    "test": "craco test",
-    "eject": "craco eject",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
     "lint:styles": "stylelint '*/**/*.{js,ts,tsx}'",
-    "prepare": "husky install",
     "buildThemes": "lessc --js --clean-css=\"--s1 --advanced\" src/styles/themes/main.less public/themes/main.css"
   },
   "browserslist": [
@@ -82,8 +80,8 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/country-list": "^2.1.0",
     "@types/leaflet": "^1.7.9",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "^17.0.52",
+    "@types/react-dom": "^17.0.18",
     "@types/react-helmet": "^6.1.5",
     "@types/react-responsive": "^8.0.5",
     "@types/react-router-dom": "^5.1.7",
@@ -111,23 +109,5 @@
     "stylelint-processor-styled-components": "^1.10.0",
     "webpack-bundle-analyzer": "^4.4.2",
     "webpackbar": "^5.0.0-3"
-  },
-  "lint-staged": {
-    "*/**/*.{js,ts,tsx}": "yarn lint"
-  },
-  "engines": {
-    "node": ">=18.x"
-  },
-  "resolutions": {
-    "@types/react": "^18.0.28",
-    "react-error-overlay": "6.0.9"
-  },
-  "packageManager": "yarn@3.1.1",
-  "keywords": [
-    "lightence",
-    "admin",
-    "admin-dashboard",
-    "ant-design",
-    "react"
-  ]
+  }
 }
