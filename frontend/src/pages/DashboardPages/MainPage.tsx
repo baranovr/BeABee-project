@@ -26,7 +26,7 @@ const MedicalDashboardPage: React.FC = () => {
             </p>
             <p style={{ textAlign: 'center', marginBottom: '20px' }}>
               With its help you can easily view information about students, teachers and works. You will no longer ask
-              questions like "Sho po domashke?"
+              questions like -- Sho po domashke? --
             </p>
           </BaseCol>
         </BaseRow>
@@ -59,7 +59,6 @@ const MedicalDashboardPage: React.FC = () => {
         <div id="total-earning">
           <TotalEarning />
         </div>
-
         <S.ScrollWrapper id="activity-story">
           <ActivityStory />
         </S.ScrollWrapper>

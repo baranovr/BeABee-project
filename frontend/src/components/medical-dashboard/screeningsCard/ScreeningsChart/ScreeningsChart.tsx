@@ -13,13 +13,13 @@ interface StatisticsData {
 }
 
 interface UserStatistics {
-  name: string | null;
-  data: StatisticsData[] | null;
+  name: string;
+  data: StatisticsData[];
 }
 
 interface ScreeningsChartProps {
-  firstUser?: UserStatistics | null;
-  secondUser?: UserStatistics | null;
+  firstUser?: UserStatistics;
+  secondUser?: UserStatistics;
 }
 
 const xAxisData = Array.from({ length: 31 }, (_, i) => i + 1);

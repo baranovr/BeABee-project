@@ -18,9 +18,9 @@ export const CreateNewsForm: React.FC = () => {
     setIsModalVisible(true);
   };
   const validateFile = (file: RcFile) => {
-    const isLt2M = file.size / 1024 / 1024 < 1;
+    const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
-      message.error('File must be smaller than 1MB!');
+      message.error('File must be smaller than 2MB!');
       return false;
     }
     return true;
@@ -131,7 +131,7 @@ export const CreateNewsForm: React.FC = () => {
             </div>
           )}
         </Upload>
-        <div style={{ marginTop: '8px', color: '#666' }}>Supported formats: JPG, PNG, WEBP, GIF (max: 1MB)</div>
+        <div style={{ marginTop: '8px', color: '#666' }}>Supported formats: JPG, PNG, WEBP, GIF (max: 2MB)</div>
       </Modal>
     </>
   );

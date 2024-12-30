@@ -32,7 +32,6 @@ Check out a [live demo](https://altence.com/lightence-landing).
 - 👍 Fully typescripted
 - ✅ Clean code: enjoy the world-recognized code style with our own enhancements
 - 🧱 Solid architecture: in compliance with the  best architectural practices
-- 📃 [MIT](LICENSE) License
 
 ### Installation
 
@@ -71,7 +70,7 @@ And then use the [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack
 [<img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white">](https://www.facebook.com/groups/altence)
 
 ### Contribution
-Let’s create great products together! We encourage and welcome collaboration and any type of contribution. 👉 Learn the [contributing docs](CONTRIBUTING.md) on how to contribute the right way.
+Let’s create great products together! We encourage and welcome collaboration and any type of contribution. 👉 Learn the contributing docs on how to contribute the right way.
 
 ### Want to get popular?
 If you use **Lightence** in your app development, please, let us know, and we’ll showcase your work to provide more awareness to your product.

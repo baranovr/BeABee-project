@@ -17,9 +17,9 @@ export const CreatePostForm: React.FC = () => {
   };
 
   const validateAvatar = (file: RcFile) => {
-    const isLt2M = file.size / 1024 / 1024 < 1;
+    const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
-      message.error('Image must be smaller than 1MB!');
+      message.error('Image must be smaller than 2MB!');
       return false;
     }
     return true;
@@ -124,7 +124,7 @@ export const CreatePostForm: React.FC = () => {
             </div>
           )}
         </Upload>
-        <div style={{ marginTop: '8px', color: '#666' }}>Supported formats: JPG, PNG, WEBP (max: 1MB)</div>
+        <div style={{ marginTop: '8px', color: '#666' }}>Supported formats: JPG, PNG, WEBP (max: 2MB)</div>
       </Modal>
     </>
   );

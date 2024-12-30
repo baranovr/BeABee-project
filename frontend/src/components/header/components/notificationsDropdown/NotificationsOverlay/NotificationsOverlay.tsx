@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { BaseNotification } from '@app/components/common/BaseNotification/BaseNotification';
 import { capitalize } from '@app/utils/utils';
 import { SystemNotification } from 'api/sys_notifications.api';

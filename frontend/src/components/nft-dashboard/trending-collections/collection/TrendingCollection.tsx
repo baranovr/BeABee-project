@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ImportantInfo } from '@app/api/activity.api';
 import { BaseAvatar } from '@app/components/common/BaseAvatar/BaseAvatar';
@@ -122,12 +122,12 @@ export const TrendingCollection: React.FC<ImportantInfoProps> = ({
           <Button key="cancel" onClick={handleDeleteCancel} disabled={isDeleting}>
             {t('common.cancel')}
           </Button>,
-          <Button key="Login" type="primary" danger onClick={handleDeleteConfirm} loading={isDeleting}>
+          <Button key={'Login'} type="primary" danger onClick={handleDeleteConfirm} loading={isDeleting}>
             {t('common.confirm')}
           </Button>,
         ]}
       >
-        <p className="confirm_message">Are you sure you want to delete "{title}" im. info?</p>
+        <p className="confirm_message">Are you sure you want to delete {title} im. info?</p>
       </StyledModalDelete>
     </>
   );

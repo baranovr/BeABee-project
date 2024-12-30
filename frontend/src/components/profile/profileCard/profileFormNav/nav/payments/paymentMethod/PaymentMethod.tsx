@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { BaseForm } from '@app/components/common/forms/BaseForm/BaseForm';
 import { BaseCard } from '@app/components/common/BaseCard/BaseCard';
 import { PaymentCardsWidget } from '@app/components/profile/profileCard/profileFormNav/nav/payments/paymentMethod/PaymentCardsWidget';
-
 import { useResponsive } from '@app/hooks/useResponsive';
 import { BaseSpin } from '@app/components/common/BaseSpin/BaseSpin';
 import { PaymentCard } from '@app/interfaces/interfaces';

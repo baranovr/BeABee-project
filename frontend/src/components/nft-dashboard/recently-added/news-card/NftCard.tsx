@@ -158,12 +158,12 @@ export const NftCard: React.FC<NftCardProps> = ({ newsItem, onDelete, onDeleteSu
           <S.Button key="cancel" onClick={handleDeleteCancel} disabled={isDeleting}>
             {t('common.cancel')}
           </S.Button>,
-          <S.Button key="Login" type="primary" danger onClick={handleDeleteConfirm} loading={isDeleting}>
+          <S.Button key={'Login'} type="primary" danger onClick={handleDeleteConfirm} loading={isDeleting}>
             {t('common.confirm')}
           </S.Button>,
         ]}
       >
-        <p className="confirm_message">Are you sure you want to delete "{newsItem.title}" news?</p>
+        <p className="confirm_message">Are you sure you want to delete {newsItem.title} news?</p>
       </S.StyledModalDelete>
     </>
   );

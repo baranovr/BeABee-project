@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosPublicInstance = axios.create({
-  baseURL: 'https://beabee-service.online/api/',
+  baseURL: 'http://127.0.0.1:8000/api/',
 });
 
 export default axiosPublicInstance;
