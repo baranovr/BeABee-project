@@ -70,6 +70,7 @@ const fetchConfig = {
   headers: {
     'Content-Type': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
+    Origin: 'https://beabee-service.netlify.app',
   },
 };
 
