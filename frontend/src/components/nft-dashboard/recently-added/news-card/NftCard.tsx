@@ -139,7 +139,7 @@ export const NftCard: React.FC<NftCardProps> = ({ newsItem, onDelete, onDeleteSu
 
         <S.StyledModal
           title={newsItem.title}
-          open={isModalVisible}
+          visible={isModalVisible}
           onCancel={handleCloseModal}
           footer={[
             <S.Button key="close" type="primary" onClick={handleCloseModal}>
@@ -152,7 +152,7 @@ export const NftCard: React.FC<NftCardProps> = ({ newsItem, onDelete, onDeleteSu
       </S.Card>
       <S.StyledModalDelete
         title="Confirm delete"
-        open={isDeleteConfirmVisible}
+        visible={isDeleteConfirmVisible}
         onCancel={handleDeleteCancel}
         footer={[
           <S.Button key="cancel" onClick={handleDeleteCancel} disabled={isDeleting}>
