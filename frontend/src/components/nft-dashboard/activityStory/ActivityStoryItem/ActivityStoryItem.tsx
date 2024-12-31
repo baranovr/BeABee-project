@@ -239,7 +239,7 @@ export const ActivityStoryItem: React.FC<UserActivity> = ({
             <span>Ban User</span>
           </CustomModalTitle>
         }
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         confirmLoading={loading}

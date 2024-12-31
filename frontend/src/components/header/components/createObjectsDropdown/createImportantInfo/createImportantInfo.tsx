@@ -87,7 +87,7 @@ export const CreateImportantInfoForm: React.FC = () => {
       </Button>
       <Modal
         title="Create Important Info"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         okText={t('common.submit')}

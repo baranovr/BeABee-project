@@ -103,7 +103,7 @@ export const TrendingCollection: React.FC<ImportantInfoProps> = ({
 
         <S.StyledModal
           title={title}
-          visible={isModalVisible}
+          open={isModalVisible}
           onCancel={handleCloseModal}
           footer={[
             <Button key="close" type="primary" onClick={handleCloseModal}>
@@ -116,7 +116,7 @@ export const TrendingCollection: React.FC<ImportantInfoProps> = ({
       </S.Card>
       <StyledModalDelete
         title="Confirm delete"
-        visible={isDeleteConfirmVisible}
+        open={isDeleteConfirmVisible}
         onCancel={handleDeleteCancel}
         footer={[
           <Button key="cancel" onClick={handleDeleteCancel} disabled={isDeleting}>

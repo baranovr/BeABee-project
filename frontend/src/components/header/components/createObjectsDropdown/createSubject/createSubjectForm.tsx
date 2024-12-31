@@ -58,7 +58,7 @@ export const CreateSubjectForm: React.FC = () => {
       </Button>
       <Modal
         title={t('header.createSubject')}
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={() => setIsModalVisible(false)}
         okText={t('common.submit')}
