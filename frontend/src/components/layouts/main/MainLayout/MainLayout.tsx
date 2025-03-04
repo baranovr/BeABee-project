@@ -4,7 +4,7 @@ import MainSider from '../sider/MainSider/MainSider';
 import MainContent from '../MainContent/MainContent';
 import { MainHeader } from '../MainHeader/MainHeader';
 import * as S from './MainLayout.styles';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation} from 'react-router-dom';
 import { MEDICAL_DASHBOARD_PATH, NFT_DASHBOARD_PATH } from '@app/components/router/AppRouter';
 import { useResponsive } from '@app/hooks/useResponsive';
 import { References } from '@app/components/common/References/References';

@@ -23,7 +23,14 @@ interface Filter {
   onReset: () => void;
 }
 
-const Filter: React.FC<Filter> = ({ author, title, dates, onApply, onReset, updateFilteredField }) => {
+const Filter: React.FC<Filter> = ({
+  author,
+  title,
+  dates,
+  onApply,
+  onReset,
+  updateFilteredField,
+}) => {
   const { t } = useTranslation();
   const { mobileOnly } = useResponsive();
 

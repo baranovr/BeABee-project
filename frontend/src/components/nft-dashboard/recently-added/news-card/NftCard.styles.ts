@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import { NFTCard } from '@app/components/nft-dashboard/common/NFTCard/NFTCard';
 import { Button as AntButton } from 'antd';
 import { FONT_SIZE, FONT_WEIGHT, FONT_FAMILY, media, BREAKPOINTS, BORDER_RADIUS } from '@app/styles/themes/constants';
@@ -199,55 +199,55 @@ export const StyledModal = styled(AntdModal)`
 `;
 
 export const StyledModalDelete = styled(AntdModal)`
-  .ant-modal-content {
-    border-radius: ${BORDER_RADIUS};
-    background-color: rgba(0, 0, 0, 0.6);
-    color: var(--text-primary-color);
-  }
-
-  .ant-modal-header {
-    border-bottom: none;
-    background-color: rgba(0, 0, 0, 0.6);
-    border-top-left-radius: ${BORDER_RADIUS};
-    border-top-right-radius: ${BORDER_RADIUS};
-    padding: 16px;
-  }
-
-  .ant-modal-title {
-    font-size: ${FONT_SIZE.lg};
-    font-weight: ${FONT_WEIGHT.bold};
-    color: var(--text-secondary-color);
-  }
-
-  .ant-modal-close {
-    color: var(--text-secondary-color);
-    font-size: ${FONT_SIZE.md};
-  }
-
-  .ant-modal-body {
-    padding: 24px;
-    font-size: ${FONT_SIZE.md};
-    line-height: 1.5;
-    color: var(--text-primary-color);
-    background-color: rgba(0, 0, 0, 0.6);
-  }
-
-  .ant-modal-footer {
-    border-top: none;
-    padding: 16px 24px;
-    display: flex;
-    justify-content: flex-end;
-    background-color: rgba(0, 0, 0, 0.6);
-
-    button {
-      border-radius: ${BORDER_RADIUS};
-      font-size: ${FONT_SIZE.md};
-      padding: 6px 12px;
+    .ant-modal-content {
+        border-radius: ${BORDER_RADIUS};
+        background-color: rgba(0, 0, 0, 0.6);
+        color: var(--text-primary-color);
     }
-  }
-  .confirm_message {
-    color: red;
-  }
+
+    .ant-modal-header {
+        border-bottom: none;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-top-left-radius: ${BORDER_RADIUS};
+        border-top-right-radius: ${BORDER_RADIUS};
+        padding: 16px;
+    }
+
+    .ant-modal-title {
+        font-size: ${FONT_SIZE.lg};
+        font-weight: ${FONT_WEIGHT.bold};
+        color: var(--text-secondary-color);
+    }
+
+    .ant-modal-close {
+        color: var(--text-secondary-color);
+        font-size: ${FONT_SIZE.md};
+    }
+
+    .ant-modal-body {
+        padding: 24px;
+        font-size: ${FONT_SIZE.md};
+        line-height: 1.5;
+        color: var(--text-primary-color);
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .ant-modal-footer {
+        border-top: none;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: flex-end;
+        background-color: rgba(0, 0, 0, 0.6);
+
+        button {
+            border-radius: ${BORDER_RADIUS};
+            font-size: ${FONT_SIZE.md};
+            padding: 6px 12px;
+        }
+    }
+    .confirm_message {
+        color: red;
+    }
 `;
 
 export const Card = styled(NFTCard)<CardInternalProps>`

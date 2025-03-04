@@ -13,13 +13,11 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-import dj_database_url
 from corsheaders.defaults import default_headers
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-env_path = Path('.', '.env')
-load_dotenv(dotenv_path=env_path)
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,8 +32,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://beabee-service.onrender.com',]
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -46,8 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'cachalot',
-    'redis',
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
@@ -57,8 +54,6 @@ INSTALLED_APPS = [
     'user',
 
 ]
-
-INSTALLED_APPS += ['storages']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -93,9 +88,35 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'beabee_project.wsgi.application'
 
+ASGI_APPLICATION = 'beabee_project.asgi.application'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+    }
+}
 
-#
+CACHALOT_ENABLED = True
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django_cachalot': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
 
 
 # Database
@@ -107,17 +128,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('RDS_NAME'),
-#         'USER': os.getenv('RDS_USER'),
-#         'PASSWORD': 'Beabee2005##',
-#         'HOST': os.getenv('RDS_HOST'),
-#         'PORT': '5432',
-#     }
-# }
 
 
 # Password validation
@@ -157,8 +167,8 @@ USE_TZ = True
 STATIC_URL = "/staticfiles/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -180,16 +190,15 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle"
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "1000000/day",
-        "user": "300000/day",
-        "try_login": "300000/day",
-        "try_register": "300000/month",
+        "anon": "100000/day",
+        "user": "3000000/day",
+        "try_login": "3/day",
     }
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "BeABeeProject",
-    "DESCRIPTION": "Web service for students",
+    "TITLE": "Wander Wave Project",
+    "DESCRIPTION": "Web service for tourists",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_SETTINGS": {
@@ -201,7 +210,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=28),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -216,6 +225,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3001",
     "http://127.0.0.1:3001",
+    "https://beabee-service.onrender.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -231,6 +241,7 @@ CSRF_COOKIE_SAMESITE = 'None'
 CSRF_COOKIE_SECURE = True  # Changed to True for security
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
+# Дополнительные настройки CORS
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',

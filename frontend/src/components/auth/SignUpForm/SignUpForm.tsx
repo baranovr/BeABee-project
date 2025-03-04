@@ -234,10 +234,8 @@ export const SignUpForm: React.FC = () => {
         <Auth.FormItem name="statusInService" label={t('common.statusInService')} rules={[{ required: true }]}>
           <Auth.FormSelect
             options={[
-              {
-                value: SERVICE_STATUS_CHOICES.Creator,
-                label: 'Creator',
-              },
+              { value: SERVICE_STATUS_CHOICES.User, label: 'User' },
+              { value: SERVICE_STATUS_CHOICES.Creator, label: 'Creator' },
             ]}
             placeholder={t('common.statusInService')}
           />

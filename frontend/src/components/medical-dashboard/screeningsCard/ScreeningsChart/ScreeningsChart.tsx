@@ -18,8 +18,8 @@ interface UserStatistics {
 }
 
 interface ScreeningsChartProps {
-  firstUser?: UserStatistics;
-  secondUser?: UserStatistics;
+  firstUser?: UserStatistics | null;
+  secondUser?: UserStatistics | null;
 }
 
 const xAxisData = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -35,8 +35,16 @@ export const ScreeningsChart: React.FC<ScreeningsChartProps> = ({ firstUser, sec
       ...getDefaultTooltipStyles(themeObject[theme]),
       trigger: 'axis',
       formatter: (series: ChartSeriesData) => {
+        if (!series || series.length < 2 || !series[0] || !series[1]) {
+          return '';
+        }
+
         const firstUser = series[1];
         const secondUser = series[0];
+
+        if (!firstUser.data || !secondUser.data) {
+          return '';
+        }
 
         const firstUserData = firstUser.data;
         const secondUserData = secondUser.data;

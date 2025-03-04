@@ -91,12 +91,20 @@ export const ScreeningsCard: React.FC = () => {
     (isFirstUser: boolean) => {
       const user = isFirstUser ? 'firstUser' : 'secondUser';
 
-      return (
-        currentValues && {
-          name: screeningsWithTeachers[currentStatistics[user]].name,
-          data: currentValues[currentStatistics[user]].data,
-        }
-      );
+      // Проверка на существование всех необходимых данных
+      if (
+        !currentValues ||
+        !screeningsWithTeachers ||
+        !screeningsWithTeachers[currentStatistics[user]] ||
+        !currentValues[currentStatistics[user]]
+      ) {
+        return null; // Или вернуть какое-то дефолтное значение
+      }
+
+      return {
+        name: screeningsWithTeachers[currentStatistics[user]].name,
+        data: currentValues[currentStatistics[user]].data,
+      };
     },
     [currentStatistics, currentValues, screeningsWithTeachers],
   );

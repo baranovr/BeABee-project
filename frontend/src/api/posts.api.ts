@@ -8,7 +8,7 @@ export interface Post {
   title: string;
   avatar: string;
   author: string;
-  status_in_service: string;
+  status_in_service: string
   description: string;
   created_at: number;
 }

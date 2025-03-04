@@ -14,7 +14,6 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from user.custom_token.token_view import RegisterThrottle
 from user.serializers import (
     UserSerializer,
     MyProfileSerializer,
@@ -36,7 +35,6 @@ from user.token_utilities import create_jwt_token
 class CreateUserViewSet(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = (permissions.AllowAny,)
-    throttle_classes = (RegisterThrottle,)
 
 
 class MyProfileView(generics.RetrieveUpdateAPIView):
@@ -245,7 +243,7 @@ class VerifyCodeView(APIView):
 
         if not stored_code or not user_id:
             return Response({
-                'error': 'Session expired! Please try again later!.'
+                'error': 'Сессия истекла. Попробуйте войти снова'
             }, status=400)
 
         if stored_code == code:

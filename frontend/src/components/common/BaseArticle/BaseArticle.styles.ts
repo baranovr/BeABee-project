@@ -18,27 +18,27 @@ export const AuthorWrapper = styled.div`
 `;
 
 export const DeletePostButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: var(--secondary-background-color);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0; /* По умолчанию скрыта */
-  visibility: hidden; /* Полностью исключаем из отображения */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--secondary-background-color);;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0; /* По умолчанию скрыта */
+    visibility: hidden; /* Полностью исключаем из отображения */
 
-  transition: opacity 0.3s ease, visibility 0.3s ease; /* Анимация появления */
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Анимация появления */
 
-  &:hover {
-    background: rgba(0, 0, 0, 0.18); /* Более тёмный цвет при наведении */
-  }
+    &:hover {
+        background: rgba(0, 0, 0, 0.18); /* Более тёмный цвет при наведении */
+    }
 `;
 
 export const Wrapper = styled.div`
@@ -58,11 +58,11 @@ export const Wrapper = styled.div`
   &:hover {
     box-shadow: var(--box-shadow-hover);
   }
-
+  
   &:hover ${DeletePostButton} {
     opacity: 1; /* Показываем кнопку при наведении */
     visibility: visible;
-  }
+  }  
 `;
 
 export const Author = styled.div`
@@ -103,7 +103,7 @@ export const Title = styled.div`
   width: 80%;
   line-height: 1.375rem;
   white-space: pre-wrap;
-  word-break: break-word;
+  word-break: break-word;  
 
   color: var(--text-main-color);
 

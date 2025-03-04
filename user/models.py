@@ -73,9 +73,9 @@ class GroupChoices(models.TextChoices):
 
 class User(AbstractUser):
     avatar = models.ImageField(_("avatar"), upload_to=avatar_path)
-    nickname = models.CharField(_("nickname"), max_length=30, unique=True, db_index=True)
-    first_name = models.CharField(_("first name"), max_length=30, unique=True)
-    last_name = models.CharField(_("last name"), max_length=30, unique=True)
+    nickname = models.CharField(_("nickname"), max_length=20, unique=True, db_index=True)
+    first_name = models.CharField(_("first name"), max_length=20, unique=True)
+    last_name = models.CharField(_("last name"), max_length=20, unique=True)
     email = models.EmailField(_("email address"), unique=True)
     sex = models.CharField(
         _("sex"),
@@ -84,7 +84,7 @@ class User(AbstractUser):
         db_index=True,
     )
     birth_date = models.DateField(_("birth date"))
-    phone_number = models.CharField(_("phone number"), max_length=30, null=True, blank=True)
+    phone_number = models.CharField(_("phone number"), max_length=20, null=True, blank=True)
     country = models.CharField(_("country"), max_length=30, null=True, blank=True)
     city = models.CharField(_("city"), max_length=30, null=True, blank=True)
     linkedin = models.URLField(_("linkedin url"), max_length=100, null=True, blank=True)
@@ -104,7 +104,7 @@ class User(AbstractUser):
         default=ServiceStatusChoices.USER,
         db_index=True,
     )
-    password = models.CharField(_("password"), max_length=255)
+    password = models.CharField(_("password"), max_length=24)
     date_joined = models.DateField(_("date joined"), auto_now_add=True)
     is_banned = models.BooleanField(default=False)
     ban_reason = models.CharField(max_length=30, null=True, blank=True)
@@ -112,15 +112,6 @@ class User(AbstractUser):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
-
-    def save(self, *args, **kwargs):
-        # Проверяем, если объект уже существует в базе
-        if self.pk:
-            old_instance = User.objects.get(pk=self.pk)
-            # Если есть старый аватар и он отличается от нового
-            if old_instance.avatar and old_instance.avatar != self.avatar:
-                old_instance.avatar.delete(save=False)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.full_name

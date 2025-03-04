@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@craco/craco": "^6.1.2",
     "@emotion/react": "^11.13.5",
     "@lit-labs/react": "^1.0.2",

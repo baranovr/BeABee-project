@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PageTitle } from '@app/components/common/PageTitle/PageTitle';
 import { MapCard } from '@app/components/medical-dashboard/mapCard/MapCard';
 import { References } from '@app/components/common/References/References';
@@ -26,7 +26,7 @@ const MedicalDashboardPage: React.FC = () => {
             </p>
             <p style={{ textAlign: 'center', marginBottom: '20px' }}>
               With its help you can easily view information about students, teachers and works. You will no longer ask
-              questions like -- Sho po domashke? --
+              questions like "Sho po domashke?"
             </p>
           </BaseCol>
         </BaseRow>

@@ -28,7 +28,7 @@ export const TwoFactorForm: React.FC = () => {
     } catch (err) {
       const error = err as Error;
       notificationController.error({
-        message: error.message || 'Failed to verify code',
+        message: error.message || 'Failed to verify code'
       });
     } finally {
       setLoading(false);
@@ -37,7 +37,12 @@ export const TwoFactorForm: React.FC = () => {
 
   return (
     <Auth.FormWrapper>
-      <BaseForm layout="vertical" onFinish={handleSubmit} requiredMark="optional" initialValues={initValues}>
+      <BaseForm
+        layout="vertical"
+        onFinish={handleSubmit}
+        requiredMark="optional"
+        initialValues={initValues}
+      >
         <Auth.FormTitle>Two-Factor Authentication</Auth.FormTitle>
         <p>Enter the verification code sent to your email address.</p>
         <Auth.FormItem
@@ -46,17 +51,27 @@ export const TwoFactorForm: React.FC = () => {
           rules={[
             {
               required: true,
-              message: 'Please enter the verification code',
+              message: 'Please enter the verification code'
             },
             {
               len: 6,
-              message: 'Verification code must be 6 digits',
-            },
+              message: 'Verification code must be 6 digits'
+            }
           ]}
         >
-          <Auth.FormInput placeholder="Enter 6-digit code" maxLength={6} autoComplete="off" autoFocus />
+          <Auth.FormInput
+            placeholder="Enter 6-digit code"
+            maxLength={6}
+            autoComplete="off"
+            autoFocus
+          />
         </Auth.FormItem>
-        <Auth.SubmitButton type="primary" htmlType="submit" loading={isLoading} disabled={isLoading}>
+        <Auth.SubmitButton
+          type="primary"
+          htmlType="submit"
+          loading={isLoading}
+          disabled={isLoading}
+        >
           {isLoading ? 'Verifying...' : 'Verify & Login'}
         </Auth.SubmitButton>
       </BaseForm>

@@ -9,7 +9,6 @@ import axiosInstance from '@app/api/axiosInstance';
 import { notificationController } from '@app/controllers/notificationController';
 import { useAppSelector } from '@app/hooks/reduxHooks';
 import { useSearchParams } from 'react-router-dom';
-import { ColumnType } from 'antd/lib/table';
 
 const groupChoices = [
   { value: 'CS-31', label: 'CS-31' },
@@ -21,10 +20,6 @@ const groupChoices = [
   { value: 'CS-43', label: 'CS-43' },
   { value: 'CS-44', label: 'CS-44' },
 ];
-
-interface SubjectTableItem extends Subject {
-  key: React.Key;
-}
 
 export const SubjectsTable: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -127,19 +122,19 @@ export const SubjectsTable: React.FC = () => {
     },
   };
 
-  const columns: ColumnType<SubjectTableItem>[] = [
+  const columns = [
     {
       title: t('common.name'),
       dataIndex: 'name',
       key: 'name',
-      sorter: (a: SubjectTableItem, b: SubjectTableItem) => a.name.localeCompare(b.name),
+      sorter: (a: Subject, b: Subject) => a.name.localeCompare(b.name),
     },
     {
       title: t('common.group'),
       dataIndex: 'group',
       key: 'group',
       filters: groupFilters,
-      onFilter: (value: boolean | Key, record: SubjectTableItem) => record.group === String(value),
+      onFilter: (value: string | number | boolean, record: Subject) => record.group === value.toString(),
     },
     {
       title: 'Created at',
@@ -152,16 +147,13 @@ export const SubjectsTable: React.FC = () => {
           {
             title: 'Actions',
             key: 'actions',
-            render: (_: unknown, record: SubjectTableItem) => (
+            render: (text: string, record: Subject) => (
               <Space>
                 <Button
                   type="primary"
                   onClick={() => {
                     setEditingSubject(record);
-                    form.setFieldsValue({
-                      name: record.name,
-                      group: record.group,
-                    });
+                    form.setFieldsValue({ name: record.name, group: record.group });
                   }}
                 >
                   Edit

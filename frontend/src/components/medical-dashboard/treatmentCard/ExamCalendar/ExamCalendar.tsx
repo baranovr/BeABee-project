@@ -61,7 +61,9 @@ export const ExamCalendar: React.FC<ExamCalendarProps> = ({
             locale={locale}
             dateCellRender={(value) => {
               const today = Dates.getToday();
-              calendar.filter((event) => Dates.getDate(event.date_time).isSame(value, 'date'));
+              calendar.filter((event) =>
+                  Dates.getDate(event.date_time).isSame(value, 'date')
+              );
               return calendar.map((exam) => {
                 const examDate = Dates.getDate(exam.date_time);
 

@@ -10,8 +10,4 @@ class LoginThrottle(UserRateThrottle):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
-    throttle_classes = [LoginThrottle]
-
-
-class RegisterThrottle(UserRateThrottle):
-    scope = "try_register"
+    # throttle_classes = [LoginThrottle]

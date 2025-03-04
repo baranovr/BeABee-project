@@ -25,7 +25,7 @@ const BanContent = styled.div`
   text-align: center;
   max-width: 600px;
   width: 90%;
-
+  
   .noting {
     color: #1e1e2f;
   }
@@ -51,13 +51,14 @@ export const BanOverlay: React.FC = () => {
         <p>
           <strong>Reason:</strong> {user.banReason || 'No reason :)'}
         </p>
-        <p className={'noting'}>/</p>
+        <p className={"noting"}>
+          /
+        </p>
         <p>
           If you believe this is a mistake, please contact support at{' '}
           <a href="mailto:support@example.com" style={{ color: '#ffa500' }}>
             beabee.official2425@gmail.com
-          </a>
-          .
+          </a>.
         </p>
         <Button type="primary" danger onClick={handleLogout}>
           Logout
